@@ -1,11 +1,37 @@
 {
   "schema_version": 1,
-  "site_version": "1.0.0",
+  "site_version": "1.1.0",
   "updated_at": "2026-10-02",
   "source_repository": "dlquffhqnxj/anki-deck-project",
   "source_commit": "98645cf64f5f526214f6f0278fb356976d03deac",
   "decks": [
     {
+      "learner": {
+        "version": "v1.2.0-RC1",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "한자 인식부터",
+            "text": "급수 하나를 정해 의미와 읽기를 회상합니다."
+          },
+          {
+            "title": "쓰기·대표어 추가",
+            "text": "같은 급수에서 쓰기와 대표어 읽기를 단계적으로 더합니다."
+          },
+          {
+            "title": "실전 N4·N3",
+            "text": "해당 급수를 복습한 뒤 실전문제로 적용합니다."
+          }
+        ],
+        "change_title": "등록·검증 정리",
+        "changes": [
+          "실제 APKG에서 카드 템플릿 4종과 복원 MASTER를 추출했습니다.",
+          "v1.1.2 실파일이 없어 이전판 대비 콘텐츠 차이는 아직 산출하지 않았습니다."
+        ],
+        "issues": [],
+        "source": ".github/release-notes/jlpt-kanji-lab-v1.2.0.md"
+      },
+      "qa_reported_at": "2026-10-02",
       "id": "jlpt-kanji-lab-v1.2.0",
       "product_id": "jlpt-kanji-lab",
       "title": "JLPT Kanji LAB 2136",
@@ -83,6 +109,40 @@
       }
     },
     {
+      "learner": {
+        "version": "v2.0.0-RC2",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "01·02 기본 회상",
+            "text": "단어·표현을 익힌 뒤 문맥에서 답을 떠올립니다."
+          },
+          {
+            "title": "03 혼동 구별",
+            "text": "해당 급수에 있는 비교 카드만 골라 차이를 설명합니다. N2 어휘 03은 없습니다."
+          },
+          {
+            "title": "04·05 적용",
+            "text": "객관식으로 확인하고 타이핑으로 산출합니다. 90은 확장 참고입니다."
+          }
+        ],
+        "change_title": "RC1 → RC2 변경",
+        "changes": [
+          "어휘 문맥 544장·혼동 비교 13장·객관식 301장을 추가했습니다.",
+          "객관식 즉시 피드백과 문법·어휘 디자인을 통일했습니다. 기존 노트·카드 식별자는 보존했습니다."
+        ],
+        "issues": [
+          {
+            "title": "90 참고 어휘의 한국어 뜻 5건",
+            "kind": "내용 검토 대기",
+            "impact": "의심 항목을 원본대로 보존한 검토 기록입니다. 오답 확정이나 전수 감수 완료를 뜻하지 않습니다.",
+            "workaround": "90 확장 참고의 뜻이 의심되면 사전·원문을 대조하고 NoteID를 제보해 주세요.",
+            "status": "검토 대기"
+          }
+        ],
+        "source": ".github/release-notes/jlpt-vocabulary-grammar-v2.0.0-rc2.md"
+      },
+      "qa_reported_at": "2026-10-02",
       "id": "jlpt-vocabulary-grammar-v2.0.0-rc2",
       "product_id": "jlpt-vocabulary-grammar-lab",
       "title": "JLPT Vocabulary & Grammar LAB",
@@ -160,6 +220,32 @@
       }
     },
     {
+      "learner": {
+        "version": "v1.1.0-RC2",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "CORE 먼저",
+            "text": "업무 목표의 핵심 표현을 회상합니다."
+          },
+          {
+            "title": "APPLICATION·DISCRIMINATION",
+            "text": "문맥 생산과 표현 구별을 연습합니다."
+          },
+          {
+            "title": "실무에 적용",
+            "text": "메일·회의·보고 장면에 맞는 표현을 직접 말합니다."
+          }
+        ],
+        "change_title": "RC1 → RC2 변경",
+        "changes": [
+          "표현·예문에 후리가나와 권장 표현 패널을 추가했습니다.",
+          "앞면은 업무 문맥과 질문, 뒷면은 핵심 답과 선택 기준 중심으로 바꿨습니다."
+        ],
+        "issues": [],
+        "source": ".github/release-notes/business-japanese-v1.1.0-rc2.md"
+      },
+      "qa_reported_at": "2026-10-02",
       "id": "business-japanese-v1.1.0-rc2",
       "product_id": "business-japanese",
       "title": "Business Japanese LAB",
@@ -236,6 +322,32 @@
       }
     },
     {
+      "learner": {
+        "version": "v1.1.0-RC3",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "혼동 비교",
+            "text": "의미·접속·문맥의 차이를 설명합니다."
+          },
+          {
+            "title": "문맥 적용",
+            "text": "네 선택지 중 답을 고르고 근거를 말합니다."
+          },
+          {
+            "title": "오답 이유 확인",
+            "text": "내 선택과 정답을 비교해 구별 기준을 다시 회상합니다."
+          }
+        ],
+        "change_title": "RC2 → RC3 변경",
+        "changes": [
+          "문맥 적용 500장의 선택지를 클릭할 수 있게 바꿨습니다.",
+          "앞면 선택을 뒷면에 이어 보여주고 내 선택과 선택지별 이유를 강조합니다. 누적 선택 기록 기능은 아닙니다."
+        ],
+        "issues": [],
+        "source": ".github/release-notes/jlpt-confusion-context-v1.1.0-rc3.md"
+      },
+      "qa_reported_at": "2026-10-02",
       "id": "jlpt-confusion-context-v1.1.0-rc3",
       "product_id": "jlpt-confusion-context-lab",
       "title": "JLPT Confusion & Context LAB",
@@ -311,6 +423,40 @@
       }
     },
     {
+      "learner": {
+        "version": "v1.2.0-RC1",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "형태 분해",
+            "text": "답을 보기 전에 한자를 구성 요소로 나눕니다."
+          },
+          {
+            "title": "연상 만들기",
+            "text": "생성 원리와 이미지를 보고 본인의 단서를 붙입니다."
+          },
+          {
+            "title": "가리고 회상",
+            "text": "자료를 덮고 형태와 의미를 다시 떠올립니다."
+          }
+        ],
+        "change_title": "배포 구성",
+        "changes": [
+          "TEXT_COMPLETE 학습 덱과 QUIZ 덱을 함께 배포합니다.",
+          "이전판 대비 전체 변경 목록은 등록 문서에서 확정되지 않았습니다."
+        ],
+        "issues": [
+          {
+            "title": "수정 예정 사항 정리 대기",
+            "kind": "사용자 보고",
+            "impact": "현행 버전으로 학습을 이어가는 중이며 구체적 증상·영향 범위는 아직 등록되지 않았습니다.",
+            "workaround": "불편한 카드가 나오면 아래 양식에 NoteID와 증상을 남겨 주세요.",
+            "status": "학습 우선 · 수정 보류"
+          }
+        ],
+        "source": ".github/release-notes/kanji-revolution-v1.2.0-rc1.md"
+      },
+      "qa_reported_at": "2026-10-02",
       "id": "kanji-revolution-v1.2.0-rc1",
       "product_id": "kanji-revolution",
       "title": "Kanji Revolution",
@@ -414,6 +560,40 @@
       "counts": {}
     },
     {
+      "learner": {
+        "version": "v1.2.0-RC5",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "단어·표현 회상",
+            "text": "뜻을 확인하기 전에 스스로 답합니다."
+          },
+          {
+            "title": "예문·결합 표현",
+            "text": "예문에서 함께 쓰이는 표현까지 말해봅니다."
+          },
+          {
+            "title": "실전 적용",
+            "text": "실전문제로 확인하고 헷갈린 표현을 다시 봅니다."
+          }
+        ],
+        "change_title": "배포 구성",
+        "changes": [
+          "단어·숙어·부사 학습 덱과 실제 템플릿 미리보기를 제공합니다.",
+          "RC5의 세부 콘텐츠 변경 목록은 등록 문서에서 확정되지 않았습니다."
+        ],
+        "issues": [
+          {
+            "title": "수정 예정 사항 정리 대기",
+            "kind": "사용자 보고",
+            "impact": "현행 버전으로 학습을 이어가는 중이며 구체적 증상·영향 범위는 아직 등록되지 않았습니다.",
+            "workaround": "불편한 카드가 나오면 아래 양식에 NoteID와 증상을 남겨 주세요.",
+            "status": "학습 우선 · 수정 보류"
+          }
+        ],
+        "source": ".github/release-notes/toeic-vocabulary-v1.2.0-rc5.md"
+      },
+      "qa_reported_at": "2026-10-02",
       "id": "toeic-vocabulary-v1.2.0-rc5",
       "product_id": "toeic-lab",
       "title": "TOEIC LAB",
@@ -493,6 +673,40 @@
       "counts": {}
     },
     {
+      "learner": {
+        "version": "v2.0.0",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "문제 선택",
+            "text": "PART 5·6·7에서 연습 범위를 고릅니다."
+          },
+          {
+            "title": "답과 근거 결정",
+            "text": "선택지를 고르고 지문이나 문법 근거를 찾습니다."
+          },
+          {
+            "title": "해설 대조",
+            "text": "정답·해석·오답 이유를 비교하고 추가 확인 표시를 살펴봅니다."
+          }
+        ],
+        "change_title": "배포 구성",
+        "changes": [
+          "PART 5·6·7 총 1,000문항으로 구성됩니다.",
+          "선택 → 채점 → 정답·해석·해설 확인과 같은 카드 앞뒷면의 선택 전달을 지원합니다."
+        ],
+        "issues": [
+          {
+            "title": "일부 AI 해설·OCR 문맥·근거 연결",
+            "kind": "내용 검토 대기",
+            "impact": "추가 확인 권장으로 표시된 해설의 내용 검토가 남아 있습니다.",
+            "workaround": "해설에 의문이 있으면 원문·정답 근거와 대조하고 해당 NoteID를 제보해 주세요.",
+            "status": "검토 대기"
+          }
+        ],
+        "source": ".github/release-notes/toeic-rc-vol3-ai-interactive-v2.0.0.md"
+      },
+      "qa_reported_at": "2026-10-02",
       "id": "toeic-rc-vol3-ai-interactive-v2.0.0",
       "product_id": "toeic-rc",
       "title": "TOEIC RC Vol.3",
@@ -569,6 +783,32 @@
       "counts": {}
     },
     {
+      "learner": {
+        "version": "v1.0.0",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "공식 회상",
+            "text": "공식과 단위를 함께 말합니다."
+          },
+          {
+            "title": "조건 설명",
+            "text": "공식이 성립하는 조건과 개념을 설명합니다."
+          },
+          {
+            "title": "근거 확인",
+            "text": "틀린 부분은 핵심 설명과 원본 확인 영역에서 보완합니다."
+          }
+        ],
+        "change_title": "등록·검증 정리",
+        "changes": [
+          "v1.0.0 APKG와 실제 카드 템플릿 미리보기의 동일성을 확인했습니다.",
+          "콘텐츠와 카드 식별자를 바꾼 업데이트가 아닌 저장소 이관 기록입니다."
+        ],
+        "issues": [],
+        "source": ".github/release-notes/electrical-engineer-summary-v1.0.0.md"
+      },
+      "qa_reported_at": "2026-10-02",
       "id": "electrical-engineer-summary-v1.0.0",
       "product_id": "electrical-engineer-summary",
       "title": "전기기사 요점정리 LAB",
@@ -688,6 +928,32 @@
       }
     },
     {
+      "learner": {
+        "version": "v1.0.0",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "범위 선택",
+            "text": "과목과 LegacyFixedPaper / AIPractice를 구분해 고릅니다."
+          },
+          {
+            "title": "풀이 과정",
+            "text": "정답 번호보다 공식·판단 근거를 먼저 정리합니다."
+          },
+          {
+            "title": "해설 후 재풀이",
+            "text": "오답 포인트를 확인하고 정답을 가린 채 다시 풀어봅니다."
+          }
+        ],
+        "change_title": "등록·검증 정리",
+        "changes": [
+          "v1.0.0의 2,250노트·카드와 실제 CBT 미리보기를 등록했습니다.",
+          "LegacyFixedPaper와 AIPractice의 구분을 유지했습니다."
+        ],
+        "issues": [],
+        "source": ".github/release-notes/electrical-engineer-cbt-v1.0.0.md"
+      },
+      "qa_reported_at": "2026-10-02",
       "id": "electrical-engineer-cbt-v1.0.0",
       "product_id": "electrical-engineer-cbt",
       "title": "전기기사 CBT",
@@ -765,6 +1031,40 @@
       }
     },
     {
+      "learner": {
+        "version": "v0.9.0",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "용어·절차",
+            "text": "핵심 정의와 심사 순서를 익힙니다."
+          },
+          {
+            "title": "판정 근거",
+            "text": "어떤 근거를 확인해야 하는지 회상합니다."
+          },
+          {
+            "title": "상황 적용",
+            "text": "심사 상황에서 필요한 판단 순서와 혼동 항목을 점검합니다."
+          }
+        ],
+        "change_title": "설치 경로 보완",
+        "changes": [
+          "단독 APKG의 크기·SHA-256 일치를 확인해 설치 링크를 열었습니다.",
+          "기존 손상 MASTER PACKAGE ZIP은 계속 차단합니다. APKG 콘텐츠 변경으로 기록하지 않습니다."
+        ],
+        "issues": [
+          {
+            "title": "기존 MASTER PACKAGE ZIP 손상",
+            "kind": "확인된 배포 파일 문제",
+            "impact": "해당 ZIP은 설치용으로 사용할 수 없습니다.",
+            "workaround": "다운로드 목록의 EPD_Anki_MASTER_v0.9.0.apkg를 사용합니다.",
+            "status": "APKG 대체 경로 제공 · ZIP 차단 유지"
+          }
+        ],
+        "source": ".github/release-notes/epd-anki-v0.9.0.md"
+      },
+      "qa_reported_at": "2026-10-02",
       "id": "epd-anki-v0.9.0",
       "product_id": "epd-auditor",
       "title": "EPD Auditor Anki",
@@ -852,6 +1152,8 @@
       "counts": {}
     },
     {
+      "learner": null,
+      "qa_reported_at": null,
       "id": "kanji-revolution-v1.0.4",
       "product_id": "kanji-revolution",
       "title": "Kanji Revolution",
@@ -918,6 +1220,8 @@
       "counts": {}
     },
     {
+      "learner": null,
+      "qa_reported_at": null,
       "id": "toeic-vocabulary-v1.1.0",
       "product_id": "toeic-lab",
       "title": "TOEIC LAB",
@@ -992,6 +1296,8 @@
       "counts": {}
     },
     {
+      "learner": null,
+      "qa_reported_at": null,
       "id": "kanji-revolution-v1.1.0",
       "product_id": "kanji-revolution",
       "title": "Kanji Revolution",
