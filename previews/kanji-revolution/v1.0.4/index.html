@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Kanji Revolution TEXT COMPLETE v1.0.4의 실제 Anki 카드 템플릿과 필기 동작 미리보기">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233f6859'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3E%E6%B1%BD%3C/text%3E%3C/svg%3E">
+  <title>Kanji Revolution TEXT COMPLETE v1.0.4 · 실제 동작 미리보기</title>
+  <style>
+    :root { --bg:#eef0ec; --panel:#ffffff; --ink:#222720; --muted:#657064; --line:#d8ddd5; --accent:#8a795d; --accent2:#3f6859; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:linear-gradient(135deg,#e9ece7,#f6f4ef); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR","Malgun Gothic",sans-serif; }
+    header { max-width:1180px; margin:0 auto; padding:36px 22px 18px; }
+    .eyebrow { color:var(--accent2); font-size:13px; font-weight:850; letter-spacing:.12em; }
+    h1 { margin:8px 0 10px; font-size:clamp(28px,4vw,46px); line-height:1.15; }
+    .lead { max-width:850px; color:var(--muted); line-height:1.75; }
+    .badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+    .badge { padding:7px 11px; border-radius:999px; background:#e4ebe6; color:#315848; font-size:12px; font-weight:800; }
+    main { max-width:1180px; margin:0 auto; padding:0 22px 56px; display:grid; grid-template-columns:minmax(420px,520px) minmax(320px,1fr); gap:24px; align-items:start; }
+    .panel { background:rgba(255,255,255,.92); border:1px solid var(--line); border-radius:24px; box-shadow:0 18px 50px rgba(35,45,38,.10); overflow:hidden; }
+    .controls { padding:16px; border-bottom:1px solid var(--line); background:#fafbf9; }
+    .tabs,.actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .actions { margin-top:10px; }
+    button { appearance:none; border:1px solid #cfd6cd; background:white; color:#2d352e; border-radius:12px; padding:10px 13px; font-weight:800; cursor:pointer; }
+    button:hover { border-color:var(--accent); }
+    button.active,button.primary { background:var(--accent); border-color:var(--accent); color:white; }
+    .screen { padding:14px; background:#dfe3dc; }
+    iframe { width:100%; height:760px; border:0; border-radius:18px; background:white; box-shadow:0 8px 24px rgba(27,34,28,.16); }
+    .guide { padding:24px; }
+    .guide h2 { margin:0 0 8px; font-size:22px; }
+    .guide h3 { margin:26px 0 8px; font-size:16px; }
+    .guide p,.guide li { color:var(--muted); line-height:1.72; }
+    .guide ol { padding-left:22px; }
+    .note { padding:14px 15px; border-radius:14px; background:#f7f7f6; border-left:4px solid var(--accent); }
+    .state { margin-top:14px; padding:12px 14px; border-radius:12px; background:#edf4ef; color:#315848; font-weight:750; }
+    .facts { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px; }
+    .fact { padding:13px; border:1px solid var(--line); border-radius:14px; }
+    .fact b { display:block; font-size:18px; margin-top:3px; }
+    @media (max-width:900px) { main { grid-template-columns:1fr; } iframe { height:720px; } }
+    @media (max-width:520px) { header,main { padding-left:12px; padding-right:12px; } main { display:block; } .guide { margin-top:16px; } iframe { height:680px; } .facts { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">APKG ACTUAL TEMPLATE PREVIEW</div>
+  <h1>Kanji Revolution TEXT COMPLETE v1.0.4</h1>
+  <p class="lead">APKG 안의 실제 HTML·CSS·JavaScript와 실제 노트 데이터를 그대로 꺼내 만든 오프라인 미리보기입니다. 아래 화면은 재설계 시안이 아니라 배포 덱의 동작을 브라우저에서 재현한 것입니다.</p>
+  <div class="badges"><span class="badge">10,975 notes</span><span class="badge">13,290 cards</span><span class="badge">4,645 media</span><span class="badge">BROWSER TEST PASS</span><span class="badge">DEVICE NOT TESTED</span></div>
+</header>
+<main>
+  <section class="panel">
+    <div class="controls">
+      <div class="tabs">
+        <button data-kind="read" class="active">한자 읽기</button>
+        <button data-kind="write">한자 쓰기</button>
+        <button data-kind="word">단어 읽기</button>
+      </div>
+      <div class="actions">
+        <button data-side="front" class="active">앞면</button>
+        <button data-side="back" class="primary">정답 보기</button>
+        <button id="theme">다크 모드</button>
+      </div>
+      <div id="state" class="state">한자 읽기 · 앞면</div>
+    </div>
+    <div class="screen"><iframe id="cardFrame" title="실제 Anki 카드 화면" src="cards/read_front.html"></iframe></div>
+  </section>
+  <aside class="panel guide">
+    <h2 id="guideTitle">한자 읽기</h2>
+    <p id="guideIntro">한자를 보고 음독 또는 훈독을 먼저 떠올린 뒤 정답을 확인합니다.</p>
+    <h3>실제 동작</h3>
+    <ol id="steps">
+      <li>앞면에서 큰 한자만 보고 읽기를 회상합니다.</li>
+      <li><b>정답 보기</b>를 눌러 읽기와 한국어 훈음을 확인합니다.</li>
+      <li>기억 그림, 전체 단어 목록, 획순, 교재 원문은 뒷면에서 확인합니다.</li>
+    </ol>
+    <div class="note" id="note">정답을 자동 판정하지 않습니다. 사용자가 말하거나 머릿속으로 회상한 뒤 Anki의 평가 버튼으로 복습 결과를 기록하는 구조입니다.</div>
+    <div class="facts">
+      <div class="fact">표본 한자<b>汽</b></div>
+      <div class="fact">표본 단어<b>汽船</b></div>
+      <div class="fact">카드 유형<b>3종</b></div>
+      <div class="fact">필기 저장<b>세션 단위</b></div>
+    </div>
+    <h3>미리보기 한계</h3>
+    <p>브라우저 렌더링은 실제 템플릿 동작을 확인하는 정적·상호작용 검사입니다. Anki Desktop 가져오기, 기존 버전 위 업데이트, iPhone/iPad의 터치·동기화는 별도 Gate로 남습니다.</p>
+  </aside>
+</main>
+<script>
+  const frame = document.getElementById('cardFrame');
+  const state = document.getElementById('state');
+  const guideTitle = document.getElementById('guideTitle');
+  const guideIntro = document.getElementById('guideIntro');
+  const steps = document.getElementById('steps');
+  const note = document.getElementById('note');
+  const guides = {
+    read: {
+      title:'한자 읽기', intro:'한자를 보고 음독 또는 훈독을 먼저 떠올린 뒤 정답을 확인합니다.',
+      steps:['앞면에서 큰 한자만 보고 읽기를 회상합니다.','정답 보기를 눌러 읽기와 한국어 훈음을 확인합니다.','기억 그림, 전체 단어 목록, 획순, 교재 원문을 펼쳐 확인합니다.'],
+      note:'읽기는 자동 채점하지 않습니다. 실제 Anki에서 사용자가 자신의 회상 결과를 평가합니다.'
+    },
+    write: {
+      title:'한자 쓰기', intro:'한국어 훈음을 보고 한자를 직접 쓰고 정답과 비교하는 카드입니다.',
+      steps:['필기 시작을 누르면 캔버스가 입력 상태로 바뀝니다.','마우스·손가락·펜으로 쓰고 되돌리기 또는 지우기를 사용할 수 있습니다.','정답 보기 후 내 필기를 불러오거나 정답 겹쳐보기로 형태를 비교합니다.'],
+      note:'필기는 자동 채점하지 않습니다. 같은 앞면→뒷면 동안 획을 보존하며 다음 복습에서는 초기화됩니다.'
+    },
+    word: {
+      title:'단어 읽기', intro:'교재에 수록된 단어 표기를 보고 읽기와 한국어 뜻을 회상합니다.',
+      steps:['앞면의 일본어 단어를 보고 읽기와 뜻을 말합니다.','정답 보기에서 읽기·뜻과 연결 한자를 확인합니다.','기억 그림과 교재 원문을 펼쳐 한자 학습 맥락을 다시 연결합니다.'],
+      note:'단어 카드는 해당 한자 ConceptID와 연결되어 있지만 별도 복습 단위로 동작합니다.'
+    }
+  };
+  let kind='read', side='front', dark=false, padState=null;
+  function applyTheme(){
+    try { frame.contentDocument.body.classList.toggle('nightMode',dark); } catch(e) {}
+  }
+  function syncPad(){
+    if(kind==='write' && side==='back' && padState){
+      frame.contentWindow.postMessage({type:'kr-pad-sync',note:'KR-N-K-V01-0010:write',strokes:padState.strokes||[]},'*');
+    }
+  }
+  function load(){
+    frame.src='cards/'+kind+'_'+side+'.html';
+    state.textContent=guides[kind].title+' · '+(side==='front'?'앞면':'뒷면');
+    guideTitle.textContent=guides[kind].title;
+    guideIntro.textContent=guides[kind].intro;
+    steps.innerHTML=guides[kind].steps.map(x=>'<li>'+x+'</li>').join('');
+    note.textContent=guides[kind].note;
+    document.querySelectorAll('[data-kind]').forEach(b=>b.classList.toggle('active',b.dataset.kind===kind));
+    document.querySelectorAll('[data-side]').forEach(b=>b.classList.toggle('active',b.dataset.side===side));
+  }
+  window.addEventListener('message',event=>{
+    if(event.source===frame.contentWindow && event.data && event.data.type==='kr-pad') padState=event.data;
+  });
+  frame.addEventListener('load',()=>{ applyTheme(); setTimeout(syncPad,120); });
+  document.querySelectorAll('[data-kind]').forEach(b=>b.addEventListener('click',()=>{kind=b.dataset.kind;side='front';padState=null;load();}));
+  document.querySelectorAll('[data-side]').forEach(b=>b.addEventListener('click',()=>{side=b.dataset.side;load();}));
+  document.getElementById('theme').addEventListener('click',e=>{dark=!dark;e.currentTarget.textContent=dark?'라이트 모드':'다크 모드';applyTheme();});
+</script>
+</body>
+</html>

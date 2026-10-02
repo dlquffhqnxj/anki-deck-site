@@ -1,0 +1,14 @@
+{
+  "schema_version": "v1.0.0",
+  "product_id": "TOEIC_LAB",
+  "release_version": "1.2.0-RC5",
+  "preview_status": "EXACT_CAPTURE",
+  "source_release_tag": "TOEIC_LAB_v1.2.0-RC5_Vocabulary",
+  "source_asset": "TOEIC_LAB_v1.2.0-RC5_DELIVERY.zip",
+  "source_asset_size": 17176515,
+  "source_asset_sha256": "c005f87c89cd6c99bfb108ef7f8bdd6480c70a1780dd0d6d3e9e443c03a81508",
+  "source_member": "TOEIC_LAB_v1.2.0-RC5_PREVIEW.html",
+  "generation_method": "Release DELIVERY ZIP의 실제 RC5 템플릿 미리보기 HTML을 추출해 index.html로 저장",
+  "output_preview": "index.html",
+  "output_preview_sha256": "f25a93c4f3b318c7bba169a537c4192b1dfd10df5dffa94f08b9532a631aec62"
+}

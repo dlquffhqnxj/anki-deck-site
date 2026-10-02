@@ -1,0 +1,23 @@
+{
+  "schema_version": "v1.0.0",
+  "product_id": "electrical-engineer-summary",
+  "release_version": "v1.0.0",
+  "preview_status": "EXTRACTED_UNVERIFIED",
+  "generated_at": "2026-09-21",
+  "source_apkg": "Electrical_Engineer_Summary_LAB_v1.0.0.apkg",
+  "source_apkg_size": 155590711,
+  "source_apkg_sha256": "d091d22a596618a9f1abfb91093b14c1131fbf7312e37706e98a33b6d43a343e",
+  "database_name": "collection.anki2",
+  "sqlite_quick_check": "ok",
+  "selection": [
+    {
+      "model": "전기기사 요점정리 LAB v1",
+      "template": "요점정리",
+      "template_ordinal": 0,
+      "note_id": 1788314294371,
+      "display_id": "EE-SUM-EM-90-0001"
+    }
+  ],
+  "output_preview": "index.html",
+  "output_preview_sha256": "f3173db995cb142db1cba6ffa75c925eb4f83a719a00e8301eec7c7e8dcdc5e0"
+}

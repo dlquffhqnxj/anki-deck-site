@@ -1,0 +1,32 @@
+{
+  "schema_version": "v1.0.0",
+  "product_id": "jlpt-vocabulary-grammar-lab",
+  "release_version": "v2.0.0",
+  "stage": "RC2",
+  "generated_at": "2026-09-21",
+  "source_preview": "JLPT_Vocabulary_Grammar_LAB_v2.0.0-RC2_PREVIEW.html",
+  "source_preview_sha256": "a0e32917b861af90a5a06e64776564487c03f26a016e6fd726ca14c7e26e27cc",
+  "source_card_count": 20,
+  "selection": {
+    "strategy": "release_curated_preview",
+    "levels": [
+      "N5",
+      "N3",
+      "N1",
+      "QA",
+      "GRAMMAR"
+    ],
+    "card_types": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "QA",
+      "GRAMMAR"
+    ]
+  },
+  "output_preview": "index.html",
+  "output_preview_sha256": "f6c6bc18b9c1e9c983e2d2970c93725d24b936e5bd664170c9da18c0d7445d59",
+  "normalization": "UTF-8 text mirror with one trailing LF added for Git text normalization"
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": "v1.0.0",
+  "product_id": "jlpt-confusion-context-lab",
+  "release_version": "v1.1.0",
+  "stage": "RC3",
+  "generated_at": "2026-09-21",
+  "source_preview": "JLPT_Confusion_Context_LAB_N1-N5_PREVIEW_v1.1.0_RC3.html",
+  "source_preview_sha256": "81620ea397e263b8636409a2e7d700d61e8f091cf204670ae048f767319ffe8b",
+  "source_note_count": 750,
+  "selection": {
+    "strategy": "deterministic_round_robin",
+    "group_by": [
+      "JLPT",
+      "CardType"
+    ],
+    "selected_note_count": 20,
+    "note_ids": [
+      "JCC-N-N1-CMP-0001",
+      "JCC-N-N1-CTX-0001-1",
+      "JCC-N-N2-CMP-0001",
+      "JCC-N-N2-CTX-0001-1",
+      "JCC-N-N3-CMP-0001",
+      "JCC-N-N3-CTX-0001-1",
+      "JCC-N-N4-CMP-0001",
+      "JCC-N-N4-CTX-0001-1",
+      "JCC-N-N5-CMP-0001",
+      "JCC-N-N5-CTX-0001-1",
+      "JCC-N-N1-CMP-0002",
+      "JCC-N-N1-CTX-0001-2",
+      "JCC-N-N2-CMP-0002",
+      "JCC-N-N2-CTX-0001-2",
+      "JCC-N-N3-CMP-0002",
+      "JCC-N-N3-CTX-0001-2",
+      "JCC-N-N4-CMP-0002",
+      "JCC-N-N4-CTX-0001-2",
+      "JCC-N-N5-CMP-0002",
+      "JCC-N-N5-CTX-0001-2"
+    ]
+  },
+  "output_preview": "index.html",
+  "output_preview_sha256": "686b70de81858e8d44e246b476e84c00cf893195e8380e313191a4e297c03df6"
+}

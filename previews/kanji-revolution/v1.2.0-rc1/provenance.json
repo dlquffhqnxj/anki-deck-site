@@ -1,0 +1,13 @@
+{
+  "schema_version": "v1.0.0",
+  "product_id": "KANJI_REVOLUTION",
+  "release_version": "1.2.0-RC1",
+  "preview_status": "EXACT_CAPTURE",
+  "source_release_tag": "JLPT_Kanji_Revolution_V1.2.0",
+  "source_asset": "Kanji_Revolution_v1.2.0-RC1_PREVIEW.html",
+  "source_asset_size": 96944,
+  "source_asset_sha256": "98a805948b6814c652f41d3cfb058025767ebf79a8c81ad73654487aae7153d7",
+  "generation_method": "GitHub Release에 등록된 RC1 미리보기 자산을 바이트 변경 없이 복사",
+  "output_preview": "index.html",
+  "output_preview_sha256": "98a805948b6814c652f41d3cfb058025767ebf79a8c81ad73654487aae7153d7"
+}

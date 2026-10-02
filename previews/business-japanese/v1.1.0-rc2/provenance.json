@@ -1,0 +1,43 @@
+{
+  "schema_version": "v1.0.0",
+  "product_id": "business-japanese",
+  "release_version": "v1.1.0",
+  "stage": "RC2",
+  "generated_at": "2026-09-21",
+  "source_preview": "Business_Japanese_LAB_PREVIEW_v1.1.0_RC2.html",
+  "source_preview_sha256": "caba96e40afc8b003f28ac3c2cd4d869cfff39cfa5ce0a057d5500deb3d047cc",
+  "source_note_count": 1200,
+  "selection": {
+    "strategy": "deterministic_round_robin",
+    "group_by": [
+      "DeckPath",
+      "Layer"
+    ],
+    "selected_note_count": 21,
+    "note_ids": [
+      "BJL-N-GRAMMAR-0001",
+      "BJL-N-VOCAB-0001",
+      "BJL-N-CORRECTION-0001",
+      "BJL-N-CORRECTION-APP-0001",
+      "BJL-N-CORRECTION-DISC-0001",
+      "BJL-N-SCENARIO-APP-0001",
+      "BJL-N-SCENARIO-0001",
+      "BJL-N-SCENARIO-DISC-0001",
+      "BJL-N-SCENARIO-APP-0029",
+      "BJL-N-SCENARIO-0029",
+      "BJL-N-SCENARIO-DISC-0029",
+      "BJL-N-GRAMMAR-0002",
+      "BJL-N-VOCAB-0002",
+      "BJL-N-CORRECTION-0002",
+      "BJL-N-CORRECTION-APP-0002",
+      "BJL-N-CORRECTION-DISC-0002",
+      "BJL-N-SCENARIO-APP-0002",
+      "BJL-N-SCENARIO-0002",
+      "BJL-N-SCENARIO-DISC-0002",
+      "BJL-N-SCENARIO-APP-0030",
+      "BJL-N-SCENARIO-0030"
+    ]
+  },
+  "output_preview": "index.html",
+  "output_preview_sha256": "7e00a16856d775492fc28448e97bdfc99a1ff64daf9f330f064c48b315bdc39f"
+}

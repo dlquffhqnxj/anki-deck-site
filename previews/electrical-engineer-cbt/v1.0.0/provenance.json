@@ -1,0 +1,23 @@
+{
+  "schema_version": "v1.0.0",
+  "product_id": "electrical-engineer-cbt",
+  "release_version": "v1.0.0",
+  "preview_status": "EXTRACTED_UNVERIFIED",
+  "generated_at": "2026-09-21",
+  "source_apkg": "Electrical_Engineer_CBT_FULL_2016-2026_v1.0.0.apkg",
+  "source_apkg_size": 48148636,
+  "source_apkg_sha256": "a2ba9da9bf052df4d174d0bc3eba3104f18698d5646d37a3f0d3441d0f37884f",
+  "database_name": "collection.anki2",
+  "sqlite_quick_check": "ok",
+  "selection": [
+    {
+      "model": "EE_CBT_Interactive_v1",
+      "template": "CBT 선택형",
+      "template_ordinal": 0,
+      "note_id": 1788400002001,
+      "display_id": "EE-CBT-PRACTICE-2026-EM-001"
+    }
+  ],
+  "output_preview": "index.html",
+  "output_preview_sha256": "3f37cc5b6d03a9a6162991e83c9979df075e9e7d398842303b360e7ffb10ad86"
+}

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <base href="../media/">
+  <title>단어 읽기 · back</title>
+  <style>
+:root{color-scheme:light;--kr-bg:#f3f0e9;--kr-surface:#fffdfa;--kr-soft:#f8f5ef;--kr-text:#242722;--kr-muted:#686c64;--kr-line:#dedbd2;--kr-green:#294f3c;--kr-accent:#a9583e;--kr-pale:#f6e9e2}
+.nightMode{color-scheme:dark;--kr-bg:#20221f;--kr-surface:#292c27;--kr-soft:#30352e;--kr-text:#f0eee8;--kr-muted:#b5b9af;--kr-line:#4b5247;--kr-green:#bed4bb;--kr-accent:#e1ad96;--kr-pale:#3b302c}
+*{box-sizing:border-box}.card{margin:0;background:var(--kr-bg);color:var(--kr-text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans CJK KR","Malgun Gothic",sans-serif;font-size:17px;line-height:1.65;text-align:left;overflow-wrap:anywhere}
+.kr-card{max-width:640px;margin:0 auto;padding:16px 14px 28px;color:var(--kr-text)}
+.kr-meta{display:flex;gap:7px;align-items:center;margin:0 0 12px;font-size:12px;color:var(--kr-muted);letter-spacing:.02em}.kr-brand{color:var(--kr-green);font-weight:700}.kr-dot{color:var(--kr-line)}.kr-pill{padding:3px 10px;border:1px solid var(--kr-line);border-radius:30px;font-size:12px}
+.kr-hero,.kr-section{background:var(--kr-surface);border:1px solid var(--kr-line);border-radius:18px;padding:22px;margin:0 0 14px}.kr-hero{text-align:center;padding:30px 20px;box-shadow:0 5px 16px #24272206}.kr-prompt{font-size:15px;color:var(--kr-muted);margin:0 0 18px}.kr-glyph{font-family:"Noto Sans CJK JP","Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;font-size:clamp(70px,22vw,108px);font-weight:500;line-height:1.2;margin:20px 0 26px;letter-spacing:.04em}.kr-word-prompt{font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif;font-size:clamp(36px,11vw,64px);line-height:1.55;margin:25px 0}.kr-write-hint{font-size:32px;font-weight:650;line-height:1.4;margin:12px 0 22px}.kr-footnote{font-size:12px;color:var(--kr-muted);margin:12px 0 0}.kr-answer{display:grid;grid-template-columns:118px minmax(0,1fr);gap:20px;align-items:center;text-align:left}.kr-answer .kr-glyph{font-size:86px;margin:0;text-align:center}.kr-answer-main{font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif;font-size:26px;color:var(--kr-green);font-weight:700;line-height:1.5}.kr-answer-meaning{font-size:18px;margin-top:6px}.kr-small-title{display:block;margin:0 0 8px;color:var(--kr-muted);font-size:12px;font-weight:600;letter-spacing:.04em}.kr-section h3{font-size:14px;margin:0 0 12px;color:var(--kr-green)}.kr-reading-row{display:grid;grid-template-columns:42px 1fr;gap:10px;padding:7px 0}.kr-reading-row label{font-size:12px;color:var(--kr-muted);padding-top:3px}.kr-ja{font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif}.kr-facts{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--kr-muted);margin-top:12px}.kr-facts span{background:var(--kr-soft);padding:4px 8px;border-radius:7px}.kr-memory{background:var(--kr-soft);border-left:3px solid var(--kr-green)}.kr-memory p{margin:0;font-size:16px}.kr-memory .kr-footnote{font-size:11px;margin-top:10px}.kr-word-list{display:grid;gap:8px}.kr-word{display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-bottom:1px solid var(--kr-line);padding:10px 0}.kr-word:last-child{border:0}.kr-word ruby{font-size:22px;white-space:normal;font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif}.kr-word rt{font-size:11px;color:var(--kr-green)}.kr-word span{font-size:14px;color:var(--kr-muted);text-align:right}
+.kr-card details{margin-bottom:12px;background:var(--kr-surface);border:1px solid var(--kr-line);border-radius:14px;overflow:hidden}.kr-card summary{cursor:pointer;padding:13px 16px;font-size:14px;font-weight:600;list-style-position:inside;color:var(--kr-green)}.kr-detail-body{padding:0 16px 16px}.kr-card img{max-width:100%;height:auto;display:block}.kr-source img{border-radius:9px;background:white}.kr-card a{color:var(--kr-accent);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}.kr-source-meta{font-size:12px;color:var(--kr-muted);margin:8px 0;word-break:keep-all}.kr-tools{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:12px 0}.kr-card button{appearance:none;border:1px solid var(--kr-line);border-radius:10px;background:var(--kr-surface);color:var(--kr-green);padding:9px 13px;font:600 13px/1.3 -apple-system,BlinkMacSystemFont,"Noto Sans CJK KR",sans-serif;cursor:pointer;touch-action:manipulation}.kr-card button.primary{background:var(--kr-green);color:var(--kr-surface)}.kr-card button:focus-visible,.kr-card summary:focus-visible{outline:3px solid var(--kr-accent);outline-offset:3px}.kr-card button[aria-pressed="true"]{background:var(--kr-pale);border-color:var(--kr-accent)}
+.kr-pad{margin-top:14px}.kr-pad[hidden],.kr-ghost[hidden]{display:none!important}.kr-pad-board{position:relative;width:min(286px,100%);aspect-ratio:1;margin:0 auto;border:1px solid var(--kr-line);border-radius:14px;overflow:hidden;background:var(--kr-surface)}.kr-pad-board:before,.kr-pad-board:after{content:"";position:absolute;pointer-events:none;opacity:.7;z-index:0}.kr-pad-board:before{left:50%;height:100%;border-left:1px dashed var(--kr-line)}.kr-pad-board:after{top:50%;width:100%;border-top:1px dashed var(--kr-line)}.kr-pad canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;z-index:2;cursor:crosshair;user-select:none;-webkit-user-select:none}.kr-ghost{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif;font-size:200px;color:var(--kr-accent);opacity:.18;line-height:1;pointer-events:none}.kr-pad-status{text-align:center;color:var(--kr-muted);font-size:12px;margin:6px 0}.kr-stroke img{width:260px;max-width:100%;margin:8px auto;background:#fff;border-radius:12px}.kr-license{font-size:11px;line-height:1.6;color:var(--kr-muted)}.kr-audit{font-size:11px;line-height:1.8;color:var(--kr-muted);padding-top:7px}
+@media(max-width:480px){.kr-card{padding:12px 10px 24px}.kr-hero,.kr-section{padding:20px 16px}.kr-answer{grid-template-columns:88px minmax(0,1fr);gap:12px}.kr-answer .kr-glyph{font-size:76px}.kr-answer-main{font-size:23px}.kr-word{gap:10px}.kr-word ruby{font-size:20px}.kr-word span{font-size:13px}.kr-write-hint{font-size:30px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* v0.2.0: textbook illustration and explanation are a single visible unit. */
+.kr-mnemonic{display:grid;grid-template-columns:144px minmax(0,1fr);gap:18px;align-items:center;margin:0;padding:4px 0 12px}
+.kr-mnemonic+.kr-mnemonic{padding-top:18px;margin-top:10px;border-top:1px solid var(--kr-line)}
+.kr-mnemonic>img{width:144px;max-width:100%;height:auto;border-radius:12px;background:#fff;border:1px solid var(--kr-line)}
+.kr-mnemonic figcaption{min-width:0}.kr-memory-origin{display:block;color:var(--kr-green);font-size:11px;font-weight:650;margin:0 0 8px;letter-spacing:.04em}
+.kr-mnemonic figcaption p{font-size:17px;line-height:1.8;word-break:keep-all;overflow-wrap:anywhere;margin:0}
+.kr-mnemonic small{display:block;font-size:11px;color:var(--kr-muted);margin-top:12px}
+.kr-memory-content{margin-top:3px}.kr-memory{border-left-width:3px}.kr-memory .kr-footnote{line-height:1.6}
+.kr-parent-source{margin-bottom:14px}.kr-parent-source>p,.kr-word-origins{font-size:12px;color:var(--kr-muted)}
+.kr-card[data-kind="word"] .kr-answer{grid-template-columns:auto minmax(0,1fr)}
+.kr-card[data-kind="word"] .kr-answer .kr-glyph{font-size:44px;max-width:220px;line-height:1.4}
+@media(max-width:480px){.kr-mnemonic{grid-template-columns:110px minmax(0,1fr);gap:13px;align-items:start}.kr-mnemonic>img{width:110px}.kr-mnemonic figcaption p{font-size:15px;line-height:1.7}.kr-card[data-kind="word"] .kr-answer .kr-glyph{max-width:130px;font-size:36px}}
+@media(max-width:335px){.kr-mnemonic{grid-template-columns:1fr}.kr-mnemonic>img{width:128px;margin:0 auto}.kr-mnemonic figcaption p{font-size:16px}}
+
+/* v0.2.1: keep the writing area discoverable; drawing is opt-in. */
+.kr-pad canvas{pointer-events:none;touch-action:auto;cursor:default}
+.kr-pad.kr-active canvas{pointer-events:auto;touch-action:none;cursor:crosshair}
+.kr-pad.kr-active .kr-pad-board{border-color:var(--kr-green);box-shadow:0 0 0 2px var(--kr-pale)}
+.kr-card button:disabled{opacity:.55;cursor:default}
+.kr-pad-status{min-height:20px}
+
+
+/* v1.0.2: ordinary image elements only; no image-coordinate clipping. */
+.kr-stable-media{display:block;max-width:100%;height:auto;object-fit:contain}
+.kr-source-text{background:#fff;border-radius:3px}
+.kr-answer-main>.kr-stable-media,.kr-word-prompt>.kr-stable-media,.kr-write-hint>.kr-stable-media{margin:6px auto}
+.kr-glyph>.kr-stable-media{margin:0 auto;border-radius:8px}
+.kr-ghost>.kr-stable-media{width:78%;margin:auto}
+.kr-scan-word-row{padding:11px 0;border-bottom:1px solid var(--kr-line)}
+.kr-scan-word-row:last-child{border:0}
+.kr-mnemonic figcaption .kr-source-text{width:auto;max-width:100%}
+</style>
+  <style>
+    html { min-height: 100%; background: #eceeea; }
+    body.card { margin: 0; min-height: 100%; padding: 18px 12px 42px; box-sizing: border-box; }
+    body.card.nightMode { background: #101413; }
+  </style>
+</head>
+<body class="card">
+<div class="kr-card" data-note="KR-N-W-V01-6300fdc42510" data-kind="word" data-side="back"><div class="kr-meta"><span class="kr-brand">한자혁명</span><span class="kr-dot">/</span><span>1권</span><span class="kr-pill">단어 읽기</span></div><section class="kr-hero"><span class="kr-small-title">정답 · 읽기와 뜻</span><div class="kr-answer-main" lang="ja">きせん</div><div class="kr-word-prompt" lang="ja">汽船</div><div class="kr-answer-meaning">기선</div></section><section class="kr-section"><h3>연결 한자</h3><div class="kr-answer"><div class="kr-glyph" lang="ja">汽</div><div>물 끓는 김 기</div></div></section><section class="kr-section kr-memory"><h3>그림으로 이해하고 기억하기</h3><div class="kr-memory-content"><figure class="kr-mnemonic"><img src="kr_v1_0010_illustration.png" alt="汽 교재 기억 그림"><figcaption><span class="kr-memory-origin">교재 그림 + 설명</span><p>끓는 물(氵)에서 김(气)이 모락모락 피어나고 있는 모습.</p><small>1권 · 0010 汽 · 인쇄 22쪽</small></figcaption></figure></div><p class="kr-footnote">교재의 학습용 설명입니다. 역사적 어원 검증과는 구분합니다.</p></section><details class="kr-source"><summary>교재 그림·원문 확인</summary><div class="kr-detail-body"><div class="kr-parent-source"><p>1권 · 0010 汽 · PDF 24쪽 · 인쇄 22쪽</p><img src="kr_v1_0010_source.png" alt="汽 원문 전체"></div><p class="kr-source-meta">일본어 한자혁명1_기울기 보정_OCR.pdf<br>PDF 24쪽 · 인쇄 22쪽 · 항목 0010</p><p class="kr-footnote">제공하신 교재의 해당 항목을 발췌했습니다.</p></div></details><details><summary>출처·검증 정보</summary><div class="kr-detail-body kr-audit">원문 대조: SourceReviewed<br>2026-09-09 v1.0.4: 1권 OCR PDF의 항목 0010을 전사하고 JLPT MAX 참고 덱 및 읽기 사전과 교차 점검. 교재 연상 설명은 역사적 어원 검증과 구분함.<br>자료: SourceTranscribed+ReferenceChecked<br>필기: v0.2.2 사용자 정상 동작 보고. 필기 JS 유지. v1.0.2 실기기 확인 전.<br>2026-09-08 사용자 IMG_6906: 일반 텍스트 + 교재 삽화. 글자 이미지로 텍스트를 대체하지 않음.<br>NoteID: KR-N-W-V01-6300fdc42510<br>ConceptID: KR-C-W-6300fdc42510</div></details><script>(function () {
+  'use strict';
+  var script = document.currentScript;
+  var root = script && script.closest ? script.closest('.kr-card') : null;
+  if (!root) {
+    var roots = document.querySelectorAll('.kr-card[data-note]');
+    root = roots.length ? roots[roots.length - 1] : null;
+  }
+  if (!root || root.getAttribute('data-kr-ready') === '0.2.1') return;
+  root.setAttribute('data-kr-ready', '0.2.1');
+  if (window.__krPadCleanup) window.__krPadCleanup();
+  var key = root.getAttribute('data-note') + ':' + root.getAttribute('data-kind');
+  var side = root.getAttribute('data-side');
+  var pad = root.querySelector('.kr-pad'), canvas = root.querySelector('canvas');
+  var status = root.querySelector('.kr-pad-status');
+  var toggle = root.querySelector('[data-action="enable"]');
+  var active = null, pointerId = null, enabled = false, observer = null;
+  var ctx = null, storageKey = 'kr-pad-v021-last';
+  var state = window.__krPadState;
+  function readSaved() {
+    try { return JSON.parse(window.sessionStorage.getItem(storageKey) || 'null'); }
+    catch (_) { return null; }
+  }
+  function validStrokes(strokes) {
+    return Array.isArray(strokes) && strokes.length <= 500 && strokes.every(function (s) {
+      return Array.isArray(s) && s.length <= 10000 && s.every(function (p) {
+        return p && typeof p.x === 'number' && typeof p.y === 'number' &&
+          isFinite(p.x) && isFinite(p.y) && p.x >= 0 && p.x <= 1 && p.y >= 0 && p.y <= 1;
+      });
+    });
+  }
+  if (canvas) {
+    if (side === 'front') state = { key: key, strokes: [], enabled: false };
+    else if (!state || state.key !== key) state = readSaved();
+    if (!state || state.key !== key || !validStrokes(state.strokes)) state = { key: key, strokes: [], enabled: false };
+    window.__krPadState = state;
+    try { ctx = canvas.getContext('2d'); } catch (_) {}
+  }
+  function persist() {
+    if (!canvas) return;
+    state.enabled = enabled;
+    window.__krPadState = state;
+    try { window.sessionStorage.setItem(storageKey, JSON.stringify(state)); } catch (_) {}
+    if (side === 'front' && window.parent !== window) {
+      window.parent.postMessage({ type: 'kr-pad', note: key, strokes: state.strokes, enabled: enabled }, '*');
+    }
+  }
+  function stop(e) {
+    e.stopPropagation();
+    if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+    if (e.cancelable) e.preventDefault();
+  }
+  function redraw() {
+    if (!canvas || !ctx) return;
+    var r = canvas.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 3);
+    if (!r.width || !r.height) return;
+    canvas.width = Math.round(r.width * d); canvas.height = Math.round(r.height * d);
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.strokeStyle = getComputedStyle(root).getPropertyValue('--kr-text').trim() || '#242722';
+    ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    state.strokes.forEach(function (stroke) {
+      ctx.beginPath();
+      stroke.forEach(function (p, i) {
+        if (i) ctx.lineTo(p.x * r.width, p.y * r.height); else ctx.moveTo(p.x * r.width, p.y * r.height);
+      });
+      if (stroke.length === 1) ctx.lineTo(stroke[0].x * r.width + 0.1, stroke[0].y * r.height + 0.1);
+      ctx.stroke();
+    });
+    if (status) status.textContent = state.strokes.length + '획 · ' + (enabled ? '필기 중 · 직접 비교' : '필기 시작을 눌러 입력');
+  }
+  function setEnabled(value) {
+    enabled = Boolean(value && ctx);
+    if (pad) { pad.hidden = false; pad.classList.toggle('kr-active', enabled); }
+    if (canvas) {
+      canvas.style.pointerEvents = enabled ? 'auto' : 'none';
+      canvas.setAttribute('aria-disabled', String(!enabled));
+    }
+    if (toggle) {
+      toggle.setAttribute('aria-pressed', String(enabled));
+      toggle.textContent = enabled ? '필기 잠금' : '필기 시작';
+      toggle.disabled = !ctx;
+    }
+    if (!enabled) { active = null; pointerId = null; }
+    redraw();
+    if (!ctx && status) status.textContent = '이 화면에서 필기판을 초기화하지 못했습니다. 앱·버전을 확인해 주세요.';
+    persist();
+  }
+  function point(e) {
+    var r = canvas.getBoundingClientRect();
+    if (!r.width || !r.height) return null;
+    var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    return x >= 0 && x <= 1 && y >= 0 && y <= 1 ? { x: x, y: y } : null;
+  }
+  function down(e) {
+    if (!enabled) return;
+    stop(e);
+    if (active || e.isPrimary === false || (e.button !== undefined && e.button !== 0)) return;
+    var p = point(e); if (!p || state.strokes.length >= 500) return;
+    active = [p]; pointerId = e.pointerId; state.strokes.push(active);
+    if (e.pointerId !== undefined && canvas.setPointerCapture) {
+      try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    }
+    redraw();
+  }
+  function move(e) {
+    if (!enabled) return;
+    stop(e);
+    if (!active || (pointerId !== undefined && e.pointerId !== pointerId)) return;
+    var p = point(e);
+    if (!p) { active = null; pointerId = null; persist(); return; }
+    if (active.length < 10000) active.push(p);
+    redraw();
+  }
+  function up(e) {
+    if (!enabled) return;
+    stop(e);
+    if (pointerId !== null && pointerId !== undefined && e.pointerId !== pointerId) return;
+    if (e.pointerId !== undefined && canvas.releasePointerCapture) {
+      try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+    }
+    active = null; pointerId = null; redraw(); persist();
+  }
+  function touch(type, e) {
+    if (!enabled) return;
+    stop(e);
+    if (type === 'touchstart' && e.touches && e.touches.length > 1) return;
+    var t = e.changedTouches && e.changedTouches[0]; if (!t) return;
+    var x = { clientX: t.clientX, clientY: t.clientY, pointerId: t.identifier,
+      cancelable: false, stopPropagation: function () {}, stopImmediatePropagation: function () {} };
+    if (type === 'touchstart') down(x); else if (type === 'touchmove') move(x); else up(x);
+  }
+  function onMessage(e) {
+    if (!canvas || side !== 'back' || e.source !== window.parent || !e.data ||
+      e.data.type !== 'kr-pad-sync' || e.data.note !== key || !validStrokes(e.data.strokes)) return;
+    state.strokes = e.data.strokes.map(function (s) { return s.map(function (p) { return { x: p.x, y: p.y }; }); });
+    redraw(); persist();
+  }
+  if (canvas) {
+    if (window.PointerEvent) {
+      canvas.addEventListener('pointerdown', down); canvas.addEventListener('pointermove', move);
+      canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
+    } else {
+      canvas.addEventListener('mousedown', down); canvas.addEventListener('mousemove', move);
+      canvas.addEventListener('mouseup', up); canvas.addEventListener('mouseleave', up);
+      ['touchstart', 'touchmove', 'touchend', 'touchcancel'].forEach(function (type) {
+        canvas.addEventListener(type, function (e) { touch(type, e); }, { passive: false });
+      });
+    }
+    ['click', 'dblclick', 'contextmenu', 'touchstart', 'touchmove', 'touchend'].forEach(function (type) {
+      canvas.addEventListener(type, function (e) { if (enabled) stop(e); }, { passive: false });
+    });
+    if (window.parent !== window) window.addEventListener('message', onMessage);
+    if (window.ResizeObserver) { observer = new ResizeObserver(redraw); observer.observe(canvas); }
+    setEnabled(side === 'back' && state.enabled);
+  }
+  root.querySelectorAll('button').forEach(function (button) {
+    button.addEventListener('click', function (e) {
+      stop(e); var action = button.getAttribute('data-action');
+      if (action === 'enable' && canvas) setEnabled(!enabled);
+      if (action === 'undo' && canvas) { state.strokes.pop(); active = null; pointerId = null; redraw(); persist(); }
+      if (action === 'clear' && canvas) { state.strokes = []; active = null; pointerId = null; redraw(); persist(); }
+      if (action === 'ghost') {
+        var ghost = root.querySelector('.kr-ghost');
+        if (ghost) { ghost.hidden = !ghost.hidden; button.setAttribute('aria-pressed', String(!ghost.hidden)); }
+      }
+      if (action === 'sync' && canvas) {
+        var saved = readSaved();
+        if (saved && saved.key === key && validStrokes(saved.strokes)) state.strokes = saved.strokes;
+        redraw();
+      }
+      if (action === 'replay') {
+        var img = root.querySelector('.kr-stroke img');
+        if (img) { var next = img.cloneNode(); next.src = img.src.split('#')[0] + '#kr' + Date.now(); img.replaceWith(next); }
+      }
+    });
+  });
+  window.__krPadCleanup = function () {
+    if (observer) observer.disconnect();
+    window.removeEventListener('message', onMessage);
+  };
+})();
+</script></div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "schema_version": "v1.0.0",
+  "product_id": "EPD_AUDITOR_ANKI",
+  "release_version": "0.9.0",
+  "preview_status": "EXTRACTED_UNVERIFIED",
+  "generated_at": "2026-09-30",
+  "source_apkg": "EPD_Anki_MASTER_v0.9.0.apkg",
+  "source_apkg_size": 42874199,
+  "source_apkg_sha256": "5cf0ffc707a7cf471f17c6d1da685afbb7df29284dee3a5cc67d26c539b45ad7",
+  "database_name": "collection.anki2",
+  "sqlite_quick_check": "ok",
+  "selection": [
+    {
+      "model": "EPD36 · 학습형 · Light v1",
+      "template": "정방향",
+      "template_ordinal": 0,
+      "note_id": 1790449236635,
+      "display_id": "1790449236635"
+    },
+    {
+      "model": "EPD36 · 단답형 · Light v1",
+      "template": "정방향",
+      "template_ordinal": 0,
+      "note_id": 1790449237781,
+      "display_id": "1790449237781"
+    },
+    {
+      "model": "EPD36 · OX · Light v1",
+      "template": "정방향",
+      "template_ordinal": 0,
+      "note_id": 1790449238927,
+      "display_id": "1790449238927"
+    },
+    {
+      "model": "EPD36 · 서술형 · Light v1",
+      "template": "정방향",
+      "template_ordinal": 0,
+      "note_id": 1790449240073,
+      "display_id": "1790449240073"
+    },
+    {
+      "model": "EPD36 · 객관식 · Light v1",
+      "template": "정방향",
+      "template_ordinal": 0,
+      "note_id": 1790449241219,
+      "display_id": "1790449241219"
+    }
+  ],
+  "output_preview": "index.html",
+  "output_preview_sha256": "4c625e694c4e73c2c34c513d9d1ffd7ec85256fd66d843728924fd41401a4387"
+}
