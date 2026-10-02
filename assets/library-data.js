@@ -3,7 +3,7 @@ window.ANKI_LIBRARY = {
   "site_version": "1.0.0",
   "updated_at": "2026-10-02",
   "source_repository": "dlquffhqnxj/anki-deck-project",
-  "source_commit": "904a310b253720429cdf07e0a68ca0a8cfe04716",
+  "source_commit": "98645cf64f5f526214f6f0278fb356976d03deac",
   "decks": [
     {
       "id": "jlpt-kanji-lab-v1.2.0",
@@ -27,12 +27,20 @@ window.ANKI_LIBRARY = {
       ],
       "qa": {
         "STATIC": "PASS",
-        "IMPORT": "NOT_TESTED",
+        "IMPORT": "PASS",
         "UPDATE": "NOT_TESTED",
-        "DEVICE": "NOT_TESTED"
+        "DEVICE": "PARTIAL"
       },
-      "qa_note": "APKG 구조·데이터 정적 QA는 PASS입니다. Anki 가져오기·업데이트·실기기 검사는 아직 수행하지 않았습니다.",
-      "device_note": "",
+      "qa_note": "파일·카드 구조 검사 PASS. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "",
       "preview": "previews/jlpt-kanji-lab/v1.2.0/index.html",
       "shots": [
         {
@@ -96,12 +104,20 @@ window.ANKI_LIBRARY = {
       ],
       "qa": {
         "STATIC": "PASS",
-        "IMPORT": "NOT_TESTED",
+        "IMPORT": "PASS",
         "UPDATE": "PARTIAL",
-        "DEVICE": "NOT_TESTED"
+        "DEVICE": "PARTIAL"
       },
-      "qa_note": "APKG·MASTER·Preview 정적 검사는 PASS이고 RC1 identity 시뮬레이션도 통과했습니다. 공식 Anki 재가져오기와 실기기 검사는 별도입니다.",
-      "device_note": "",
+      "qa_note": "파일·카드 구조 검사 PASS. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "",
       "preview": "previews/jlpt-vocabulary-grammar-lab/v2.0.0-rc2/index.html",
       "shots": [
         {
@@ -164,12 +180,20 @@ window.ANKI_LIBRARY = {
       ],
       "qa": {
         "STATIC": "PASS",
-        "IMPORT": "NOT_TESTED",
+        "IMPORT": "PASS",
         "UPDATE": "NOT_TESTED",
-        "DEVICE": "NOT_TESTED"
+        "DEVICE": "PARTIAL"
       },
-      "qa_note": "원본 bundle과 내부 매니페스트의 모든 대상 파일 해시가 일치합니다. 공식 Anki import와 실기기 검사는 아직 별도입니다.",
-      "device_note": "",
+      "qa_note": "파일·카드 구조 검사 PASS. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "",
       "preview": "previews/business-japanese/v1.1.0-rc2/index.html",
       "shots": [
         {
@@ -231,12 +255,20 @@ window.ANKI_LIBRARY = {
       ],
       "qa": {
         "STATIC": "PASS",
-        "IMPORT": "NOT_TESTED",
+        "IMPORT": "PASS",
         "UPDATE": "NOT_TESTED",
-        "DEVICE": "NOT_TESTED"
+        "DEVICE": "PARTIAL"
       },
-      "qa_note": "APKG·MASTER·전체 Preview·클릭 상태 전이는 정적 PASS입니다. 공식 Anki와 실기기에서 같은 동작을 다시 확인해야 합니다.",
-      "device_note": "",
+      "qa_note": "파일·카드 구조 검사 PASS. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "",
       "preview": "previews/jlpt-confusion-context-lab/v1.1.0-rc3/index.html",
       "shots": [
         {
@@ -300,12 +332,20 @@ window.ANKI_LIBRARY = {
       ],
       "qa": {
         "STATIC": "NOT_TESTED",
-        "IMPORT": "NOT_TESTED",
+        "IMPORT": "PASS",
         "UPDATE": "NOT_TESTED",
         "DEVICE": "PARTIAL"
       },
-      "qa_note": "Desktop·iPhone은 PASS입니다. iPad·Android는 NOT_TESTED이므로 DEVICE 전체 PASS나 GM으로 확대하지 않습니다.",
-      "device_note": "사용자 실행 보고(2026.09.30): Desktop·iPhone PASS, Anki 25.09. iPad·Android는 NOT_TESTED로 기록되어 있습니다.",
+      "qa_note": "사용자 요청에 따라 STATIC은 NOT_TESTED로 유지합니다. 수정 예정 내용이 있으며 현행 버전으로 학습 중입니다. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "",
       "preview": "previews/kanji-revolution/v1.2.0-rc1/index.html",
       "shots": [
         {
@@ -386,7 +426,7 @@ window.ANKI_LIBRARY = {
       "published_at": "2026-09-30T09:57:28Z",
       "purpose": "정답뿐 아니라 예문·해석·출제 표현·연상 단서를 함께 회상합니다.",
       "study": "단어 뜻을 맞힌 뒤 예문 속 결합 표현까지 말할 수 있는지 확인합니다.",
-      "update": "기존 버전 위 업데이트는 사용자 시험에서 PASS입니다. 새 Desktop 테스트 프로필의 최초 Import는 아직 NOT_TESTED입니다.",
+      "update": "기존 버전 위 업데이트 PASS 기록을 유지합니다. 사용자도 업데이트한 덱의 학습 기록 보존을 확인했습니다. 새 프로필 가져오기는 사용자 확인 PASS입니다.",
       "structure": [
         "단어",
         "숙어",
@@ -395,12 +435,20 @@ window.ANKI_LIBRARY = {
       ],
       "qa": {
         "STATIC": "NOT_TESTED",
-        "IMPORT": "NOT_TESTED",
+        "IMPORT": "PASS",
         "UPDATE": "PASS",
         "DEVICE": "PARTIAL"
       },
-      "qa_note": "Desktop·iPhone·기존 버전 위 Update는 PASS입니다. 새 프로필 Import·iPad·Android·이 버전 STATIC은 NOT_TESTED입니다.",
-      "device_note": "사용자 실행 보고(2026.09.30): Desktop·iPhone PASS, Anki 25.09. iPad·Android는 NOT_TESTED로 기록되어 있습니다.",
+      "qa_note": "사용자 요청에 따라 STATIC은 NOT_TESTED로 유지합니다. 수정 예정 내용이 있으며 현행 버전으로 학습 중입니다. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 기존에 확인된 업데이트 PASS를 유지합니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "",
       "preview": "previews/toeic-vocabulary/v1.2.0-rc5/index.html",
       "shots": [
         {
@@ -463,12 +511,20 @@ window.ANKI_LIBRARY = {
       ],
       "qa": {
         "STATIC": "PASS",
-        "IMPORT": "NOT_TESTED",
+        "IMPORT": "PASS",
         "UPDATE": "NOT_TESTED",
-        "DEVICE": "NOT_TESTED"
+        "DEVICE": "PARTIAL"
       },
-      "qa_note": "Release에 PACKAGE·DB·STATIC PASS가 기록되어 있습니다. 실제 Anki import·update·device는 NOT_TESTED입니다.",
-      "device_note": "",
+      "qa_note": "파일·카드 구조 검사 PASS. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. 세부 기능·동기화 QA는 별도입니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "",
       "preview": "previews/toeic-rc/vol3-ai-interactive/v2.0.0/index.html",
       "shots": [
         {
@@ -536,12 +592,20 @@ window.ANKI_LIBRARY = {
       ],
       "qa": {
         "STATIC": "PASS",
-        "IMPORT": "NOT_TESTED",
+        "IMPORT": "PASS",
         "UPDATE": "NOT_TESTED",
-        "DEVICE": "NOT_TESTED"
+        "DEVICE": "PARTIAL"
       },
-      "qa_note": "GitHub Release APKG와 로컬 검증본의 바이트가 일치하고 ZIP·SQLite·미디어 참조 검사를 통과했습니다. 실제 Anki와 기기 검사는 아직 별도입니다.",
-      "device_note": "",
+      "qa_note": "파일·카드 구조 검사 PASS. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "",
       "preview": "previews/electrical-engineer-summary/v1.0.0/index.html",
       "shots": [
         {
@@ -645,12 +709,20 @@ window.ANKI_LIBRARY = {
       ],
       "qa": {
         "STATIC": "PASS",
-        "IMPORT": "NOT_TESTED",
+        "IMPORT": "PASS",
         "UPDATE": "NOT_TESTED",
-        "DEVICE": "NOT_TESTED"
+        "DEVICE": "PARTIAL"
       },
-      "qa_note": "GitHub Release APKG와 로컬 검증본의 파일명·크기·SHA-256이 일치하고 ZIP·SQLite·필드·GUID·카드 참조·2,601개 미디어 검사를 통과했습니다. 실제 Anki와 기기 검사는 아직 별도입니다.",
-      "device_note": "",
+      "qa_note": "파일·카드 구조 검사 PASS. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "",
       "preview": "previews/electrical-engineer-cbt/v1.0.0/index.html",
       "shots": [
         {
@@ -713,13 +785,21 @@ window.ANKI_LIBRARY = {
         "주의·혼동 항목"
       ],
       "qa": {
-        "STATIC": "FAIL",
-        "IMPORT": "NOT_TESTED",
+        "STATIC": "PARTIAL",
+        "IMPORT": "PASS",
         "UPDATE": "NOT_TESTED",
         "DEVICE": "PARTIAL"
       },
-      "qa_note": "Desktop·iPhone 런타임은 PASS입니다. 외부 배포 ZIP은 손상으로 FAIL이며, 내부 APKG CRC·SQLite만 PASS입니다. 정상 ZIP 재업로드와 나머지 Gate 전에는 전체 QA PASS나 GM으로 확대하지 않습니다.",
-      "device_note": "사용자 실행 보고(2026.09.30): Desktop·iPhone PASS, Anki 25.09. iPad·Android는 NOT_TESTED로 기록되어 있습니다.",
+      "qa_note": "단독 APKG가 Release에 등록됐으며 크기·SHA-256이 기존 CRC·SQLite 검증본과 일치합니다. STATIC은 구조 확인 범위의 PARTIAL이며 미디어·필드 참조 전수 검사는 남아 있습니다. 새 프로필 가져오기와 Android 기본 실행은 사용자 확인 PASS입니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "NOT_TESTED",
+        "iPhone": "NOT_TESTED",
+        "iPad": "NOT_TESTED",
+        "Android": "PASS"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "설치에는 EPD_Anki_MASTER_v0.9.0.apkg를 사용하세요. 예전 MASTER PACKAGE ZIP은 손상 기록으로 다운로드가 차단되어 있습니다.",
       "preview": "previews/epd-auditor/v0.9.0/index.html",
       "shots": [
         {
@@ -733,8 +813,16 @@ window.ANKI_LIBRARY = {
           "sha256": "adf335f71c1df169f134d03bd6691b22265bec75f3960870196ad3907916b253"
         }
       ],
-      "shot_scope": "v0.9.0 내부 APKG의 실제 학습형 템플릿입니다. 외부 배포 ZIP의 손상·FAIL 판정은 그대로이며, 정상 패키지가 필요합니다.",
+      "shot_scope": "v0.9.0 APKG의 실제 학습형 템플릿입니다. 설치에는 별도로 등록된 APKG를 사용하며 예전 손상 ZIP은 차단합니다.",
       "assets": [
+        {
+          "name": "EPD_Anki_.EC.B2.98.EC.9D.8C.EC.82.AC.EC.9A.A9.EC.9E.90.EA.B0.80.EC.9D.B4.EB.93.9C_v0.9.0.html",
+          "size": 16354,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/EPD_Anki_MASTER_PACKAGE/EPD_Anki_.EC.B2.98.EC.9D.8C.EC.82.AC.EC.9A.A9.EC.9E.90.EA.B0.80.EC.9D.B4.EB.93.9C_v0.9.0.html",
+          "sha256": "c55c5220a8c567ac267b04f4cb024389521e49ea0a0267dfbcf2139b90e6390e",
+          "kind": "문서·자료",
+          "blocked": false
+        },
         {
           "name": "EPD_Anki_MASTER_PACKAGE_v0.9.0.zip",
           "size": 53695936,
@@ -742,6 +830,14 @@ window.ANKI_LIBRARY = {
           "sha256": "15550f494106a1c6af1b79cbb651775bf3aa818d8afdbacf943b8e62252b8f62",
           "kind": "배포 ZIP",
           "blocked": true
+        },
+        {
+          "name": "EPD_Anki_MASTER_v0.9.0.apkg",
+          "size": 42874199,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/EPD_Anki_MASTER_PACKAGE/EPD_Anki_MASTER_v0.9.0.apkg",
+          "sha256": "5cf0ffc707a7cf471f17c6d1da685afbb7df29284dee3a5cc67d26c539b45ad7",
+          "kind": "APKG",
+          "blocked": false
         },
         {
           "name": "EPD_Auditor_Anki_v0.9.0_PREVIEW.zip",
@@ -752,7 +848,7 @@ window.ANKI_LIBRARY = {
           "blocked": false
         }
       ],
-      "blocked": true,
+      "blocked": false,
       "counts": {}
     },
     {
@@ -783,6 +879,9 @@ window.ANKI_LIBRARY = {
       },
       "qa_note": "해당 버전의 Release 기록을 기준으로 표시합니다. 현재판 검증을 이전판으로 승계하지 않습니다.",
       "device_note": "",
+      "runtime_devices": {},
+      "runtime_scope": "",
+      "download_note": "",
       "preview": "previews/kanji-revolution/v1.0.4/index.html",
       "shots": [
         {
@@ -831,7 +930,7 @@ window.ANKI_LIBRARY = {
       "published_at": "2026-09-22T00:40:25Z",
       "purpose": "정답뿐 아니라 예문·해석·출제 표현·연상 단서를 함께 회상합니다.",
       "study": "단어 뜻을 맞힌 뒤 예문 속 결합 표현까지 말할 수 있는지 확인합니다.",
-      "update": "기존 버전 위 업데이트는 사용자 시험에서 PASS입니다. 새 Desktop 테스트 프로필의 최초 Import는 아직 NOT_TESTED입니다.",
+      "update": "기존 버전 위 업데이트 PASS 기록을 유지합니다. 사용자도 업데이트한 덱의 학습 기록 보존을 확인했습니다. 새 프로필 가져오기는 사용자 확인 PASS입니다.",
       "structure": [
         "단어",
         "숙어",
@@ -846,6 +945,9 @@ window.ANKI_LIBRARY = {
       },
       "qa_note": "해당 버전의 Release 기록을 기준으로 표시합니다. 현재판 검증을 이전판으로 승계하지 않습니다.",
       "device_note": "",
+      "runtime_devices": {},
+      "runtime_scope": "",
+      "download_note": "",
       "preview": "previews/toeic-vocabulary/v1.1.0/index.html",
       "shots": [
         {
@@ -917,6 +1019,9 @@ window.ANKI_LIBRARY = {
       },
       "qa_note": "해당 버전의 Release 기록을 기준으로 표시합니다. 현재판 검증을 이전판으로 승계하지 않습니다.",
       "device_note": "사용자 실행 보고(2026.09.30): Desktop·iPhone PASS, Anki 25.09. iPad·Android는 NOT_TESTED로 기록되어 있습니다.",
+      "runtime_devices": {},
+      "runtime_scope": "",
+      "download_note": "",
       "preview": null,
       "shots": [
         {
