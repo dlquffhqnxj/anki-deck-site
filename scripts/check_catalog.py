@@ -19,7 +19,7 @@ def check():
     errors = []
     if (ROOT / 'assets/library-data.js').read_text(encoding='utf-8') != expected_js:
         errors.append('assets/library-data.js differs from data/library.json')
-    for filename in ('index.html', 'deck.html', 'preview.html', 'releases.html', 'trial.html'):
+    for filename in ('index.html', 'deck.html', 'preview.html', 'releases.html', 'trial.html', 'guide.html', 'assets/library-guide.js', 'assets/library-guide.css'):
         if not (ROOT / filename).is_file():
             errors.append(f'Missing entry point {filename}')
 
