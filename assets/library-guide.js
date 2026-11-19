@@ -70,7 +70,7 @@
 
     function receiveFile(deck, edition) {
       if (!deck) return `<p>위에서 덱을 고르면 받을 버전과 다운로드 버튼이 표시됩니다. 사이트에서 덱의 구성과 대표 카드를 미리 확인할 수 있습니다.</p>
-        <a class="guide-button" href="index.html">덱 목록 보기 <span aria-hidden="true">→</span></a>`;
+        <a class="guide-button" href="index.html">덱 목록 보기</a>`;
       const packages = installFiles(deck);
       const versionHelp = state.flow === 'update' && edition
         ? `<div class="guide-note"><strong>${esc(edition.label)}</strong><p>${esc(edition.copy)}</p>${edition.scope ? `<p>${esc(edition.scope)}</p>` : ''}</div>`
@@ -81,7 +81,7 @@
           ${outbound(asset.url, isApkg(asset) ? (deck.install?.asset === asset.name ? '통합 APKG 받기' : 'APKG 받기') : '배포 ZIP 받기', 'guide-button guide-button-primary')}</div>`).join('')}</div>
         ${packages.some(asset => !isApkg(asset)) ? '<p>ZIP을 압축 해제한 뒤 내부 안내에서 가져올 APKG를 확인하세요.</p>' : ''}
         <p class="guide-caption">다운로드할 때는 제작 저장소에 접근할 수 있는 GitHub 계정으로 로그인하세요.</p>
-        <a class="guide-text-link" href="${deckUrl(deck)}">덱 상세·미리보기 및 전체 배포 파일 보기 <span aria-hidden="true">→</span></a>`;
+        <a class="guide-text-link" href="${deckUrl(deck)}">덱 상세·미리보기 및 전체 배포 파일 보기</a>`;
     }
 
     function stepContent(deck, edition) {
@@ -89,7 +89,7 @@
       switch (state.step) {
         case 'prepare':
           return `<p>PC에서 작업하려면 먼저 Anki를 설치합니다. 설치할 덱은 위에서 선택하거나 덱 목록에서 화면과 구성을 살펴본 뒤 골라 주세요.</p>
-            <div class="guide-inline-actions">${outbound('https://apps.ankiweb.net/', 'PC용 Anki 설치')}<a class="guide-button" href="index.html">덱 목록 보기 <span aria-hidden="true">→</span></a></div>`;
+            <div class="guide-inline-actions">${outbound('https://apps.ankiweb.net/', 'PC용 Anki 설치')}<a class="guide-button" href="index.html">덱 목록 보기</a></div>`;
         case 'backup':
           return `<p>최근에 공부한 기기부터 동기화하고, PC Anki에서 학습 기록과 미디어가 들어 있는 컬렉션 백업을 저장합니다.</p>
             <ol class="guide-checks">
@@ -114,14 +114,14 @@
                 ])}
             ${updating && deck ? `<div class="guide-note"><strong>선택한 덱의 업데이트 방법</strong>
               <p>${esc(edition?.copy || deck.update)}</p>${edition?.scope ? `<p>${esc(edition.scope)}</p>` : ''}</div>` : ''}
-            ${deck && updating ? `<p><a class="guide-text-link" href="${deckUrl(deck)}#install">선택한 덱의 설치·업데이트 안내 <span aria-hidden="true">→</span></a></p>` : ''}
+            ${deck && updating ? `<p><a class="guide-text-link" href="${deckUrl(deck)}#install">선택한 덱의 설치·업데이트 안내</a></p>` : ''}
             ${outbound(help.import, 'APKG 가져오기 도움말')}`;
         case 'verify':
           return `<p>${updating ? '가져오기가 끝나면 기존 카드부터 열어 확인하세요.' : '덱 목록에 새 덱이 생겼는지 보고 대표 카드 몇 장을 열어보세요.'}</p>
             ${bullets(updating
               ? ['가져오기 결과에서 기존 노트의 업데이트 수와 신규 노트 수를 확인합니다.', '대표 카드의 복습 예정일과 카드 구성이 예상대로인지 확인합니다.', '정답 보기와 이미지가 정상적으로 표시되는지 확인합니다.']
               : ['덱 이름과 하위 덱 구성을 확인합니다.', '대표 카드의 문제와 정답이 열리는지 확인합니다.', '이미지와 선택지 등 카드에서 사용하는 기능을 확인합니다.'])}
-            ${deck ? `<a class="guide-button" href="${deckUrl(deck)}">덱 구성 확인 <span aria-hidden="true">→</span></a>` : ''}`;
+            ${deck ? `<a class="guide-button" href="${deckUrl(deck)}">덱 구성 확인</a>` : ''}`;
         case 'sync':
           return '<p>PC에서 카드와 복습 기록을 확인했다면 AnkiWeb에 동기화합니다. 그다음 다른 기기에서 동기화해 새 카드와 업데이트 내용을 받으세요.</p>';
         case 'account':
@@ -157,7 +157,7 @@
         </header>
         <nav class="guide-modes" aria-label="내 상황 선택">
           ${Object.entries(flows).map(([id, value]) => `<button class="guide-mode" type="button" id="guide-mode-${id}" data-guide-flow="${id}" aria-pressed="${state.flow === id}">
-            <strong>${value.title}</strong><span>${value.caption}</span><b aria-hidden="true">→</b>
+            <strong>${value.title}</strong><span>${value.caption}</span>
           </button>`).join('')}
         </nav>
         <div class="guide-layout">
@@ -176,10 +176,10 @@
               <h2 id="guide-step-title" tabindex="-1">${title}</h2>
               <div class="guide-step-content">${stepContent(deck, edition)}</div>
               <div class="guide-step-buttons">
-                ${previous ? `<button class="guide-button" data-guide-step="${previous[0]}" type="button"><span aria-hidden="true">←</span> 이전 단계</button>` : ''}
-                ${next ? `<button class="guide-button guide-button-primary" data-guide-step="${next[0]}" type="button">다음 · ${next[1]} <span aria-hidden="true">→</span></button>`
-                  : state.flow === 'sync' ? '<a class="guide-button guide-button-primary" href="index.html">덱 목록으로 <span aria-hidden="true">→</span></a>'
-                  : '<button class="guide-button guide-button-primary" data-guide-flow="sync" type="button">iPhone·iPad 동기화 안내 <span aria-hidden="true">→</span></button>'}
+                ${previous ? `<button class="guide-button" data-guide-step="${previous[0]}" type="button">이전 단계</button>` : ''}
+                ${next ? `<button class="guide-button guide-button-primary" data-guide-step="${next[0]}" type="button">다음 · ${next[1]}</button>`
+                  : state.flow === 'sync' ? '<a class="guide-button guide-button-primary" href="index.html">덱 목록으로</a>'
+                  : '<button class="guide-button guide-button-primary" data-guide-flow="sync" type="button">iPhone·iPad 동기화 안내</button>'}
               </div>
             </section>
             <details class="guide-help">
