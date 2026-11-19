@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "site_version": "1.2.0",
+  "site_version": "1.3.0",
   "updated_at": "2026-11-19",
   "source_repository": "dlquffhqnxj/anki-deck-project",
   "source_commit": "51098886cacce8b0050c70d707092c3366974d96",
@@ -15,8 +15,17 @@
         "cards": 23290,
         "media": 4665
       },
-      "shots": [],
-      "shot_scope": "",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.7.1-rc1-front.jpg",
+          "caption": "앞면 · 유사 한자 실전 질문"
+        },
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.7.1-rc1-back.jpg",
+          "caption": "뒷면 · 정답과 土·士 구별 획"
+        }
+      ],
+      "shot_scope": "해당 버전의 실제 HTML 미리보기에서 캡처한 대표 화면입니다.",
       "id": "kanji-revolution-v1.7.1-rc1",
       "product_id": "kanji-revolution",
       "title": "한자혁명 · Kanji Revolution",
@@ -114,7 +123,98 @@
       "published_at": "2026-11-19T04:16:22Z",
       "prerelease": true,
       "qa_source": "릴리스 QA",
-      "preview_asset": "Kanji_Revolution_PREVIEW_v1.7.1-RC1.html"
+      "preview_asset": "Kanji_Revolution_PREVIEW_v1.7.1-RC1.html",
+      "tracks": {
+        "kanji": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "practice": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ]
+      },
+      "package_counts": {
+        "study": 13290,
+        "practice": 10000
+      },
+      "install": {
+        "asset": "Kanji_Revolution_COMPLETE_v1.7.1-RC1.apkg",
+        "paths": [
+          {
+            "id": "fresh",
+            "label": "처음 설치",
+            "copy": "통합 APKG 하나를 Anki에서 가져오면 한자 학습과 5파트 실전문제가 함께 나타납니다."
+          },
+          {
+            "id": "v1.3.0",
+            "label": "v1.3.0 TEXT 또는 TEXT·QUIZ 사용 중",
+            "copy": "컬렉션을 백업한 뒤 같은 프로필에 통합 APKG를 가져오세요. 기존 어휘 QUIZ는 별도 덱으로 둘 수 있습니다.",
+            "scope": "통합판의 학습 구성은 v1.3.0 TEXT를 기준으로 합니다. 기존 v1.3.0 프로필에서의 학습 기록 보존은 별도 시험 프로필에서 먼저 확인하세요."
+          },
+          {
+            "id": "v1.3.1",
+            "label": "v1.3.1-RC1 TEXT 사용 중",
+            "copy": "백업 후 같은 프로필에 통합 APKG를 가져오세요. 노트와 노트 유형은 더 최신인 경우에만 업데이트하고 패키지 일정의 가져오기를 끄세요.",
+            "scope": "v1.3.1 TEXT·v1.7.0 실전·별도 QUIZ가 함께 있던 엔진 시험에서 급수 정보와 기존 카드, 복습 표본의 일정·로그 보존을 확인했습니다."
+          },
+          {
+            "id": "v1.7.0",
+            "label": "v1.7.0 실전 사용 중",
+            "copy": "통합 APKG에는 v1.7.0의 실전 10,000문항과 한자 학습 13,290장이 들어 있습니다. 백업 후 같은 프로필에 가져오고 실전 카드 수와 대표 복습 예정일을 확인하세요.",
+            "scope": "v1.3.1 TEXT가 함께 있던 엔진 시험에서는 기존 실전 카드와 복습 표본을 확인했습니다. v1.7.0만 있던 개인 프로필은 먼저 시험 프로필에서 점검하세요."
+          },
+          {
+            "id": "other",
+            "label": "다른 버전이거나 잘 모르겠어요",
+            "copy": "Anki에서 사용 중인 덱과 버전을 확인한 뒤 백업하세요. 이 통합판을 시험 프로필에 먼저 가져오면 카드 구성부터 확인할 수 있습니다."
+          }
+        ]
+      },
+      "trial": [
+        {
+          "id": "read-tatsu",
+          "type": "한자 읽기",
+          "prompt": "達의 대표 읽기를 떠올려 보세요.",
+          "display": "達",
+          "answer": "たつ（タツ） · 통달할 달",
+          "explanation": "配達（はいたつ）는 배달, 発達（はったつ）는 발달입니다."
+        },
+        {
+          "id": "shape-tsuchi",
+          "type": "유사 한자 구별",
+          "prompt": "빈칸에 들어갈 한자를 고르세요.",
+          "display": "〔　〕曜日って、何か予定ある？",
+          "hint": "どようび · 토요일",
+          "options": [
+            "去",
+            "土",
+            "地"
+          ],
+          "answer": "土",
+          "explanation": "土曜日（どようび）는 토요일입니다. 土는 아래 가로획이 길고, 士는 위 가로획이 깁니다."
+        },
+        {
+          "id": "form-kaku",
+          "type": "동사 활용",
+          "prompt": "書く（かく）를 て형으로 바꾸세요.",
+          "display": "書く",
+          "options": [
+            "書きて",
+            "書いた",
+            "書いて"
+          ],
+          "answer": "書いて",
+          "explanation": "5단 동사 書く의 끝 く를 いて로 바꿉니다. 書いた는 과거형을 만드는 た형입니다."
+        }
+      ],
+      "shot_kind": "card"
     },
     {
       "subject": "japanese",
@@ -238,7 +338,23 @@
       "published_at": "2026-11-11T16:30:12Z",
       "prerelease": true,
       "qa_source": "릴리스 QA",
-      "preview_asset": "JLPT_Kanji_LAB_2136_PREVIEW_v1.9.2-RC1.html"
+      "preview_asset": "JLPT_Kanji_LAB_2136_PREVIEW_v1.9.2-RC1.html",
+      "tracks": {
+        "kanji": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "practice": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ]
+      }
     },
     {
       "learner": {
@@ -349,6 +465,22 @@
         "media": 0,
         "needs_review": null,
         "excluded": null
+      },
+      "tracks": {
+        "language": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "practice": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ]
       }
     },
     {
@@ -451,6 +583,10 @@
         "media": 0,
         "needs_review": 207,
         "excluded": null
+      },
+      "tracks": {
+        "language": [],
+        "work": []
       }
     },
     {
@@ -552,6 +688,15 @@
         "media": 0,
         "needs_review": 750,
         "excluded": null
+      },
+      "tracks": {
+        "language": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ]
       }
     },
     {
@@ -563,8 +708,17 @@
         "notes": 30,
         "cards": 30
       },
-      "shots": [],
-      "shot_scope": "",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/japanese-verb-lab-v1.0.0-preview.1-front.jpg",
+          "caption": "앞면 · 帰る 동사 분류 질문"
+        },
+        {
+          "path": "assets/release-screenshots/japanese-verb-lab-v1.0.0-preview.1-back.jpg",
+          "caption": "뒷면 · 정답과 활용 해설"
+        }
+      ],
+      "shot_scope": "해당 버전의 실제 HTML 미리보기에서 캡처한 대표 화면입니다.",
       "id": "japanese-verb-lab-v1.0.0-preview.1",
       "product_id": "japanese-verb-lab",
       "title": "일본어 동사 활용 LAB",
@@ -614,7 +768,11 @@
       "published_at": "2026-11-19T03:12:17Z",
       "prerelease": true,
       "qa_source": "릴리스 QA",
-      "preview_asset": "Japanese_Verb_PREVIEW_v1.0.0-preview.1.html"
+      "preview_asset": "Japanese_Verb_PREVIEW_v1.0.0-preview.1.html",
+      "tracks": {
+        "language": []
+      },
+      "shot_kind": "card"
     },
     {
       "subject": "japanese",
@@ -625,8 +783,17 @@
         "notes": 10,
         "cards": 30
       },
-      "shots": [],
-      "shot_scope": "",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/jlpt-kanji-n5-v1.3.0-preview.1-front.jpg",
+          "caption": "앞면 · 日의 뜻 떠올리기"
+        },
+        {
+          "path": "assets/release-screenshots/jlpt-kanji-n5-v1.3.0-preview.1-back.jpg",
+          "caption": "뒷면 · 정답과 기본 정보"
+        }
+      ],
+      "shot_scope": "해당 버전의 실제 HTML 미리보기에서 캡처한 대표 화면입니다.",
       "id": "jlpt-kanji-n5-v1.3.0-preview.1",
       "product_id": "jlpt-kanji-n5-pilot",
       "title": "JLPT 한자 N5 제작 표본",
@@ -682,7 +849,13 @@
       "published_at": "2026-11-19T03:09:47Z",
       "prerelease": true,
       "qa_source": "릴리스 QA",
-      "preview_asset": "JLPT_Kanji_N5_v1.3.0-preview.1_PREVIEW.html"
+      "preview_asset": "JLPT_Kanji_N5_v1.3.0-preview.1_PREVIEW.html",
+      "tracks": {
+        "kanji": [
+          "N5"
+        ]
+      },
+      "shot_kind": "card"
     },
     {
       "learner": {
@@ -795,7 +968,11 @@
         }
       ],
       "blocked": false,
-      "counts": {}
+      "counts": {},
+      "tracks": {
+        "language": [],
+        "practice": []
+      }
     },
     {
       "learner": {
@@ -905,7 +1082,10 @@
         }
       ],
       "blocked": false,
-      "counts": {}
+      "counts": {},
+      "tracks": {
+        "practice": []
+      }
     },
     {
       "learner": {
@@ -1050,6 +1230,9 @@
         "media": 2671,
         "needs_review": null,
         "excluded": null
+      },
+      "tracks": {
+        "summary": []
       }
     },
     {
@@ -1153,6 +1336,9 @@
         "media": 2601,
         "needs_review": null,
         "excluded": null
+      },
+      "tracks": {
+        "practice": []
       }
     },
     {
@@ -1274,7 +1460,11 @@
         }
       ],
       "blocked": false,
-      "counts": {}
+      "counts": {},
+      "tracks": {
+        "summary": [],
+        "work": []
+      }
     },
     {
       "subject": "tools",
@@ -1282,8 +1472,17 @@
       "current": true,
       "blocked": false,
       "counts": {},
-      "shots": [],
-      "shot_scope": "",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/anki-deck-platform-v1.3.0-front.jpg",
+          "caption": "앞면 · 실전문제 앞면"
+        },
+        {
+          "path": "assets/release-screenshots/anki-deck-platform-v1.3.0-back.jpg",
+          "caption": "뒷면 · 채점·해설 화면"
+        }
+      ],
+      "shot_scope": "해당 버전의 실제 HTML 미리보기에서 캡처한 대표 화면입니다.",
       "id": "anki-deck-platform-v1.3.0",
       "product_id": "anki-deck-platform",
       "title": "Anki 공통 제작 플랫폼",
@@ -1360,7 +1559,11 @@
       "preview_asset": "Anki_Deck_Platform_PREVIEW_v1.3.0.html",
       "preview_scope": "한자혁명 v1.7.0 실전 카드 5장으로 학습 설정, 내 기록, 즉시 채점과 복습 도우미를 확인합니다. 원본 플랫폼 HTML에는 대표 카드 20장이 있습니다.",
       "preview": "previews/anki-deck-platform/v1.3.0/index.html",
-      "preview_label": "공통 설정·채점·오답 필터 체험"
+      "preview_label": "공통 설정·채점·오답 필터 체험",
+      "tracks": {
+        "production": []
+      },
+      "shot_kind": "card"
     },
     {
       "subject": "japanese",
@@ -1371,8 +1574,17 @@
         "notes": 5000,
         "cards": 5000
       },
-      "shots": [],
-      "shot_scope": "",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.6.0-front.jpg",
+          "caption": "앞면 · 실전문제와 선택지"
+        },
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.6.0-back.jpg",
+          "caption": "뒷면 · 정답·해설"
+        }
+      ],
+      "shot_scope": "해당 버전의 실제 HTML 미리보기에서 캡처한 대표 화면입니다.",
       "id": "kanji-revolution-v1.6.0",
       "product_id": "kanji-revolution",
       "title": "한자혁명 · 실전 제작 이력",
@@ -1495,7 +1707,8 @@
       },
       "qa_source": "릴리스 QA",
       "preview_asset": "Kanji_Revolution_PREVIEW_v1.6.0.html",
-      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다."
+      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다.",
+      "shot_kind": "card"
     },
     {
       "subject": "japanese",
@@ -1506,8 +1719,17 @@
         "notes": 10975,
         "cards": 13290
       },
-      "shots": [],
-      "shot_scope": "",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.3.1-rc1-front.jpg",
+          "caption": "앞면 · 何 읽기 질문"
+        },
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.3.1-rc1-back.jpg",
+          "caption": "뒷면 · 정답과 읽기·기본 정보"
+        }
+      ],
+      "shot_scope": "해당 버전의 실제 한자 읽기 카드에서 교재 그림과 원문 영역을 제외한 화면입니다.",
       "id": "kanji-revolution-v1.3.1-rc1",
       "product_id": "kanji-revolution",
       "title": "한자혁명 · TEXT 급수 보완",
@@ -1589,7 +1811,8 @@
       "prerelease": true,
       "qa_source": "릴리스 QA",
       "preview_asset": "Kanji_Revolution_PREVIEW_v1.3.1-RC1.html",
-      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다."
+      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다.",
+      "shot_kind": "adapted"
     },
     {
       "subject": "japanese",
@@ -1600,8 +1823,17 @@
         "notes": 10000,
         "cards": 10000
       },
-      "shots": [],
-      "shot_scope": "",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.7.0-front.jpg",
+          "caption": "앞면 · 실전문제와 선택지"
+        },
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.7.0-back.jpg",
+          "caption": "뒷면 · 정답·해설"
+        }
+      ],
+      "shot_scope": "해당 버전의 실제 HTML 미리보기에서 캡처한 대표 화면입니다.",
       "id": "kanji-revolution-v1.7.0",
       "product_id": "kanji-revolution",
       "title": "한자혁명 · 5파트 실전",
@@ -1689,7 +1921,8 @@
       "prerelease": true,
       "qa_source": "릴리스 QA",
       "preview_asset": "Kanji_Revolution_PREVIEW_v1.7.0.html",
-      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다."
+      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다.",
+      "shot_kind": "card"
     },
     {
       "subject": "japanese",
@@ -1700,8 +1933,17 @@
         "notes": 11975,
         "cards": 14290
       },
-      "shots": [],
-      "shot_scope": "",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.3.0-rc1-front.jpg",
+          "caption": "앞면 · 達 읽기 질문"
+        },
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.3.0-rc1-back.jpg",
+          "caption": "뒷면 · 정답과 읽기·기본 정보"
+        }
+      ],
+      "shot_scope": "해당 버전의 실제 한자 읽기 카드에서 교재 그림과 원문 영역을 제외한 화면입니다.",
       "id": "kanji-revolution-v1.3.0-rc1",
       "product_id": "kanji-revolution",
       "title": "한자혁명 · TEXT + 어휘 QUIZ",
@@ -1792,7 +2034,8 @@
       "prerelease": true,
       "qa_source": "릴리스 QA",
       "preview_asset": "Kanji_Revolution_PREVIEW_v1.3.0-RC1.html",
-      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다."
+      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다.",
+      "shot_kind": "adapted"
     },
     {
       "subject": "japanese",
@@ -2188,7 +2431,7 @@
           "sha256": "63c7899adfa71c34dd4711b9b97570e39e14ceb27eb4c01b93f37a5a957f5d2f"
         }
       ],
-      "shot_scope": "v1.1.0 QUIZ APKG의 실제 HTML·CSS·대표 노트와 미디어를 읽기 전용으로 추출했습니다. 디자인 승인용 HTML은 이 캡처에 사용하지 않았습니다.",
+      "shot_scope": "해당 버전의 실제 어휘 퀴즈 화면입니다. 원본 HTML은 릴리스에서 받을 수 있습니다.",
       "assets": [
         {
           "name": "Kanji_Revolution_Accuracy_UI_PREVIEW_v1.1.0-RC2.html",
@@ -2265,7 +2508,8 @@
       ],
       "blocked": false,
       "counts": {},
-      "preview_scope": "릴리스에 연결된 실제 화면 2컷입니다."
+      "preview_scope": "릴리스에 연결된 실제 화면 2컷입니다.",
+      "preview_asset": "Kanji_Revolution_UI_PREVIEW_v1.1.0.html"
     },
     {
       "learner": null,

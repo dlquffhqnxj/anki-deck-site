@@ -9,12 +9,16 @@
   const seoulDate = new Intl.DateTimeFormat('ko-KR', {dateStyle:'medium', timeZone:'Asia/Seoul'});
   const detailUrl = d => `deck.html?id=${encodeURIComponent(d.id)}`;
   const previewUrl = d => `preview.html?id=${encodeURIComponent(d.id)}`;
+  const trialUrl = d => `trial.html?id=${encodeURIComponent(d.id)}`;
   const hasInteractivePreview = d => Boolean(d.preview || d.sample);
+  const hasPackage = d => d.assets.some(a => a.name.endsWith('.apkg') && !a.blocked);
   const badge = d => `<span class="badge ${d.blocked ? 'badge-fail' : ''}">${d.blocked ? '설치 보류' : d.classification === 'pilot' ? '제작 표본' : d.classification === 'platform' ? '제작 도구' : d.prerelease ? '배포 후보' : '정식 릴리스'}</span>`;
   const accessNote = `<div class="access-note"><strong>다운로드 안내</strong><p>GitHub 저장소는 비공개입니다. 파일을 받으려면 저장소 접근 권한이 있는 계정으로 로그인해 주세요.</p></div>`;
   const title = (kicker, heading, copy) => `<div class="page-title"><div><p class="kicker">${esc(kicker)}</p><h1>${esc(heading)}</h1>${copy ? `<p class="intro">${esc(copy)}</p>` : ''}</div></div>`;
   function shots(d, large = false) {
-    return `<div class="shot-pair ${large ? 'detail-pair' : ''}">${d.shots.map((s, i) => `<figure class="shot"><button class="shot-button" type="button" data-image="${esc(s.path)}" data-caption="${esc(d.title + ' · ' + s.caption)}" aria-label="${esc(d.title + ' · ' + s.caption + ' 크게 보기')}"><img src="${esc(s.path)}" alt="${esc(d.title + ' ' + d.version + ' · ' + s.caption)}" loading="${large || i === 0 ? 'eager' : 'lazy'}" width="750" height="550"></button><figcaption class="shot-caption">${esc(s.caption)}</figcaption></figure>`).join('')}</div>`;
+    const controls = `<div class="shot-switch" role="group" aria-label="${esc(d.title)} 대표 화면"><button type="button" data-shot-side="0" aria-pressed="true">화면 1</button><button type="button" data-shot-side="1" aria-pressed="false">화면 2</button></div>`;
+    const figures = d.shots.map((s, i) => `<figure class="shot" data-shot-panel="${i}"><button class="shot-button" type="button" data-image="${esc(s.path)}" data-caption="${esc(d.title + ' · ' + s.caption)}" aria-label="${esc(d.title + ' · ' + s.caption + ' 크게 보기')}"><img src="${esc(s.path)}" alt="${esc(d.title + ' ' + d.version + ' · ' + s.caption)}" loading="${large || i === 0 ? 'eager' : 'lazy'}" width="750" height="550"></button><figcaption class="shot-caption">${esc(s.caption)}</figcaption></figure>`).join('');
+    return `<div class="shot-gallery" data-active-shot="0">${d.shots.length === 2 ? controls : ''}<div class="shot-pair ${large ? 'detail-pair' : ''}">${figures}</div></div>`;
   }
   function samplePair(d, large) {
     const sample = d.sample;
@@ -36,13 +40,57 @@
   }
   function catalog() {
     const current = data.decks.filter(d => d.current);
-    main.innerHTML = `<div class="page-title"><div><p class="kicker">DECK LIBRARY</p><h1>학습할 덱을 골라보세요</h1><p class="intro">덱의 앞·뒷면을 비교하고, 카드 미리보기에서 직접 풀어보세요.</p></div><div class="page-meta"><div><strong>${current.length}</strong><span>현재 항목</span></div><div><strong>${data.decks.length}</strong><span>등록 릴리스</span></div></div></div>${accessNote}<div class="filter-bar"><div class="filters" role="group" aria-label="과목별 덱"><button class="filter" type="button" data-filter="all" aria-pressed="true">전체</button><button class="filter" type="button" data-filter="japanese" aria-pressed="false">일본어</button><button class="filter" type="button" data-filter="english" aria-pressed="false">영어·TOEIC</button><button class="filter" type="button" data-filter="electrical-engineer" aria-pressed="false">전기기사</button><button class="filter" type="button" data-filter="certifications" aria-pressed="false">환경성적표지</button><button class="filter" type="button" data-filter="tools" aria-pressed="false">제작 플랫폼</button></div><span class="result-count" id="results" aria-live="polite">현재 항목 ${current.length}개</span></div><section class="deck-grid" aria-label="현재 덱과 제작 자료">${current.map(d => `<article class="deck-card" data-subject="${esc(d.subject)}"><div class="card-head"><div class="card-top"><span class="subject">${esc(d.subject_label)}</span><span class="version">${esc(d.version)}</span></div><h2 class="card-title"><a href="${detailUrl(d)}">${esc(d.title)}</a></h2><p class="card-description">${esc(d.purpose)}</p></div>${previewPair(d)}<div class="card-bottom">${badge(d)}<div class="card-links"><a class="card-action" href="${detailUrl(d)}">상세·파일</a>${hasInteractivePreview(d) ? `<a class="button" href="${previewUrl(d)}">미리보기</a>` : ''}</div></div></article>`).join('')}</section><div class="section panel preview-launch"><div><h2>이전판을 찾고 있나요?</h2><p>등록된 이전 릴리스의 화면과 파일은 릴리스 기록에 보관되어 있습니다.</p></div><a class="button" href="releases.html">릴리스 기록 보기</a></div>`;
-    document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', () => {
-      document.querySelectorAll('[data-filter]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-      let count = 0;
-      document.querySelectorAll('.deck-card').forEach(c => { c.hidden = b.dataset.filter !== 'all' && c.dataset.subject !== b.dataset.filter; if (!c.hidden) count++; });
-      document.querySelector('#results').textContent = `현재 항목 ${count}개`;
-    }));
+    const subjects = new Map(current.map(d => [d.subject, d.subject_label]));
+    const levels = ['N5', 'N4', 'N3', 'N2', 'N1'];
+    const topics = {kanji:'한자 읽기·쓰기', language:'어휘·문법', practice:'실전문제', work:'실무', summary:'핵심 정리', production:'덱 제작'};
+    const options = (entries, first) => `<option value="">${first}</option>${entries.map(([key, label]) => `<option value="${esc(key)}">${esc(label)}</option>`).join('')}`;
+    main.innerHTML = `<div class="page-title"><div><h1>학습할 덱을 골라보세요</h1><p class="intro">학습 목적에 맞는 덱을 찾고 대표 카드를 풀어보세요.</p></div><div class="page-meta"><div><strong>${current.length}</strong><span>현재 항목</span></div><div><strong>${data.decks.length}</strong><span>등록 릴리스</span></div></div></div>
+      <form class="catalog-filters panel" role="search" aria-label="덱 찾기">
+        <label class="filter-search">덱 이름 또는 내용<input type="search" name="q" maxlength="100" placeholder="예: 한자혁명, 독해, TOEIC"></label>
+        <label>과목<select name="subject" aria-label="과목">${options([...subjects], '전체 과목')}</select></label>
+        <label>JLPT 급수<select name="level" aria-label="JLPT 급수">${options(levels.map(l => [l,l]), '전체 급수')}</select></label>
+        <label>학습 목적<select name="topic" aria-label="학습 목적">${options(Object.entries(topics), '전체 목적')}</select></label>
+        <button class="button" type="reset">초기화</button>
+      </form>
+      <p class="result-count" id="results" role="status"></p>
+      <section class="deck-grid" aria-label="현재 덱과 제작 자료">${current.map(deckCard).join('')}</section>
+      <p class="empty" id="no-decks" hidden>조건에 맞는 덱이 없습니다. 검색어나 필터를 바꿔 보세요.</p>
+      <div class="section panel preview-launch"><div><h2>이전판을 찾고 있나요?</h2><p>이전 릴리스의 미리보기와 배포 파일을 볼 수 있습니다.</p></div><a class="button" href="releases.html">릴리스 기록 보기</a></div>`;
+    const form = main.querySelector('form');
+    const cards = [...main.querySelectorAll('.deck-card')];
+    const params = new URLSearchParams(location.search);
+    for (const field of form.querySelectorAll('input, select')) {
+      if (params.has(field.name)) field.value = params.get(field.name).slice(0, 100);
+    }
+    const aliases = {english:'영어 토익', japanese:'일본어 JLPT', 'electrical-engineer':'전기기사 자격증'};
+    const searchable = current.map(d => [
+      d.title, d.version, d.subject_label, d.purpose, aliases[d.subject], ...d.structure,
+      ...Object.entries(d.tracks || {}).flatMap(([topic, grades]) => [topics[topic], ...grades])
+    ].join(' ').toLowerCase());
+    function applyFilters() {
+      const {q, subject, level, topic} = Object.fromEntries(new FormData(form));
+      const tokens = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      cards.forEach((card, index) => {
+        const d = current[index];
+        const matchesTrack = (!level && !topic) || Object.entries(d.tracks || {}).some(([key, grades]) => (!topic || key === topic) && (!level || grades.includes(level)));
+        card.hidden = Boolean((subject && d.subject !== subject) || !matchesTrack || !tokens.every(token => searchable[index].includes(token)));
+        if (!card.hidden) shown++;
+      });
+      document.querySelector('#results').textContent = `덱 ${shown}개`;
+      document.querySelector('#no-decks').hidden = shown !== 0;
+      const updated = new URLSearchParams(Object.entries({q, subject, level, topic}).filter(([, value]) => value.trim()));
+      history.replaceState(null, '', location.pathname + (updated.toString() ? '?' + updated : ''));
+    }
+    form.addEventListener('input', applyFilters);
+    form.addEventListener('submit', event => { event.preventDefault(); applyFilters(); });
+    form.addEventListener('reset', () => queueMicrotask(applyFilters));
+    applyFilters();
+  }
+  function deckCard(d) {
+    const action = d.trial ? `<a class="button primary" href="${trialUrl(d)}">3문항 풀기</a>`
+      : hasInteractivePreview(d) ? `<a class="button" href="${previewUrl(d)}">미리보기</a>` : '';
+    return `<article class="deck-card"><div class="card-head"><div class="card-top"><span class="subject">${esc(d.subject_label)}</span><span class="version">${esc(d.version)}</span></div><h2 class="card-title"><a href="${detailUrl(d)}">${esc(d.title)}</a></h2><p class="card-description">${esc(d.purpose)}</p></div>${previewPair(d)}<div class="card-bottom">${badge(d)}<div class="card-links"><a class="card-action" href="${detailUrl(d)}">상세·파일</a>${action}</div></div></article>`;
   }
   const statusClass = v => v === 'PASS' || v === 'STATIC_PASS' ? 'pass' : v === 'FAIL' ? 'fail' : 'pending';
   const qaLabels = {STATIC:'파일·카드 구성 검사', IMPORT:'새 프로필 가져오기', UPDATE:'기존 덱 업데이트', DEVICE:'기기별 실행·동작'};
@@ -62,9 +110,44 @@
     const parts = [['notes','노트'],['cards','카드'],['media','미디어']].filter(([k]) => Number.isInteger(d.counts?.[k])).map(([k,label]) => `${label} ${d.counts[k].toLocaleString('ko-KR')}${k==='notes'?'개':k==='media'?'개':'장'}`);
     return parts.length ? `<p class="scope">등록 수량 · ${parts.join(' · ')}</p>` : '';
   }
+  function installPanel(d) {
+    if (!hasPackage(d)) return '';
+    const apkg = d.assets.find(a => a.name === d.install?.asset && !a.blocked);
+    const paths = d.install?.paths || [
+      {id:'fresh', label:'처음 설치', copy:'APKG를 받고 Anki의 파일 → 가져오기에서 엽니다.'},
+      {id:'update', label:'기존 덱 업데이트', copy:d.update}
+    ];
+    const existing = paths.filter(p => p.id !== 'fresh');
+    return `<section class="section panel install-panel" id="install">
+      <h2>설치·업데이트</h2>
+      ${d.package_counts ? `<p class="package-counts">한자 학습 <strong>${d.package_counts.study.toLocaleString('ko-KR')}장</strong> · 5파트 실전 <strong>${d.package_counts.practice.toLocaleString('ko-KR')}문항</strong></p>` : ''}
+      <div class="install-modes" role="group" aria-label="설치 상황"><button class="button" type="button" data-install-mode="fresh" aria-pressed="true">처음 설치</button><button class="button" type="button" data-install-mode="update" aria-pressed="false">기존 덱 업데이트</button></div>
+      <label class="install-version" hidden>지금 쓰는 버전<select id="install-from" aria-label="지금 쓰는 버전">${existing.map(p => `<option value="${esc(p.id)}">${esc(p.label)}</option>`).join('')}</select></label>
+      <div id="install-instructions" aria-live="polite"></div>
+      <div class="install-download">${apkg ? external(apkg.url, '통합 APKG 받기', 'button primary') : '<a class="button primary" href="#downloads">APKG 목록 보기</a>'}<p>다운로드하려면 GitHub에 로그인하세요.</p></div>
+    </section>`;
+  }
+  function bindInstall(d) {
+    const panel = main.querySelector('#install');
+    if (!panel) return;
+    const modes = [...panel.querySelectorAll('[data-install-mode]')];
+    const select = panel.querySelector('#install-from');
+    let mode = 'fresh';
+    function render() {
+      const initial = {copy:'APKG를 받고 Anki의 파일 → 가져오기에서 엽니다.'};
+      const path = d.install?.paths.find(p => p.id === (mode === 'fresh' ? 'fresh' : select.value))
+        || (mode === 'fresh' ? initial : {copy:d.update});
+      select.closest('label').hidden = mode !== 'update' || !d.install;
+      modes.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.installMode === mode)));
+      panel.querySelector('#install-instructions').innerHTML = `<p>${esc(path.copy)}</p>${path.scope ? `<p class="scope">${esc(path.scope)}</p>` : ''}`;
+    }
+    modes.forEach(button => button.addEventListener('click', () => { mode = button.dataset.installMode; render(); }));
+    select.addEventListener('change', render);
+    render();
+  }
   function detail(d) {
     document.title = `${d.title} ${d.version} · Anki 덱 라이브러리`;
-    main.innerHTML = `<a class="back" href="${d.current ? 'index.html' : 'releases.html'}">${d.current ? '덱 라이브러리' : '릴리스 기록'}로 돌아가기</a><div class="detail-header"><div class="detail-title"><p class="kicker">${esc(d.subject_label)}</p><h1>${esc(d.title)}</h1><div class="detail-badges"><span class="version">${esc(d.version)}</span>${badge(d)}${!d.current ? '<span class="badge badge-muted">이전판</span>' : ''}</div><p class="detail-description">${esc(d.purpose)}</p>${countLine(d)}</div></div><div class="detail-actions">${hasInteractivePreview(d) ? `<a class="button primary" href="${previewUrl(d)}">${d.classification === 'platform' ? '동작 체험' : '카드 직접 보기'}</a>` : ''}${originalPreviewLink(d)}${external(d.release_url, 'GitHub 릴리스', 'button')}<a class="button" href="#downloads">배포 파일 보기</a></div>${relatedVersions(d)}<section class="section"><div class="section-heading"><h2>${d.shots.length ? '실제 카드 화면 2컷' : '앞·뒷면 학습 예시'}</h2>${d.shots.length ? '<span class="section-note">눌러서 크게 보기</span>' : ''}</div>${previewPair(d, true)}${d.shot_scope ? `<p class="scope">${esc(d.shot_scope)}</p>` : ''}</section>${d.blocked ? '<div class="section access-note"><strong>설치 보류</strong><p>기존 배포 ZIP에 손상 기록이 있습니다. 복구한 내부 카드의 미리보기는 확인할 수 있지만, 정상 배포 패키지가 확인되기 전에는 새 설치에 사용하지 마세요.</p></div>' : ''}<section class="section" id="downloads"><div class="section-heading"><h2>다운로드</h2><span class="section-note">등록된 릴리스 자산</span></div>${accessNote}${d.download_note ? `<p class="device-note">${esc(d.download_note)}</p>` : ''}${downloads(d)}</section><section class="section"><div class="section-heading"><h2>기록된 검증 상태</h2></div>${qaBoxes(d)}${runtimeDevices(d)}${d.qa_note ? `<p class="device-note">${esc(d.qa_note)}</p>` : ''}${d.device_note ? `<p class="device-note">${esc(d.device_note)}</p>` : ''}<p class="scope">이 표는 GitHub에 기록된 Anki 검증 상태입니다. 사이트의 화면 확인으로 상태를 올리지 않습니다.</p></section>${support.deck(d)}<section class="section guide-grid"><article class="panel body-copy"><h2>학습 방법</h2><p>${esc(d.study)}</p>${d.structure.length ? `<ul>${d.structure.map(v => `<li>${esc(v)}</li>`).join('')}</ul>` : ''}</article><article class="panel body-copy"><h2>업데이트</h2><p>${esc(d.update)}</p><p><a href="guide.html#update">공통 설치·업데이트 안내</a></p></article></section>`;
+    main.innerHTML = `<a class="back" href="${d.current ? 'index.html' : 'releases.html'}">${d.current ? '덱 라이브러리' : '릴리스 기록'}로 돌아가기</a><div class="detail-header"><div class="detail-title"><p class="kicker">${esc(d.subject_label)}</p><h1>${esc(d.title)}</h1><div class="detail-badges"><span class="version">${esc(d.version)}</span>${badge(d)}${!d.current ? '<span class="badge badge-muted">이전판</span>' : ''}</div><p class="detail-description">${esc(d.purpose)}</p>${countLine(d)}</div></div><div class="detail-actions">${d.trial ? `<a class="button primary" href="${trialUrl(d)}">3문항 풀기</a>` : ''}${hasInteractivePreview(d) ? `<a class="button ${d.trial ? '' : 'primary'}" href="${previewUrl(d)}">${d.classification === 'platform' ? '동작 체험' : '카드 미리보기'}</a>` : ''}${hasPackage(d) ? '<a class="button" href="#install">설치·업데이트</a>' : ''}${originalPreviewLink(d)}${external(d.release_url, 'GitHub 릴리스', 'button')}<a class="button" href="#downloads">배포 파일 보기</a></div>${relatedVersions(d)}${installPanel(d)}<section class="section"><div class="section-heading"><h2>${d.shots.length && d.shot_kind !== 'example' ? '대표 카드 화면' : '앞·뒷면 학습 예시'}</h2>${d.shots.length ? '<span class="section-note">눌러서 크게 보기</span>' : ''}</div>${previewPair(d, true)}${d.shot_scope ? `<p class="scope">${esc(d.shot_scope)}</p>` : ''}</section>${d.blocked ? '<div class="section access-note"><strong>설치 보류</strong><p>기존 배포 ZIP에 손상 기록이 있습니다. 복구한 내부 카드의 미리보기는 확인할 수 있지만, 정상 배포 패키지가 확인되기 전에는 새 설치에 사용하지 마세요.</p></div>' : ''}<section class="section" id="downloads"><div class="section-heading"><h2>다운로드</h2><span class="section-note">등록된 릴리스 자산</span></div>${accessNote}${d.download_note ? `<p class="device-note">${esc(d.download_note)}</p>` : ''}${downloads(d)}</section><section class="section"><div class="section-heading"><h2>기록된 검증 상태</h2></div>${qaBoxes(d)}${runtimeDevices(d)}${d.qa_note ? `<p class="device-note">${esc(d.qa_note)}</p>` : ''}${d.device_note ? `<p class="device-note">${esc(d.device_note)}</p>` : ''}<p class="scope">이 표는 GitHub에 기록된 Anki 검증 상태입니다. 사이트의 화면 확인으로 상태를 올리지 않습니다.</p></section>${support.deck(d)}<section class="section guide-grid"><article class="panel body-copy"><h2>학습 방법</h2><p>${esc(d.study)}</p>${d.structure.length ? `<ul>${d.structure.map(v => `<li>${esc(v)}</li>`).join('')}</ul>` : ''}</article><article class="panel body-copy"><h2>업데이트</h2><p>${esc(d.update)}</p><p><a href="guide.html#update">공통 설치·업데이트 안내</a></p></article></section>`;
   }
   function releases() {
     main.innerHTML = `${title('RELEASES', '릴리스 기록', '현재판과 이전판의 화면·배포 파일을 확인할 수 있습니다.')}${accessNote}<div class="section-heading"><h2>현재판</h2><span class="section-note">${data.decks.filter(d=>d.current).length}개</span></div><section class="release-list">${data.decks.filter(d=>d.current).map(releaseRow).join('')}</section><h2 class="previous-heading">이전판</h2><section class="release-list">${data.decks.filter(d=>!d.current).map(releaseRow).join('')}</section>`;
@@ -95,7 +178,7 @@
           ? `<iframe class="preview-frame" src="${esc(d.preview)}" title="${esc(d.title + ' 실제 카드 미리보기')}" sandbox="allow-scripts allow-same-origin allow-downloads"></iframe>`
           : sampleExercise(d.sample)}
       <p class="scope">${esc(d.preview_scope || d.shot_scope)} 학습 기록은 Anki에 저장되지 않습니다.</p>
-      ${d.sample && d.shots.length ? `<section class="section"><h2>실제 카드 화면 2컷</h2>${shots(d, true)}</section>` : ''}`;
+      ${d.sample && d.shots.length ? `<section class="section"><h2>${d.shot_kind === 'example' ? '학습 예시 화면' : '대표 카드 화면'}</h2>${shots(d, true)}</section>` : ''}`;
     if (!d.preview) bindSample(d.sample);
   }
   function sampleExercise(sample) {
@@ -145,6 +228,15 @@
     });
   }
   function images() {
+    main.querySelectorAll('.shot-switch').forEach(group => {
+      group.addEventListener('click', event => {
+        const button = event.target.closest('[data-shot-side]');
+        if (!button) return;
+        group.closest('.shot-gallery').dataset.activeShot = button.dataset.shotSide;
+        group.querySelectorAll('button').forEach(control => control.setAttribute('aria-pressed', String(control === button)));
+      });
+    });
+    if (!main.querySelector('[data-image]')) return;
     const dialog = document.createElement('dialog');
     dialog.innerHTML = '<div class="dialog-top"><p id="image-caption"></p><button type="button" class="dialog-close">닫기</button></div><img class="dialog-image" alt="">';
     dialog.setAttribute('aria-labelledby', 'image-caption'); document.body.append(dialog);
@@ -157,17 +249,19 @@
   try {
     if (!data?.decks?.length) throw new Error('덱 정보가 없습니다.');
     const filename = location.pathname.split('/').pop() || 'index.html';
-    const route = {'releases.html':'releases','guide.html':'guide','qa.html':'qa','deck.html':'deck','preview.html':'preview'}[filename] || 'catalog';
+    const route = {'releases.html':'releases','guide.html':'guide','qa.html':'qa','deck.html':'deck','preview.html':'preview','trial.html':'trial'}[filename] || 'catalog';
     const id = new URLSearchParams(location.search).get('id');
     const d = data.decks.find(d=>d.id===id);
     if (route === 'catalog') catalog(); else if (route === 'releases') releases(); else if (route === 'guide') guide(); else if (route === 'qa') qa();
+    else if (d && route === 'trial' && d.trial) window.LibraryTrial.render(main, d, esc, detailUrl(d));
     else if (d) route === 'preview' ? preview(d) : detail(d);
     else main.innerHTML = '<div class="missing"><h1>덱을 찾을 수 없습니다</h1><p>덱 라이브러리에서 다시 선택해 주세요.</p><a class="button primary" href="index.html">덱 라이브러리</a></div>';
+    if (d && route === 'deck') bindInstall(d);
     support.bind();
-    const navRoute = ['deck','preview'].includes(route) ? 'catalog' : route;
+    const navRoute = ['deck','preview','trial'].includes(route) ? 'catalog' : route;
     document.querySelector(`[data-nav="${navRoute}"]`)?.classList.add('active');
     document.querySelector(`[data-nav="${navRoute}"]`)?.setAttribute('aria-current','page');
-    document.querySelector('#breadcrumb').textContent = ({catalog:'덱 라이브러리',releases:'릴리스 기록',guide:'설치·업데이트',qa:'검증·호환성',deck:'덱 상세',preview:'카드 미리보기'})[route];
+    document.querySelector('#breadcrumb').textContent = ({catalog:'덱 라이브러리',releases:'릴리스 기록',guide:'설치·업데이트',qa:'검증·호환성',deck:'덱 상세',preview:'카드 미리보기',trial:'3문항 학습 체험'})[route];
     document.querySelector('#snapshot-date').textContent = data.updated_at.replaceAll('-','.');
     images();
   } catch(e) {
