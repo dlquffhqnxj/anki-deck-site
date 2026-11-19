@@ -193,6 +193,24 @@ main:focus { outline: none; }
 .missing .button { margin-top: 15px; }
 .noscript { margin: 0 var(--gutter) 24px; }
 
+.study-home { margin-bottom: clamp(24px, 3.4vw, 42px); }
+.study-home-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 14px; }
+.study-home-heading p { color: var(--muted); font-size: .9rem; word-break: keep-all; }
+.study-home-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.study-home-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px clamp(12px, 2vw, 20px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+.study-home-card h2 { font-size: clamp(1.15rem, 2.4vw, 1.35rem); }
+.study-home-card p { margin-top: 3px; color: var(--muted); font-size: .875rem; font-variant-numeric: tabular-nums; }
+.study-home-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+
 .library-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
@@ -204,8 +222,8 @@ main:focus { outline: none; }
   background: var(--paper);
   box-shadow: var(--shadow);
 }
-.hero-copy h1 { font-size: clamp(2.02rem, 4.1vw, 3.25rem); line-height: 1.2; letter-spacing: -.05em; }
-.hero-copy h1 span { color: var(--accent); }
+.hero-copy h2 { font-size: clamp(2.02rem, 4.1vw, 3.25rem); line-height: 1.2; letter-spacing: -.05em; }
+.hero-copy h2 span { color: var(--accent); }
 .hero-copy p { max-width: 37ch; margin-top: 14px; color: var(--muted); font-size: clamp(1rem, 1.4vw, 1.1rem); }
 .hero-actions, .detail-actions, .card-links, .release-links, .preview-actions, .sample-controls {
   display: flex;
@@ -512,6 +530,12 @@ dialog::backdrop { background: rgb(35 27 20 / .72); }
   .nav-link { padding: 4px; font-size: .8125rem; text-align: center; white-space: normal; word-break: keep-all; }
   .nav-full { display: none; }
   .nav-short { display: inline; }
+  .study-home-heading { display: block; }
+  .study-home-heading p { margin-top: 4px; }
+  .study-home-grid { grid-template-columns: 1fr; gap: 8px; }
+  .study-home-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: 11px 12px; }
+  .study-home-actions { justify-content: flex-end; }
+  .study-home-actions .button { padding-inline: 10px; }
   .hero-copy p { margin-top: 10px; }
   .hero-actions { margin-top: 14px; }
   .hero-preview { padding: 10px; }
@@ -546,6 +570,9 @@ dialog::backdrop { background: rgb(35 27 20 / .72); }
   .preview-frame { height: 78vh; min-height: 570px; }
   .trial-controls { position: sticky; bottom: 0; padding: 9px 0 max(9px, env(safe-area-inset-bottom)); background: var(--bg); }
   .trial-controls .button { flex: 1; }
+}
+@media (max-width: 400px) {
+  .study-home-actions { flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce) {
   .button, .guide-button { transition: none; }

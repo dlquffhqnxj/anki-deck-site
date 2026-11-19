@@ -58,9 +58,16 @@
     const topics = {kanji:'한자 읽기·쓰기', language:'어휘·문법', practice:'실전문제', work:'실무', summary:'핵심 정리', production:'덱 제작'};
     const options = (entries, first) => `<option value="">${first}</option>${entries.map(([key, label]) => `<option value="${esc(key)}">${esc(label)}</option>`).join('')}`;
     main.innerHTML = `
+      <section class="study-home" aria-labelledby="today-study-title">
+        <header class="study-home-heading">
+          <h1 id="today-study-title">오늘의 학습</h1>
+          <p>이 브라우저에 저장된 풀이를 이어서 볼 수 있어요.</p>
+        </header>
+        <div class="study-home-grid" id="study-home-courses"></div>
+      </section>
       <section class="library-hero" aria-labelledby="library-title">
         <div class="hero-copy">
-          <h1 id="library-title">공부에 맞는<br><span>Anki 덱을 찾으세요</span></h1>
+          <h2 id="library-title">공부에 맞는<br><span>Anki 덱을 찾으세요</span></h2>
           <p>일본어, TOEIC, 전기기사, 환경성적표지. 실제 카드 화면을 보고 학습할 버전을 골라보세요.</p>
           <div class="hero-actions">
             <a class="button primary" href="#decks">덱 둘러보기</a>
