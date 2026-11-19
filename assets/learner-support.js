@@ -4,8 +4,13 @@
   const repo = 'https://github.com/dlquffhqnxj/anki-deck-project/blob/main/';
   function evidence(d,key) {
     const value=d.qa[key] || 'NOT_TESTED';
+    if (d.qa_source) {
+      return key === 'STATIC'
+        ? `<details class="qa-evidence"><summary>릴리스 검증 범위</summary><p>${esc(d.qa_note)}</p><a class="text-link" href="${esc(d.release_url)}" target="_blank" rel="noopener noreferrer">릴리스 QA 기록 · 권한 필요</a></details>`
+        : '';
+    }
     let done='',left='',type='기존 제품별 검증 기록',date='원문 날짜 참조';
-    if(!d.current) {done='해당 이전판의 Release 기록만 반영합니다.';left='현재판의 결과는 이전판에 적용하지 않습니다.';}
+    if(!d.current&&!d.qa_reported_at) {done='해당 이전판의 Release 기록만 반영합니다.';left='현재판의 결과는 이전판에 적용하지 않습니다.';}
     else if(key==='STATIC') {
       done=value==='NOT_TESTED'?'이번 파일·카드 구성 검사는 수행하지 않았습니다.':d.product_id==='epd-auditor'?'단독 APKG 크기·SHA-256이 기존 CRC·SQLite 검증본과 일치합니다.':'기존 제품별 파일·카드 구조 검사 결과를 유지합니다.';
       left=value==='NOT_TESTED'?'사용자 요청에 따라 검사 보류. NOT_TESTED 자체는 오류 판정이 아닙니다.':d.product_id==='epd-auditor'?'미디어·필드 참조의 전수 확인이 남았습니다.':'내용 전수 감수와 실제 기기 동작은 별도 범위입니다.';
