@@ -1,112 +1,244 @@
 window.ANKI_LIBRARY = {
   "schema_version": 1,
-  "site_version": "1.1.0",
-  "updated_at": "2026-10-02",
+  "site_version": "1.2.0",
+  "updated_at": "2026-11-19",
   "source_repository": "dlquffhqnxj/anki-deck-project",
-  "source_commit": "98645cf64f5f526214f6f0278fb356976d03deac",
+  "source_commit": "51098886cacce8b0050c70d707092c3366974d96",
   "decks": [
     {
-      "learner": {
-        "version": "v1.2.0-RC1",
-        "reviewed_at": "2026-10-02",
-        "steps": [
-          {
-            "title": "한자 인식부터",
-            "text": "급수 하나를 정해 의미와 읽기를 회상합니다."
-          },
-          {
-            "title": "쓰기·대표어 추가",
-            "text": "같은 급수에서 쓰기와 대표어 읽기를 단계적으로 더합니다."
-          },
-          {
-            "title": "실전 N4·N3",
-            "text": "해당 급수를 복습한 뒤 실전문제로 적용합니다."
-          }
-        ],
-        "change_title": "등록·검증 정리",
-        "changes": [
-          "실제 APKG에서 카드 템플릿 4종과 복원 MASTER를 추출했습니다.",
-          "v1.1.2 실파일이 없어 이전판 대비 콘텐츠 차이는 아직 산출하지 않았습니다."
-        ],
-        "issues": [],
-        "source": ".github/release-notes/jlpt-kanji-lab-v1.2.0.md"
-      },
-      "qa_reported_at": "2026-10-02",
-      "id": "jlpt-kanji-lab-v1.2.0",
-      "product_id": "jlpt-kanji-lab",
-      "title": "JLPT Kanji LAB 2136",
       "subject": "japanese",
       "subject_label": "일본어",
-      "version": "v1.2.0-RC1",
       "current": true,
-      "prerelease": true,
-      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_2136",
-      "published_at": "2026-09-12T04:47:40Z",
-      "purpose": "한자의 의미·읽기·쓰기와 대표어를 서로 다른 회상 행동으로 익히고, N4·N3 형식의 실전문제로 적용합니다.",
-      "study": "급수 하나에서 한자 인식 카드를 먼저 익힌 뒤 쓰기와 대표어 읽기를 단계적으로 추가합니다. 실전문제는 해당 급수 복습 뒤 풉니다.",
-      "update": "v1.1.2 실제 APKG가 없어 업데이트 검증은 아직 미수행입니다. 기존 프로필을 백업하고 테스트 프로필에서 중복과 학습 이력 보존을 먼저 확인합니다.",
+      "blocked": false,
+      "counts": {
+        "notes": 20975,
+        "cards": 23290,
+        "media": 4665
+      },
+      "shots": [],
+      "shot_scope": "",
+      "id": "kanji-revolution-v1.7.1-rc1",
+      "product_id": "kanji-revolution",
+      "title": "한자혁명 · Kanji Revolution",
+      "version": "v1.7.1-RC1",
+      "purpose": "한자 학습 13,290장과 5파트 실전 10,000문항을 한 APKG로 가져오는 통합 후보입니다.",
       "structure": [
-        "한자 읽기 N5~N1",
-        "한자 쓰기 N5~N1",
-        "단어 읽기 N5~N1",
-        "실전문제 N4·N3"
+        "학습 13,290장 · 한자 읽기·쓰기, 대표 단어 읽기",
+        "실전 10,000문항 · 유사 한자, 기본 뜻·읽기, 어휘·문맥, 동사 활용, 종합 실전",
+        "v1.3의 어휘 QUIZ 1,000문항은 별도 APKG"
+      ],
+      "study": "한자 읽기·쓰기와 대표어 읽기로 학습한 뒤 5파트 실전에서 적용합니다. 유사 한자 비교에서는 두 글자를 구별하는 획과 대표 어휘를 확인합니다.",
+      "update": "컬렉션을 백업한 뒤 같은 프로필에 통합 APKG를 가져옵니다. 노트와 노트 유형은 더 최신인 경우에만 업데이트하고 패키지의 학습 일정 가져오기는 끕니다.",
+      "download_note": "처음 쓰는 경우 통합 APKG 한 파일을 가져오면 학습과 실전문제가 표시됩니다. 기존 어휘 QUIZ 1,000문항은 v1.3.0-RC1에서 별도 설치할 수 있습니다.",
+      "related": [
+        [
+          "kanji-revolution-v1.3.0-rc1",
+          "v1.3.0 학습 TEXT·어휘 QUIZ"
+        ],
+        [
+          "kanji-revolution-v1.7.0",
+          "v1.7.0 실전 10,000문항"
+        ]
       ],
       "qa": {
         "STATIC": "PASS",
         "IMPORT": "PASS",
-        "UPDATE": "NOT_TESTED",
-        "DEVICE": "PARTIAL"
+        "UPDATE": "PARTIAL",
+        "DEVICE": "NOT_TESTED"
       },
-      "qa_note": "파일·카드 구조 검사 PASS. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
-      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
-      "runtime_devices": {
-        "Desktop": "PASS",
-        "iPhone": "PASS",
-        "iPad": "PASS",
-        "Android": "NOT_TESTED"
+      "qa_note": "Anki 엔진 25.9.2에서 새 프로필 23,290장, 재가져오기 중복 0장, 기존 v1.3.1 학습·v1.7.0 실전·별도 QUIZ 카드와 복습 표본 8장의 일정 및 로그를 확인했습니다. Anki 앱 화면·실기기·AnkiWeb 동기화는 미검증입니다.",
+      "sample": {
+        "type": "유사 한자",
+        "prompt": "‘흙’을 뜻하는 한자는 무엇일까요?",
+        "answer": "土",
+        "explanation": "土는 아래 가로획이 더 길고, 士는 위 가로획이 더 깁니다. 土地（とち）는 ‘토지’, 武士（ぶし）는 ‘무사’입니다.",
+        "options": [
+          "土",
+          "士"
+        ]
       },
-      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
-      "download_note": "",
-      "preview": "previews/jlpt-kanji-lab/v1.2.0/index.html",
-      "shots": [
-        {
-          "path": "assets/release-screenshots/jlpt-kanji-lab-v1.2.0-writing.jpg",
-          "caption": "한자 필기",
-          "sha256": "c270ecf53a82cec8d741a1ffba3c5ff59d046d3a24dd298ae3005eaf91e2adfe"
-        },
-        {
-          "path": "assets/release-screenshots/jlpt-kanji-lab-v1.2.0-writing-back.jpg",
-          "caption": "필기·정답 비교",
-          "sha256": "9cfd51e916a893444cccc8b7cf19d303e8a0eb55dc1173b747889713e815f47a"
-        }
-      ],
-      "shot_scope": "v1.2.0 실제 템플릿의 필기 화면과 정답 비교 화면입니다.",
+      "preview": "previews/kanji-revolution/v1.7.1-rc1/index.html",
+      "preview_label": "통합판 실제 카드 체험",
+      "preview_scope": "실제 릴리스 HTML에서 선정한 학습·실전 카드입니다. 원본 HTML에는 대표 카드 30장이 있습니다.",
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_Revolution_V1.7.1-RC1",
       "assets": [
         {
-          "name": "JLPT_Kanji_LAB_2136_v1.2.0.apkg",
-          "size": 2868487,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136/JLPT_Kanji_LAB_2136_v1.2.0.apkg",
-          "sha256": "b166ad378ccb79aa33cf7aeb84f499eae9a4539d0dffc7f9b3d6fd87d1a7e936",
+          "name": "Kanji_Revolution_COMPLETE_v1.7.1-RC1.apkg",
+          "size": 408334772,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.1-RC1/Kanji_Revolution_COMPLETE_v1.7.1-RC1.apkg",
+          "sha256": "b956747d9ae2ad9fb1502e40698929c99872213875e5814deeb6fa6a366ffa59",
           "kind": "APKG",
           "blocked": false
         },
         {
-          "name": "JLPT_Kanji_LAB_2136_v1.2.0_PREVIEW.zip",
-          "size": 50379,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136/JLPT_Kanji_LAB_2136_v1.2.0_PREVIEW.zip",
-          "sha256": "818d5677830922f4e82f263859d55b32e463a8170bbbff4e8ce4483c45212eb3",
-          "kind": "미리보기",
+          "name": "Kanji_Revolution_MASTER_v1.7.1-RC1.xlsx",
+          "size": 9134173,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.1-RC1/Kanji_Revolution_MASTER_v1.7.1-RC1.xlsx",
+          "sha256": "dc87dfc7a9a3a49588d0e4f6e86fca3d45a4d9180401d9a3e85346d35aea6b0e",
+          "kind": "Excel MASTER",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_PREVIEW_v1.7.1-RC1.html",
+          "size": 4229770,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.1-RC1/Kanji_Revolution_PREVIEW_v1.7.1-RC1.html",
+          "sha256": "52d5b210e133cfc6f51aa6fa6e5ef2a63d8dd7d172b65c6e94dc1996b5f401ba",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_PREVIEW_v1.7.1-RC1.zip",
+          "size": 2703516,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.1-RC1/Kanji_Revolution_PREVIEW_v1.7.1-RC1.zip",
+          "sha256": "67010d37554d37b1775c571a65d18538bb49529b1d7c965794be3c3bb18e43f3",
+          "kind": "미리보기 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_SHA256SUMS_v1.7.1-RC1.txt",
+          "size": 533,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.1-RC1/Kanji_Revolution_SHA256SUMS_v1.7.1-RC1.txt",
+          "sha256": "77b0e5d5bf34bac571ca0a202f0b900348959b55ba341d60288b70c2c6ae11b3",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_SUPPORT_v1.7.1-RC1.zip",
+          "size": 11392655,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.1-RC1/Kanji_Revolution_SUPPORT_v1.7.1-RC1.zip",
+          "sha256": "28c4500b32f980c5194b36f957d3c4a0b7658c22ed43660ff66bb512f1a55477",
+          "kind": "지원·배포 ZIP",
           "blocked": false
         }
       ],
+      "published_at": "2026-11-19T04:16:22Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "Kanji_Revolution_PREVIEW_v1.7.1-RC1.html"
+    },
+    {
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "current": true,
       "blocked": false,
       "counts": {
-        "notes": 2376,
-        "cards": 6648,
-        "media": 0,
-        "needs_review": 0,
-        "excluded": 0
-      }
+        "notes": 11975,
+        "cards": 16247,
+        "media": 237
+      },
+      "shots": [
+        {
+          "path": "assets/release-screenshots/jlpt-kanji-lab-v1.9.2-rc1-front.jpg",
+          "caption": "앞면 · 한자 인식 · 語"
+        },
+        {
+          "path": "assets/release-screenshots/jlpt-kanji-lab-v1.9.2-rc1-back.jpg",
+          "caption": "뒷면 · 정답과 획순 · 語"
+        }
+      ],
+      "shot_scope": "v1.9.2-RC1의 실제 브라우저 앞·뒷면입니다.",
+      "id": "jlpt-kanji-lab-v1.9.2-rc1",
+      "product_id": "jlpt-kanji-lab",
+      "title": "JLPT Kanji LAB 2136",
+      "version": "v1.9.2-RC1",
+      "purpose": "한자 학습과 급수별 실전에 오답·플래그 복습 도우미를 개선한 배포 후보입니다.",
+      "structure": [
+        "한자 읽기·쓰기, 대표 단어 읽기",
+        "N5~N1 실전문제 · 어휘·문법·문장 배열·독해",
+        "오답·플래그 조건으로 Anki 필터 검색식 구성"
+      ],
+      "study": "한자 인식·획순·대표어부터 연습한 뒤 급수별 실전을 풉니다. 오답·플래그 도우미의 검색식은 Anki 필터 덱의 ‘찾기’에 붙여넣어 사용합니다.",
+      "update": "컬렉션을 백업한 뒤 기존 덱을 유지한 채 v1.9.2 APKG를 가져옵니다. v1.8.2 → v1.9.2 경로의 엔진 검사 범위는 아래에서 확인할 수 있습니다.",
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "PASS",
+        "UPDATE": "PARTIAL",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "Anki 공식 엔진 25.09·26.09.4의 새 가져오기, v1.8.2 → v1.9.2 업데이트와 36회 테스트 복습 이력 보존, 검색·필터 덱을 확인했습니다. Desktop 앱 화면·사용자 컬렉션·실기기·AnkiWeb·시스템 클립보드는 미검증입니다.",
+      "sample": {
+        "type": "한자 인식",
+        "prompt": "語의 핵심 뜻을 고르세요.",
+        "answer": "말·언어",
+        "explanation": "음독은 ゴ입니다. 日本語（にほんご）는 ‘일본어’, 物語（ものがたり）는 ‘이야기’입니다.",
+        "options": [
+          "말·언어",
+          "웃음",
+          "글쓰기"
+        ]
+      },
+      "preview_scope": "語 인식 카드로 답 공개를 체험할 수 있습니다. 릴리스의 원본 HTML에는 대표 카드 91장이 있습니다.",
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_2136_v1.9.2-RC1",
+      "assets": [
+        {
+          "name": "BIZ_UDPGothic_OFL.txt",
+          "size": 4408,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.9.2-RC1/BIZ_UDPGothic_OFL.txt",
+          "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc",
+          "kind": "문서·자료",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_FILTER_HELPER_v1.9.2-RC1.html",
+          "size": 30334,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.9.2-RC1/JLPT_Kanji_LAB_2136_FILTER_HELPER_v1.9.2-RC1.html",
+          "sha256": "d6fce6ca2cdb7d0da5abb17a28804637f2c7aae550d5c2c75ced3e8f17b1b9cc",
+          "kind": "복습 도우미 HTML",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_MASTER_v1.9.2-RC1.xlsx",
+          "size": 12515808,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.9.2-RC1/JLPT_Kanji_LAB_2136_MASTER_v1.9.2-RC1.xlsx",
+          "sha256": "acb9de6f2589532bed5271ac6e543417f849d2b2b102cee4b5d14c80e4ffcc65",
+          "kind": "Excel MASTER",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_MIXED_QUIZ_v1.9.2-RC1.html",
+          "size": 221122,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.9.2-RC1/JLPT_Kanji_LAB_2136_MIXED_QUIZ_v1.9.2-RC1.html",
+          "sha256": "4f51eea1ee20bb8c9ddb045c5906037d103a80baebca631e0845248fd2b1cf53",
+          "kind": "혼합 퀴즈 HTML",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_PERSONAL_DOWNLOAD_v1.9.2-RC1.zip",
+          "size": 40643722,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.9.2-RC1/JLPT_Kanji_LAB_2136_PERSONAL_DOWNLOAD_v1.9.2-RC1.zip",
+          "sha256": "a520d0284567fe57b2f1b77355d1b3cc5b8f256fe76c7ea753009748a3425a56",
+          "kind": "지원·배포 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_PREVIEW_v1.9.2-RC1.html",
+          "size": 22618822,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.9.2-RC1/JLPT_Kanji_LAB_2136_PREVIEW_v1.9.2-RC1.html",
+          "sha256": "1d1316b4a930edf9be95b984c044d85492ab049afb816f9f7b10b58e260b2e8c",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_SHA256SUMS_v1.9.2-RC1.txt",
+          "size": 757,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.9.2-RC1/JLPT_Kanji_LAB_2136_SHA256SUMS_v1.9.2-RC1.txt",
+          "sha256": "556fd95605d44669aff9f53142a29e0344cc9b7e4f1ea5efb9bed2b49677f15f",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_v1.9.2-RC1.apkg",
+          "size": 12828198,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.9.2-RC1/JLPT_Kanji_LAB_2136_v1.9.2-RC1.apkg",
+          "sha256": "090ff82eb172ef4fe42840f2e98bc08c612106ed9810a48657891a94225b6064",
+          "kind": "APKG",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-11T16:30:12Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "JLPT_Kanji_LAB_2136_PREVIEW_v1.9.2-RC1.html"
     },
     {
       "learner": {
@@ -423,141 +555,134 @@ window.ANKI_LIBRARY = {
       }
     },
     {
-      "learner": {
-        "version": "v1.2.0-RC1",
-        "reviewed_at": "2026-10-02",
-        "steps": [
-          {
-            "title": "형태 분해",
-            "text": "답을 보기 전에 한자를 구성 요소로 나눕니다."
-          },
-          {
-            "title": "연상 만들기",
-            "text": "생성 원리와 이미지를 보고 본인의 단서를 붙입니다."
-          },
-          {
-            "title": "가리고 회상",
-            "text": "자료를 덮고 형태와 의미를 다시 떠올립니다."
-          }
-        ],
-        "change_title": "배포 구성",
-        "changes": [
-          "TEXT_COMPLETE 학습 덱과 QUIZ 덱을 함께 배포합니다.",
-          "이전판 대비 전체 변경 목록은 등록 문서에서 확정되지 않았습니다."
-        ],
-        "issues": [
-          {
-            "title": "수정 예정 사항 정리 대기",
-            "kind": "사용자 보고",
-            "impact": "현행 버전으로 학습을 이어가는 중이며 구체적 증상·영향 범위는 아직 등록되지 않았습니다.",
-            "workaround": "불편한 카드가 나오면 아래 양식에 NoteID와 증상을 남겨 주세요.",
-            "status": "학습 우선 · 수정 보류"
-          }
-        ],
-        "source": ".github/release-notes/kanji-revolution-v1.2.0-rc1.md"
-      },
-      "qa_reported_at": "2026-10-02",
-      "id": "kanji-revolution-v1.2.0-rc1",
-      "product_id": "kanji-revolution",
-      "title": "Kanji Revolution",
       "subject": "japanese",
       "subject_label": "일본어",
-      "version": "v1.2.0-RC1",
       "current": true,
-      "prerelease": true,
-      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_Revolution_V1.2.0",
-      "published_at": "2026-09-30T10:56:38Z",
-      "purpose": "한자 형태를 구성 요소와 이미지에 연결해 장기 기억 단서를 강화합니다.",
-      "study": "답을 보기 전에 형태를 말로 분해하고 본인만의 연상을 한 번 만들어 봅니다.",
-      "update": "기존 버전 사용자는 백업 후 별도 테스트 프로필에서 v1.2.0-RC1 업데이트를 검증해야 합니다. 이번 사용자 보고에는 Update 결과가 없어 NOT_TESTED입니다.",
+      "blocked": false,
+      "counts": {
+        "notes": 30,
+        "cards": 30
+      },
+      "shots": [],
+      "shot_scope": "",
+      "id": "japanese-verb-lab-v1.0.0-preview.1",
+      "product_id": "japanese-verb-lab",
+      "title": "일본어 동사 활용 LAB",
+      "version": "v1.0.0-preview.1",
+      "classification": "pilot",
+      "purpose": "18개 동사로 그룹 분류, 활용 변환, 문장 적용, 오답 교정을 연습하는 30장 제작 표본입니다.",
       "structure": [
-        "한자",
-        "생성원리",
-        "연상법",
-        "원본 확인"
+        "분류 4장 · 활용 변환 18장 · 문장 적용 4장 · 오답 교정 4장"
       ],
+      "study": "먼저 활용형을 직접 떠올리고 정답, 활용 규칙, 후리가나 예문과 한국어 뜻을 확인합니다.",
+      "update": "설치 검토가 필요하면 지원 ZIP의 안내에 따라 별도 시험 프로필을 사용합니다.",
       "qa": {
-        "STATIC": "NOT_TESTED",
-        "IMPORT": "PASS",
+        "STATIC": "PASS",
+        "IMPORT": "NOT_TESTED",
         "UPDATE": "NOT_TESTED",
-        "DEVICE": "PARTIAL"
+        "DEVICE": "NOT_TESTED"
       },
-      "qa_note": "사용자 요청에 따라 STATIC은 NOT_TESTED로 유지합니다. 수정 예정 내용이 있으며 현행 버전으로 학습 중입니다. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
-      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
-      "runtime_devices": {
-        "Desktop": "PASS",
-        "iPhone": "PASS",
-        "iPad": "PASS",
-        "Android": "NOT_TESTED"
+      "qa_note": "정적 검사와 모의 동작 17개를 확인했습니다. Anki 가져오기·업데이트·실기기·동기화는 미검증입니다.",
+      "sample": {
+        "type": "동사 분류",
+        "prompt": "帰る（かえる）는 어느 활용 그룹일까요?",
+        "answer": "5단 동사 · 1그룹",
+        "explanation": "帰る → 帰ります／帰って. 어미가 る여도 5단 동사일 수 있습니다."
       },
-      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
-      "download_note": "",
-      "preview": "previews/kanji-revolution/v1.2.0-rc1/index.html",
-      "shots": [
-        {
-          "path": "assets/release-screenshots/kanji-revolution-v1.2.0-rc1-01.png",
-          "caption": "정답·기억 카드",
-          "sha256": "9c21ff1ffb30135fb26c94a1ee6cc3420debddb46e3728ba9d6dcf59e92196d6"
-        },
-        {
-          "path": "assets/release-screenshots/kanji-revolution-v1.2.0-rc1-02.png",
-          "caption": "학습 설정",
-          "sha256": "27a7831481f0c455d09c61a71a9975e722faa2f8e915c2179c023748f81504c2"
-        }
-      ],
-      "shot_scope": "RC1 첨부 원본이 제공하는 정답 카드와 설정 패널입니다. 앞면·뒷면 한 쌍으로 표기하지 않습니다.",
+      "preview": "previews/japanese-verb-lab/v1.0.0-preview.1/index.html",
+      "preview_label": "동사 활용 실제 카드 체험",
+      "preview_scope": "실제 릴리스 HTML에서 분류·변환·문장 적용·오답 교정 표본을 골랐습니다. 원본 HTML에는 30장이 있습니다.",
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/Japanese_Verb_LAB_v1.0.0-preview.1",
       "assets": [
         {
-          "name": "CONTENT_AUDIT.md",
-          "size": 925,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/CONTENT_AUDIT.md",
-          "sha256": "4374252d6170463f5ae5c061b36d6d5324891df33708a12a6446fe15f82619bf",
-          "kind": "문서·자료",
+          "name": "Japanese_Verb_PREVIEW_v1.0.0-preview.1.html",
+          "size": 3466914,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/Japanese_Verb_LAB_v1.0.0-preview.1/Japanese_Verb_PREVIEW_v1.0.0-preview.1.html",
+          "sha256": "a329bab2b7f6a6c74b3884512fca2b1511310247752a1022a25ad0d46c0e9f3b",
+          "kind": "미리보기 HTML",
           "blocked": false
         },
         {
-          "name": "Kanji_Revolution_QUIZ_v1.2.0-RC1.apkg",
-          "size": 38681225,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/Kanji_Revolution_QUIZ_v1.2.0-RC1.apkg",
-          "sha256": "3bd055ca90b5a9f21d6ab9664a6232b190d5aff72668a5abdbb17418997de068",
-          "kind": "APKG",
-          "blocked": false
-        },
-        {
-          "name": "Kanji_Revolution_TEXT_COMPLETE_v1.2.0-RC1.apkg",
-          "size": 421982606,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/Kanji_Revolution_TEXT_COMPLETE_v1.2.0-RC1.apkg",
-          "sha256": "56bb6c67a32d6887aa49e185160e3d6f2b1beebe09fe1321665ce1413a7baf44",
-          "kind": "APKG",
-          "blocked": false
-        },
-        {
-          "name": "Kanji_Revolution_v1.2.0-RC1_PREVIEW.html",
-          "size": 96944,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/Kanji_Revolution_v1.2.0-RC1_PREVIEW.html",
-          "sha256": "98a805948b6814c652f41d3cfb058025767ebf79a8c81ad73654487aae7153d7",
-          "kind": "미리보기",
-          "blocked": false
-        },
-        {
-          "name": "Kanji_Revolution_v1.2.0-RC1_PREVIEW.zip",
-          "size": 54522,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/Kanji_Revolution_v1.2.0-RC1_PREVIEW.zip",
-          "sha256": "e9e14c6f9f36385ca3f790661025c980c6082b4f7a03796e76a591d54c79c493",
-          "kind": "미리보기",
-          "blocked": false
-        },
-        {
-          "name": "README_IMPORT_TEST.md",
-          "size": 1604,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/README_IMPORT_TEST.md",
-          "sha256": "7ff21509c5c607aad082c48a535e38ea9b2c21c4e76588e27d84dc90fc07b1fb",
-          "kind": "문서·자료",
+          "name": "Japanese_Verb_SUPPORT_v1.0.0-preview.1.zip",
+          "size": 1173403,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/Japanese_Verb_LAB_v1.0.0-preview.1/Japanese_Verb_SUPPORT_v1.0.0-preview.1.zip",
+          "sha256": "66e680ae7e47e3a6f5535b52345a0f860bc76d901570ef012fa531a17b23e4f7",
+          "kind": "미리보기 ZIP",
           "blocked": false
         }
       ],
+      "published_at": "2026-11-19T03:12:17Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "Japanese_Verb_PREVIEW_v1.0.0-preview.1.html"
+    },
+    {
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "current": true,
       "blocked": false,
-      "counts": {}
+      "counts": {
+        "notes": 10,
+        "cards": 30
+      },
+      "shots": [],
+      "shot_scope": "",
+      "id": "jlpt-kanji-n5-v1.3.0-preview.1",
+      "product_id": "jlpt-kanji-n5-pilot",
+      "title": "JLPT 한자 N5 제작 표본",
+      "version": "v1.3.0-preview.1",
+      "classification": "pilot",
+      "purpose": "한자 10자를 인식·쓰기·대표어 읽기로 구성한 플랫폼 재현용 시험 덱입니다.",
+      "structure": [
+        "한자 인식 10장 · 한자 쓰기 10장 · 대표어 읽기 10장"
+      ],
+      "study": "한자 뜻을 떠올린 후 써 보고 대표 단어에서 읽는 법을 연습합니다.",
+      "update": "기존 덱과 노트 유형 ID를 공유합니다. 가져오기를 검토할 때는 별도 시험 프로필을 사용합니다.",
+      "related": [
+        [
+          "anki-deck-platform-v1.3.0",
+          "공통 제작 플랫폼 v1.3.0"
+        ]
+      ],
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "NOT_TESTED",
+        "UPDATE": "NOT_TESTED",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "ZIP·SQLite·식별자·재현과 작업 재개를 검사했습니다. Anki 엔진 가져오기·실기기·동기화는 미검증입니다.",
+      "sample": {
+        "type": "대표어 읽기",
+        "prompt": "毎日은 어떻게 읽을까요?",
+        "answer": "まいにち · 매일",
+        "explanation": "毎（まい）와 日（にち）를 결합한 말입니다."
+      },
+      "preview": "previews/jlpt-kanji-n5/v1.3.0-preview.1/index.html",
+      "preview_label": "N5 실제 카드 체험",
+      "preview_scope": "실제 릴리스 HTML에서 인식·쓰기·대표어 읽기 표본을 골랐습니다. 원본 HTML에는 30장이 있습니다.",
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_N5_v1.3.0-preview.1",
+      "assets": [
+        {
+          "name": "JLPT_Kanji_N5_Platform_Pilot_v1.3.0-preview.1.zip",
+          "size": 168694,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_N5_v1.3.0-preview.1/JLPT_Kanji_N5_Platform_Pilot_v1.3.0-preview.1.zip",
+          "sha256": "3945846cef3d5f9daa3d35353f0112f422a7b85bb68202687a3fafd30ec3077e",
+          "kind": "미리보기 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_N5_v1.3.0-preview.1_PREVIEW.html",
+          "size": 478111,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_N5_v1.3.0-preview.1/JLPT_Kanji_N5_v1.3.0-preview.1_PREVIEW.html",
+          "sha256": "5b6d4301f1a7c964d2efd20ca86ca8badec224ddf164f54388236fd826bb8bcf",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-19T03:09:47Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "JLPT_Kanji_N5_v1.3.0-preview.1_PREVIEW.html"
     },
     {
       "learner": {
@@ -1152,18 +1277,779 @@ window.ANKI_LIBRARY = {
       "counts": {}
     },
     {
-      "learner": null,
-      "qa_reported_at": null,
-      "id": "kanji-revolution-v1.0.4",
+      "subject": "tools",
+      "subject_label": "제작 플랫폼",
+      "current": true,
+      "blocked": false,
+      "counts": {},
+      "shots": [],
+      "shot_scope": "",
+      "id": "anki-deck-platform-v1.3.0",
+      "product_id": "anki-deck-platform",
+      "title": "Anki 공통 제작 플랫폼",
+      "version": "v1.3.0",
+      "classification": "platform",
+      "purpose": "공통 학습 설정·내 기록·채점·오답 필터와 APKG·HTML 일치 검사를 적용하는 제작 도구입니다.",
+      "structure": [
+        "RULE-06 v1.3.0 · 공통 UI 운영 규칙",
+        "모델·모듈 레지스트리와 학습 설정 기본값",
+        "APKG·HTML 대조, 파트별 추가·누적 수량 집계"
+      ],
+      "study": "지원 ZIP에서 운영 규칙, 제작 도구, 예제와 시험 자료를 확인합니다. 원본 HTML은 v1.7.0 실전 카드 20장으로 공통 동작을 보여 줍니다.",
+      "update": "새 덱을 만들 때 대상 모델과 모듈, 적용 버전 및 기본값을 정하고 APKG와 HTML을 대조합니다.",
+      "related": [
+        [
+          "jlpt-kanji-n5-v1.3.0-preview.1",
+          "JLPT N5 제작 표본"
+        ],
+        [
+          "kanji-revolution-v1.7.0",
+          "한자혁명 적용 사례"
+        ]
+      ],
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "NOT_APPLICABLE",
+        "UPDATE": "NOT_APPLICABLE",
+        "DEVICE": "NOT_APPLICABLE"
+      },
+      "qa_note": "플랫폼의 표본 브라우저 시험과 정적 템플릿·수량 대조를 확인했습니다. 실제 Anki 검증은 제품별 릴리스에서 확인합니다.",
+      "download_note": "플랫폼 릴리스는 공통 규칙·지원 파일과 HTML을 제공합니다.",
+      "sample": {
+        "type": "즉시 채점 예시",
+        "prompt": "食べる（たべる）의 ない형을 고르세요.",
+        "answer": "食べない",
+        "explanation": "1단 동사는 끝의 る를 떼고 ない를 붙입니다.",
+        "options": [
+          "食べらない",
+          "食べない",
+          "食べなく",
+          "食べりない"
+        ]
+      },
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/Anki_Deck_Platform_v1.3.0",
+      "assets": [
+        {
+          "name": "Anki_Deck_Platform_PREVIEW_v1.3.0.html",
+          "size": 185443,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/Anki_Deck_Platform_v1.3.0/Anki_Deck_Platform_PREVIEW_v1.3.0.html",
+          "sha256": "865afd52ffcc98efc54adffb5b093ea6057f73fa999b9a03690610bc8d1ccf1a",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "Anki_Deck_Platform_v1.3.0_GITHUB_SUPPORT.zip",
+          "size": 9189309,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/Anki_Deck_Platform_v1.3.0/Anki_Deck_Platform_v1.3.0_GITHUB_SUPPORT.zip",
+          "sha256": "52f962920f3852a1d1fa3465ed5523cd5e6779daa27313bd58eb04a7c0538818",
+          "kind": "지원·배포 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "SHA256SUMS.txt",
+          "size": 216,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/Anki_Deck_Platform_v1.3.0/SHA256SUMS.txt",
+          "sha256": "7e3b1bd15e619ae31a91814a7b8a3922380d36aeae907a4816dc4ca60d2d0af6",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-19T03:07:42Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "Anki_Deck_Platform_PREVIEW_v1.3.0.html",
+      "preview_scope": "한자혁명 v1.7.0 실전 카드 5장으로 학습 설정, 내 기록, 즉시 채점과 복습 도우미를 확인합니다. 원본 플랫폼 HTML에는 대표 카드 20장이 있습니다.",
+      "preview": "previews/anki-deck-platform/v1.3.0/index.html",
+      "preview_label": "공통 설정·채점·오답 필터 체험"
+    },
+    {
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "current": false,
+      "blocked": false,
+      "counts": {
+        "notes": 5000,
+        "cards": 5000
+      },
+      "shots": [],
+      "shot_scope": "",
+      "id": "kanji-revolution-v1.6.0",
+      "product_id": "kanji-revolution",
+      "title": "한자혁명 · 실전 제작 이력",
+      "version": "v1.6.0",
+      "purpose": "v1.4의 초기 표본 5종과 v1.5의 3,000문항, v1.6의 5,000문항을 보관한 릴리스입니다.",
+      "structure": [
+        "v1.4.0-preview.1~5 · 초기 지원 ZIP",
+        "v1.5.0 · 3,000문항 APKG",
+        "v1.6.0 · 5,000문항 APKG와 미리보기"
+      ],
+      "study": "v1.6 HTML로 초기 실전 흐름을 비교할 수 있습니다.",
+      "update": "학습 기록을 먼저 백업하고 현재 통합판과 실전 전용판 중 사용하는 구성의 업데이트 안내를 확인합니다.",
+      "related": [
+        [
+          "kanji-revolution-v1.7.1-rc1",
+          "v1.7.1 통합판"
+        ],
+        [
+          "kanji-revolution-v1.7.0",
+          "v1.7.0 실전 전용판"
+        ]
+      ],
+      "qa_note": "이 릴리스는 보관용입니다. 검사 기록은 해당 배포 ZIP의 QA 문서에서 확인할 수 있습니다.",
+      "sample": {
+        "type": "어휘·문맥",
+        "prompt": "痛みが治まる（いたみがおさまる）의 뜻은 무엇일까요?",
+        "answer": "통증이 가라앉다",
+        "explanation": "治まる는 증상이나 혼란이 가라앉는 상황에 쓸 수 있습니다."
+      },
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_Revolution_V1.6.0",
+      "assets": [
+        {
+          "name": "Kanji_Revolution_3000_v1.5.0.apkg",
+          "size": 1209282,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.6.0/Kanji_Revolution_3000_v1.5.0.apkg",
+          "sha256": "c44bae4b0133e7135f4c4570dbe8167624d74eab3bb286adde2e696531abfa1c",
+          "kind": "APKG",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_5000_v1.6.0.apkg",
+          "size": 1868710,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.6.0/Kanji_Revolution_5000_v1.6.0.apkg",
+          "sha256": "f938f3679d22bb4e903a3be9c3cf0621c9cf97365c4f86ba518cf2c7612cb306",
+          "kind": "APKG",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_DELIVERY_v1.6.0.zip",
+          "size": 6182115,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.6.0/Kanji_Revolution_DELIVERY_v1.6.0.zip",
+          "sha256": "ab921efbf21f355113a1df44be9b7cef2a25dbad2a44b32ec311dfb63b13df43",
+          "kind": "지원·배포 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_PRACTICE_SUPPORT_v1.4.0-preview.1.zip",
+          "size": 773981,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.6.0/Kanji_Revolution_PRACTICE_SUPPORT_v1.4.0-preview.1.zip",
+          "sha256": "11856ba8a164db1c6367951aa3b5da80201414c85cd4adf690895f9cd71ac112",
+          "kind": "미리보기 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_PRACTICE_SUPPORT_v1.4.0-preview.2.zip",
+          "size": 840630,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.6.0/Kanji_Revolution_PRACTICE_SUPPORT_v1.4.0-preview.2.zip",
+          "sha256": "218d924200f6a1d46ea8aad11756cebadb99847ca7f52444aac075ed5ce9ff11",
+          "kind": "미리보기 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_PREVIEW_v1.6.0.html",
+          "size": 4480597,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.6.0/Kanji_Revolution_PREVIEW_v1.6.0.html",
+          "sha256": "aeb7bd339920de8b4b21017c61ae1547ef7967b93d3a44713486198c2e79bf0e",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_SIMILAR_KANJI_DELIVERY_v1.4.0-preview.5.zip",
+          "size": 180264,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.6.0/Kanji_Revolution_SIMILAR_KANJI_DELIVERY_v1.4.0-preview.5.zip",
+          "sha256": "e132276a5cb503231a84891c7eb236fdffc93f3105e9a162e4fcd1e26a7e06e3",
+          "kind": "미리보기 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_VERBS_DELIVERY_v1.4.0-preview.3.zip",
+          "size": 182117,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.6.0/Kanji_Revolution_VERBS_DELIVERY_v1.4.0-preview.3.zip",
+          "sha256": "4ef052636e1a30ef2acb6df5903ebbcc00378a5b142fba0a34bd9cdaa5ba7ba7",
+          "kind": "미리보기 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_VERBS_DELIVERY_v1.4.0-preview.4.zip",
+          "size": 265075,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.6.0/Kanji_Revolution_VERBS_DELIVERY_v1.4.0-preview.4.zip",
+          "sha256": "b8e8d3ba6f4eed9519e09980e17cd2e6bfdc0fa36716254396435cc9695ec42c",
+          "kind": "미리보기 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "SHA256SUMS.txt",
+          "size": 918,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.6.0/SHA256SUMS.txt",
+          "sha256": "f68352b84c51fd191afd695ad9deccc873884ba43e263b06437a1959f06cb37f",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-19T03:03:45Z",
+      "prerelease": true,
+      "qa": {
+        "STATIC": "NOT_TESTED",
+        "IMPORT": "NOT_TESTED",
+        "UPDATE": "NOT_TESTED",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_source": "릴리스 QA",
+      "preview_asset": "Kanji_Revolution_PREVIEW_v1.6.0.html",
+      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다."
+    },
+    {
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "current": false,
+      "blocked": false,
+      "counts": {
+        "notes": 10975,
+        "cards": 13290
+      },
+      "shots": [],
+      "shot_scope": "",
+      "id": "kanji-revolution-v1.3.1-rc1",
+      "product_id": "kanji-revolution",
+      "title": "한자혁명 · TEXT 급수 보완",
+      "version": "v1.3.1-RC1",
+      "purpose": "한자 2,254개의 학습용 급수와 기준을 채운 TEXT 학습판입니다.",
+      "structure": [
+        "한자 읽기·쓰기, 대표 단어 읽기",
+        "급수는 학습용 분류입니다."
+      ],
+      "study": "한자별 음독·훈독과 대표어를 학습하고 급수 표시와 근거를 확인합니다.",
+      "update": "v1.3.0 TEXT 사용자는 백업 후 같은 프로필에 TEXT를 가져옵니다. 기존 어휘 퀴즈는 v1.3.0-RC1에 있습니다.",
+      "related": [
+        [
+          "kanji-revolution-v1.7.1-rc1",
+          "v1.7.1 통합판"
+        ],
+        [
+          "kanji-revolution-v1.3.0-rc1",
+          "v1.3.0 어휘 QUIZ"
+        ]
+      ],
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "NOT_TESTED",
+        "UPDATE": "NOT_TESTED",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "식별자·카드 행·미디어 보존을 파일로 확인했습니다. 이 버전의 실제 Anki 가져오기·업데이트·실기기·동기화는 당시 검증하지 않았습니다.",
+      "sample": {
+        "type": "한자 읽기",
+        "prompt": "何의 음독과 훈독을 떠올려 보세요.",
+        "answer": "음독 カ · 훈독 なに／なん",
+        "explanation": "何時（なんじ）는 ‘몇 시’, 何を（なにを）는 ‘무엇을’이라는 뜻입니다."
+      },
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_Revolution_V1.3.1-RC1",
+      "assets": [
+        {
+          "name": "Kanji_Revolution_MASTER_v1.3.1-RC1.xlsx",
+          "size": 6765556,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.1-RC1/Kanji_Revolution_MASTER_v1.3.1-RC1.xlsx",
+          "sha256": "bdf8df229befdb6d91b3254e46e330c392bdb79bcb5236d85f8f356aebf5daa8",
+          "kind": "Excel MASTER",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_PREVIEW_v1.3.1-RC1.html",
+          "size": 7033424,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.1-RC1/Kanji_Revolution_PREVIEW_v1.3.1-RC1.html",
+          "sha256": "62f476050431e2fb540ba48093ed23e7433d69b5b6bb34832272b72802c0a18f",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_SUPPORT_v1.3.1-RC1.zip",
+          "size": 12849532,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.1-RC1/Kanji_Revolution_SUPPORT_v1.3.1-RC1.zip",
+          "sha256": "bb61fd500fd9a763ff3ea7e80b7ac4f7f0efd8e9dd3d9d0f1031d45703ea62f8",
+          "kind": "지원·배포 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_TEXT_COMPLETE_v1.3.1-RC1.apkg",
+          "size": 422038897,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.1-RC1/Kanji_Revolution_TEXT_COMPLETE_v1.3.1-RC1.apkg",
+          "sha256": "428359fedc077ee7cac3ce916f109b188983c3b0b6fc21753a95dcb05be7b163",
+          "kind": "APKG",
+          "blocked": false
+        },
+        {
+          "name": "SHA256SUMS.txt",
+          "size": 2988,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.1-RC1/SHA256SUMS.txt",
+          "sha256": "38ab869b792bb0bcea1f2897e0793f0fe9e73a11960c397ed90d965bbe9c8c3f",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-19T02:57:21Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "Kanji_Revolution_PREVIEW_v1.3.1-RC1.html",
+      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다."
+    },
+    {
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "current": false,
+      "blocked": false,
+      "counts": {
+        "notes": 10000,
+        "cards": 10000
+      },
+      "shots": [],
+      "shot_scope": "",
+      "id": "kanji-revolution-v1.7.0",
+      "product_id": "kanji-revolution",
+      "title": "한자혁명 · 5파트 실전",
+      "version": "v1.7.0",
+      "purpose": "v1.6의 5,000문항에 새 실전문제 5,000문항을 더한 실전 전용판입니다.",
+      "structure": [
+        "유사 한자, 기본 뜻·읽기, 어휘·문맥, 동사 활용, 종합 실전",
+        "v1.3 한자 학습은 별도 APKG"
+      ],
+      "study": "파트별 문제를 풀고 즉시 채점·해설과 오답 복습용 검색식을 활용합니다. 원본 HTML에서 새 5,000문항을 따로 볼 수 있습니다.",
+      "update": "한자 학습까지 함께 사용하려면 통합 후보 v1.7.1-RC1을 확인하세요. 기존 분리형 조합은 v1.3 TEXT와 v1.7.0 실전을 같은 프로필에 각각 가져오는 방식입니다.",
+      "related": [
+        [
+          "kanji-revolution-v1.7.1-rc1",
+          "v1.7.1 통합판"
+        ],
+        [
+          "kanji-revolution-v1.3.0-rc1",
+          "v1.3.0 학습 TEXT·어휘 QUIZ"
+        ]
+      ],
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "PASS",
+        "UPDATE": "PARTIAL",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "Anki 엔진 25.9.2의 새 가져오기와 중복 없는 재가져오기, v1.6 → v1.7 업데이트의 일정 표본 5장과 Chromium 화면 표본을 확인했습니다. AnkiMobile 실기기와 AnkiWeb 동기화는 미검증입니다.",
+      "sample": {
+        "type": "동사 활용",
+        "prompt": "書く（かく）의 て형을 고르세요.",
+        "answer": "書いて",
+        "explanation": "5단 く 동사의 て형은 보통 いて입니다. 行く → 行って는 예외입니다.",
+        "options": [
+          "書いて",
+          "書って",
+          "書きて",
+          "書けて"
+        ]
+      },
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_Revolution_V1.7.0",
+      "assets": [
+        {
+          "name": "Kanji_Revolution_10000_v1.7.0.apkg",
+          "size": 3580620,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.0/Kanji_Revolution_10000_v1.7.0.apkg",
+          "sha256": "ba882801c734071d86c138c76e3e52cff80a92180c907458cf14db38b806c2a2",
+          "kind": "APKG",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_DELIVERY_v1.7.0.zip",
+          "size": 10060721,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.0/Kanji_Revolution_DELIVERY_v1.7.0.zip",
+          "sha256": "3c5ae04936021e5a6e6d91feb9c6bfb1c9cf91cb7e3e98ad3a600986a8079fc6",
+          "kind": "지원·배포 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_MASTER_v1.7.0.xlsx",
+          "size": 3553110,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.0/Kanji_Revolution_MASTER_v1.7.0.xlsx",
+          "sha256": "3ce9dfee4dec131838e090f15ae35852851cb5263b421c08adb35b474f0547a8",
+          "kind": "Excel MASTER",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_PREVIEW_v1.7.0.html",
+          "size": 11420467,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.0/Kanji_Revolution_PREVIEW_v1.7.0.html",
+          "sha256": "c460b78807f1d1889a78f7b7f55c20f9c7b2b8385dfed2e9575a3ff0b6ee4f58",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "SHA256SUMS.txt",
+          "size": 819,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.7.0/SHA256SUMS.txt",
+          "sha256": "7751ea0affe89f9b943cb0be2823d94a3ff429c996250fc21e9008074ef87679",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-19T02:57:20Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "Kanji_Revolution_PREVIEW_v1.7.0.html",
+      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다."
+    },
+    {
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "current": false,
+      "blocked": false,
+      "counts": {
+        "notes": 11975,
+        "cards": 14290
+      },
+      "shots": [],
+      "shot_scope": "",
+      "id": "kanji-revolution-v1.3.0-rc1",
+      "product_id": "kanji-revolution",
+      "title": "한자혁명 · TEXT + 어휘 QUIZ",
+      "version": "v1.3.0-RC1",
+      "purpose": "한자 학습 TEXT 13,290장과 어휘 실전 QUIZ 1,000문항을 두 APKG로 제공하는 버전입니다.",
+      "structure": [
+        "TEXT · 한자 읽기·쓰기, 대표 단어 읽기",
+        "QUIZ · 어휘 읽기·뜻 4지선다 1,000문항",
+        "v1.7의 5파트 실전 10,000문항은 별도"
+      ],
+      "study": "두 종류를 사용하면 TEXT → QUIZ 순으로 가져옵니다. 학습 설정, 내 기록, 혼동 원인과 오답을 확인할 수 있습니다.",
+      "update": "5파트 실전까지 함께 새로 설치하려면 v1.7.1 통합 후보를 확인하세요. v1.3의 어휘 QUIZ는 이 릴리스에서 별도로 받습니다.",
+      "related": [
+        [
+          "kanji-revolution-v1.7.1-rc1",
+          "v1.7.1 통합판"
+        ],
+        [
+          "kanji-revolution-v1.7.0",
+          "v1.7.0 실전 전용판"
+        ]
+      ],
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "NOT_TESTED",
+        "UPDATE": "NOT_TESTED",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "정적 검사와 HTTPS 대표 24장의 브라우저 동작을 확인했습니다. Anki 가져오기·업데이트·실기기·동기화는 미검증입니다.",
+      "sample": {
+        "type": "단어 읽기",
+        "prompt": "理解는 어떻게 읽을까요?",
+        "answer": "りかい · 이해",
+        "explanation": "説明を理解する（せつめいをりかいする）는 ‘설명을 이해하다’입니다."
+      },
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_Revolution_V1.3.0-RC1",
+      "assets": [
+        {
+          "name": "Kanji_Revolution_MASTER_v1.3.0-RC1.xlsx",
+          "size": 6667357,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.0-RC1/Kanji_Revolution_MASTER_v1.3.0-RC1.xlsx",
+          "sha256": "a3189c8497abf6826da094f9c1ae34aed741fd40341ea072970f51f13d2233f8",
+          "kind": "Excel MASTER",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_PREVIEW_v1.3.0-RC1.html",
+          "size": 7665513,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.0-RC1/Kanji_Revolution_PREVIEW_v1.3.0-RC1.html",
+          "sha256": "30ae12ea07aa7a2c76d94c987cb9cd56a8329e2ed569f36d0afd3f5d2f6863d3",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_QUIZ_v1.3.0-RC1.apkg",
+          "size": 38694044,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.0-RC1/Kanji_Revolution_QUIZ_v1.3.0-RC1.apkg",
+          "sha256": "585052bf309b654df78eaec6bc55f4a05cb7423172f5209c21fe03614e12168e",
+          "kind": "APKG",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_SHA256SUMS_v1.3.0-RC1.txt",
+          "size": 536,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.0-RC1/Kanji_Revolution_SHA256SUMS_v1.3.0-RC1.txt",
+          "sha256": "20ed2cd384e97e7723d9208673d2bb709648cb2c3c261022d0ae47d1ab5f1cb4",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_SUPPORT_v1.3.0-RC1.zip",
+          "size": 13482490,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.0-RC1/Kanji_Revolution_SUPPORT_v1.3.0-RC1.zip",
+          "sha256": "82560e0bdab16a97ceb4edad6904c8f310634f81066cc6bf397ccbf8863dcb09",
+          "kind": "지원·배포 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_TEXT_COMPLETE_v1.3.0-RC1.apkg",
+          "size": 422027954,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.3.0-RC1/Kanji_Revolution_TEXT_COMPLETE_v1.3.0-RC1.apkg",
+          "sha256": "b4e20ba286441763259a73050fe6c8bed707e4518a4e3c276742ba6814b4112c",
+          "kind": "APKG",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-11T15:52:31Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "Kanji_Revolution_PREVIEW_v1.3.0-RC1.html",
+      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다."
+    },
+    {
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "current": false,
+      "blocked": false,
+      "counts": {
+        "notes": 11975,
+        "cards": 16247,
+        "media": 237
+      },
+      "shots": [
+        {
+          "path": "assets/release-screenshots/jlpt-kanji-lab-v1.8.2-rc1-front.jpg",
+          "caption": "앞면 · 한자 인식 · 笑"
+        },
+        {
+          "path": "assets/release-screenshots/jlpt-kanji-lab-v1.8.2-rc1-back.jpg",
+          "caption": "뒷면 · 정답과 획순 · 笑"
+        }
+      ],
+      "shot_scope": "v1.8.2-RC1의 실제 브라우저 앞·뒷면입니다.",
+      "id": "jlpt-kanji-lab-v1.8.2-rc1",
+      "product_id": "jlpt-kanji-lab",
+      "title": "JLPT Kanji LAB 2136",
+      "version": "v1.8.2-RC1",
+      "purpose": "인식·쓰기·대표어 뒷면에서 PC 획순 크기와 제목·버튼 정렬을 보정한 버전입니다.",
+      "structure": [
+        "한자 읽기·쓰기, 대표 단어 읽기",
+        "획순 정렬 보정 · 2,136자, 답면 6,408장",
+        "대표 HTML 91장"
+      ],
+      "study": "앞면에서 뜻을 떠올리고 뒷면에서 획순과 대표 단어를 확인합니다.",
+      "update": "개인 템플릿이 있다면 먼저 백업과 시험 적용을 확인합니다. 획순 표시 수정을 적용하려면 노트 유형 업데이트를 허용합니다.",
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "NOT_TESTED",
+        "UPDATE": "NOT_TESTED",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "파일 구조와 N5~N1 15종의 브라우저 표본을 확인했습니다. 실제 Anki 가져오기·업데이트·실기기·동기화는 미검증입니다.",
+      "sample": {
+        "type": "한자 인식",
+        "prompt": "笑의 핵심 뜻을 떠올려 보세요.",
+        "answer": "웃다 · 웃음",
+        "explanation": "음독 ショウ, 훈독 わらう／えむ. 笑顔（えがお）는 ‘웃는 얼굴’입니다."
+      },
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_2136_v1.8.2-RC1",
+      "assets": [
+        {
+          "name": "BIZ_UDPGothic_OFL.txt",
+          "size": 4408,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.2-RC1/BIZ_UDPGothic_OFL.txt",
+          "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc",
+          "kind": "문서·자료",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_MASTER_v1.8.2-RC1.xlsx",
+          "size": 12397448,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.2-RC1/JLPT_Kanji_LAB_2136_MASTER_v1.8.2-RC1.xlsx",
+          "sha256": "0fdf1d5ac7c1c704d89f3ae363d24e7c41b4473af4ca0259dc95a935ede8c896",
+          "kind": "Excel MASTER",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_PERSONAL_DOWNLOAD_v1.8.2-RC1.zip",
+          "size": 38877424,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.2-RC1/JLPT_Kanji_LAB_2136_PERSONAL_DOWNLOAD_v1.8.2-RC1.zip",
+          "sha256": "0eee78cb2b3add2898dc5bd609144016146953c864c1042545cd5322ecf82cac",
+          "kind": "지원·배포 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_PREVIEW_v1.8.2-RC1.html",
+          "size": 17856780,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.2-RC1/JLPT_Kanji_LAB_2136_PREVIEW_v1.8.2-RC1.html",
+          "sha256": "e50d5d668b3febc6f814d8ea7a0f695bcc074ca2888dfdc401e70251689dd65b",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_SHA256SUMS_v1.8.2-RC1.txt",
+          "size": 528,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.2-RC1/JLPT_Kanji_LAB_2136_SHA256SUMS_v1.8.2-RC1.txt",
+          "sha256": "e29af9e7b5c81b723fe29738913f077d5c902d4ab491d2020cf8d5fe40c9a6b4",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_v1.8.2-RC1.apkg",
+          "size": 12650895,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.2-RC1/JLPT_Kanji_LAB_2136_v1.8.2-RC1.apkg",
+          "sha256": "2ed748b6d43daa3863312576017bb1817755216021d6ced87a57c96d30e91488",
+          "kind": "APKG",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-11T13:41:36Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "JLPT_Kanji_LAB_2136_PREVIEW_v1.8.2-RC1.html",
+      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다."
+    },
+    {
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "current": false,
+      "blocked": false,
+      "counts": {
+        "notes": 11975,
+        "cards": 16247,
+        "media": 237
+      },
+      "shots": [
+        {
+          "path": "assets/release-screenshots/jlpt-kanji-lab-v1.8.1-rc1-front.jpg",
+          "caption": "앞면 · N5 독해 질문·선택지"
+        },
+        {
+          "path": "assets/release-screenshots/jlpt-kanji-lab-v1.8.1-rc1-back.jpg",
+          "caption": "뒷면 · 정답·해설·한국어 해석"
+        }
+      ],
+      "shot_scope": "v1.8.1-RC1의 실제 N5 독해 카드 앞·뒷면입니다.",
+      "id": "jlpt-kanji-lab-v1.8.1-rc1",
+      "product_id": "jlpt-kanji-lab",
+      "title": "JLPT Kanji LAB 2136",
+      "version": "v1.8.1-RC1",
+      "purpose": "N5~N1 독해 400문항의 후리가나 표시와 대표어 읽기 음악 설정을 보완한 버전입니다.",
+      "structure": [
+        "한자 2,136노트 · 추가 단어 읽기 3,289노트 · 실전 6,550노트",
+        "독해 후리가나 ON/OFF와 지문 전체 한국어 해석",
+        "대표 HTML 76장"
+      ],
+      "study": "독해 문제를 풀고 후리가나와 전체 한국어 해석을 비교합니다.",
+      "update": "기존 컬렉션을 백업하고 별도 시험 프로필에서 적용을 확인합니다.",
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "NOT_TESTED",
+        "UPDATE": "NOT_TESTED",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "파일 구조와 독해 후리가나·JavaScript를 검사했습니다. 실제 Anki 가져오기·업데이트·실기기·동기화 및 음악 동시 재생은 미검증입니다.",
+      "sample": {
+        "type": "N5 독해",
+        "prompt": "図書館は金曜日だけ午後六時に閉まります。金曜日は何時に閉まりますか。",
+        "answer": "午後六時",
+        "explanation": "‘도서관은 금요일만 오후 6시에 닫습니다.’ だけ는 ‘~만’, 閉まる（しまる）는 ‘닫히다’입니다.",
+        "options": [
+          "午前六時",
+          "午後五時",
+          "午後六時"
+        ]
+      },
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_2136_v1.8.1-RC1",
+      "assets": [
+        {
+          "name": "BIZ_UDPGothic_OFL.txt",
+          "size": 4408,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.1-RC1/BIZ_UDPGothic_OFL.txt",
+          "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc",
+          "kind": "문서·자료",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_MASTER_v1.8.1-RC1.xlsx",
+          "size": 12395556,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.1-RC1/JLPT_Kanji_LAB_2136_MASTER_v1.8.1-RC1.xlsx",
+          "sha256": "ca5e4ee62f1cd3e45634fdda27f49a899c9c996dce26b8193ffb6f7ba9c5623a",
+          "kind": "Excel MASTER",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_PERSONAL_DOWNLOAD_v1.8.1-RC1.zip",
+          "size": 32445476,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.1-RC1/JLPT_Kanji_LAB_2136_PERSONAL_DOWNLOAD_v1.8.1-RC1.zip",
+          "sha256": "1b7de48ed86f0494455a20a552476b492434ab3ca9883fbe8a718abccf82616f",
+          "kind": "지원·배포 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_PREVIEW_v1.8.1-RC1.html",
+          "size": 8715922,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.1-RC1/JLPT_Kanji_LAB_2136_PREVIEW_v1.8.1-RC1.html",
+          "sha256": "5e85a0978d57034ef2e7a571e705e904120f0b2095e1f1b64dd3a7a9d6983d8f",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_SHA256SUMS_v1.8.1-RC1.txt",
+          "size": 528,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.1-RC1/JLPT_Kanji_LAB_2136_SHA256SUMS_v1.8.1-RC1.txt",
+          "sha256": "9bd66f86a6b3fbc0cf1be090d41d7e0794c1d70a2c9bd87cd8877b7200c29fc7",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_v1.8.1-RC1.apkg",
+          "size": 12569254,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136_v1.8.1-RC1/JLPT_Kanji_LAB_2136_v1.8.1-RC1.apkg",
+          "sha256": "0451aa73da75f3cdb222e53376d009a553ece36ec3d4191f4476ee00e7ba213c",
+          "kind": "APKG",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-11T05:09:19Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "JLPT_Kanji_LAB_2136_PREVIEW_v1.8.1-RC1.html",
+      "preview_scope": "사이트에서 풀어볼 수 있도록 구성한 공개 예시입니다."
+    },
+    {
+      "learner": {
+        "version": "v1.2.0-RC1",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "형태 분해",
+            "text": "답을 보기 전에 한자를 구성 요소로 나눕니다."
+          },
+          {
+            "title": "연상 만들기",
+            "text": "생성 원리와 이미지를 보고 본인의 단서를 붙입니다."
+          },
+          {
+            "title": "가리고 회상",
+            "text": "자료를 덮고 형태와 의미를 다시 떠올립니다."
+          }
+        ],
+        "change_title": "배포 구성",
+        "changes": [
+          "TEXT_COMPLETE 학습 덱과 QUIZ 덱을 함께 배포합니다.",
+          "이전판 대비 전체 변경 목록은 등록 문서에서 확정되지 않았습니다."
+        ],
+        "issues": [
+          {
+            "title": "수정 예정 사항 정리 대기",
+            "kind": "사용자 보고",
+            "impact": "현행 버전으로 학습을 이어가는 중이며 구체적 증상·영향 범위는 아직 등록되지 않았습니다.",
+            "workaround": "불편한 카드가 나오면 아래 양식에 NoteID와 증상을 남겨 주세요.",
+            "status": "학습 우선 · 수정 보류"
+          }
+        ],
+        "source": ".github/release-notes/kanji-revolution-v1.2.0-rc1.md"
+      },
+      "qa_reported_at": "2026-10-02",
+      "id": "kanji-revolution-v1.2.0-rc1",
       "product_id": "kanji-revolution",
       "title": "Kanji Revolution",
       "subject": "japanese",
       "subject_label": "일본어",
-      "version": "v1.0.4",
+      "version": "v1.2.0-RC1",
       "current": false,
       "prerelease": true,
-      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Anki",
-      "published_at": "2026-09-12T04:46:11Z",
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_Revolution_V1.2.0",
+      "published_at": "2026-09-30T10:56:38Z",
       "purpose": "한자 형태를 구성 요소와 이미지에 연결해 장기 기억 단서를 강화합니다.",
       "study": "답을 보기 전에 형태를 말로 분해하고 본인만의 연상을 한 번 만들어 봅니다.",
       "update": "기존 버전 사용자는 백업 후 별도 테스트 프로필에서 v1.2.0-RC1 업데이트를 검증해야 합니다. 이번 사용자 보고에는 Update 결과가 없어 NOT_TESTED입니다.",
@@ -1174,121 +2060,82 @@ window.ANKI_LIBRARY = {
         "원본 확인"
       ],
       "qa": {
-        "STATIC": "PASS",
-        "IMPORT": "NOT_TESTED",
+        "STATIC": "NOT_TESTED",
+        "IMPORT": "PASS",
         "UPDATE": "NOT_TESTED",
-        "DEVICE": "NOT_TESTED"
+        "DEVICE": "PARTIAL"
       },
-      "qa_note": "해당 버전의 Release 기록을 기준으로 표시합니다. 현재판 검증을 이전판으로 승계하지 않습니다.",
-      "device_note": "",
-      "runtime_devices": {},
-      "runtime_scope": "",
+      "qa_note": "사용자 요청에 따라 STATIC은 NOT_TESTED로 유지합니다. 수정 예정 내용이 있으며 현행 버전으로 학습 중입니다. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
       "download_note": "",
-      "preview": "previews/kanji-revolution/v1.0.4/index.html",
+      "preview": "previews/kanji-revolution/v1.2.0-rc1/index.html",
       "shots": [
         {
-          "path": "assets/release-screenshots/kanji-revolution-v1.0.4-reading-front.png",
-          "caption": "한자 읽기 앞면",
-          "sha256": "ea318e47e61fb8330dc94c18a689bac70911cf40d552062f3ae7456cfa66d591"
+          "path": "assets/release-screenshots/kanji-revolution-v1.2.0-rc1-01.png",
+          "caption": "정답·기억 카드",
+          "sha256": "9c21ff1ffb30135fb26c94a1ee6cc3420debddb46e3728ba9d6dcf59e92196d6"
         },
         {
-          "path": "assets/release-screenshots/kanji-revolution-v1.0.4-reading-answer.png",
-          "caption": "정답·기억 그림",
-          "sha256": "7069d8fc9b8365d7a250ce421d7309101854981610460fb3c663294e6b330169"
+          "path": "assets/release-screenshots/kanji-revolution-v1.2.0-rc1-02.png",
+          "caption": "학습 설정",
+          "sha256": "27a7831481f0c455d09c61a71a9975e722faa2f8e915c2179c023748f81504c2"
         }
       ],
-      "shot_scope": "v1.0.4 실제 템플릿 미리보기의 읽기 앞면·정답 화면입니다.",
+      "shot_scope": "RC1 첨부 원본이 제공하는 정답 카드와 설정 패널입니다. 앞면·뒷면 한 쌍으로 표기하지 않습니다.",
       "assets": [
         {
-          "name": "complete_v104.zip",
-          "size": 426723448,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Anki/complete_v104.zip",
-          "sha256": "d4813fb72d7bc77ce413c19c8a4e9fdd3ba80d43134a6196c0c686962f3cb4d9",
-          "kind": "배포 ZIP",
+          "name": "CONTENT_AUDIT.md",
+          "size": 925,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/CONTENT_AUDIT.md",
+          "sha256": "4374252d6170463f5ae5c061b36d6d5324891df33708a12a6446fe15f82619bf",
+          "kind": "문서·자료",
           "blocked": false
         },
         {
-          "name": "Kanji_Revolution_TEXT_COMPLETE_v1.0.4_PREVIEW_BUNDLE.zip",
-          "size": 961898,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Anki/Kanji_Revolution_TEXT_COMPLETE_v1.0.4_PREVIEW_BUNDLE.zip",
-          "sha256": "e7c6c5db68fe46bdce0ef9b6db5ff82875b24c7cbdecffc9175939a46de3f0fd",
-          "kind": "미리보기",
-          "blocked": false
-        }
-      ],
-      "blocked": false,
-      "counts": {}
-    },
-    {
-      "learner": null,
-      "qa_reported_at": null,
-      "id": "toeic-vocabulary-v1.1.0",
-      "product_id": "toeic-lab",
-      "title": "TOEIC LAB",
-      "subject": "english",
-      "subject_label": "영어·TOEIC",
-      "version": "v1.1.0",
-      "current": false,
-      "prerelease": true,
-      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/TOEIC_Vocabulary",
-      "published_at": "2026-09-22T00:40:25Z",
-      "purpose": "정답뿐 아니라 예문·해석·출제 표현·연상 단서를 함께 회상합니다.",
-      "study": "단어 뜻을 맞힌 뒤 예문 속 결합 표현까지 말할 수 있는지 확인합니다.",
-      "update": "기존 버전 위 업데이트 PASS 기록을 유지합니다. 사용자도 업데이트한 덱의 학습 기록 보존을 확인했습니다. 새 프로필 가져오기는 사용자 확인 PASS입니다.",
-      "structure": [
-        "단어",
-        "숙어",
-        "부사",
-        "실전 문제"
-      ],
-      "qa": {
-        "STATIC": "PASS",
-        "IMPORT": "NOT_TESTED",
-        "UPDATE": "NOT_TESTED",
-        "DEVICE": "NOT_TESTED"
-      },
-      "qa_note": "해당 버전의 Release 기록을 기준으로 표시합니다. 현재판 검증을 이전판으로 승계하지 않습니다.",
-      "device_note": "",
-      "runtime_devices": {},
-      "runtime_scope": "",
-      "download_note": "",
-      "preview": "previews/toeic-vocabulary/v1.1.0/index.html",
-      "shots": [
-        {
-          "path": "assets/release-screenshots/toeic-vocabulary-v1.1.0-front.jpg",
-          "caption": "단어 앞면",
-          "sha256": "b58d185cbb75e15a9f8c5bdefd2e1b9072371797f924e92fde69dc9f25330ef8"
-        },
-        {
-          "path": "assets/release-screenshots/toeic-vocabulary-v1.1.0-back.jpg",
-          "caption": "정답·연상",
-          "sha256": "7ddf82164500e62e39f029e5a5882173d136b79a407676078ff5facbfa5fbebe"
-        }
-      ],
-      "shot_scope": "v1.1.0 실제 템플릿 미리보기의 기존 앞면·정답 캡처입니다.",
-      "assets": [
-        {
-          "name": "TOEIC_Vocabulary_Idiom_Adverb_LAB_Master_v1.1.0.xlsx",
-          "size": 1327910,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/TOEIC_Vocabulary/TOEIC_Vocabulary_Idiom_Adverb_LAB_Master_v1.1.0.xlsx",
-          "sha256": "8ac45474e1cd79c7655e7d3b90b100aff4f602e9d3f2c2f6f4cb2463e6800642",
-          "kind": "MASTER",
-          "blocked": false
-        },
-        {
-          "name": "TOEIC_Vocabulary_Idiom_Adverb_LAB_v1.1.0.apkg",
-          "size": 1635650,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/TOEIC_Vocabulary/TOEIC_Vocabulary_Idiom_Adverb_LAB_v1.1.0.apkg",
-          "sha256": "8c6c65d30ef3f331484ef488d00e4dbe5861fd6b9fd862f0f72aaeddeb22fb88",
+          "name": "Kanji_Revolution_QUIZ_v1.2.0-RC1.apkg",
+          "size": 38681225,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/Kanji_Revolution_QUIZ_v1.2.0-RC1.apkg",
+          "sha256": "3bd055ca90b5a9f21d6ab9664a6232b190d5aff72668a5abdbb17418997de068",
           "kind": "APKG",
           "blocked": false
         },
         {
-          "name": "TOEIC_Vocabulary_Idiom_Adverb_LAB_v1.1.0_PREVIEW.zip",
-          "size": 9804,
-          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/TOEIC_Vocabulary/TOEIC_Vocabulary_Idiom_Adverb_LAB_v1.1.0_PREVIEW.zip",
-          "sha256": "22919f5318aa6292dfd7146d6e897ff885a950cf9ab2fb8ed49032f1edb070fb",
+          "name": "Kanji_Revolution_TEXT_COMPLETE_v1.2.0-RC1.apkg",
+          "size": 421982606,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/Kanji_Revolution_TEXT_COMPLETE_v1.2.0-RC1.apkg",
+          "sha256": "56bb6c67a32d6887aa49e185160e3d6f2b1beebe09fe1321665ce1413a7baf44",
+          "kind": "APKG",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_v1.2.0-RC1_PREVIEW.html",
+          "size": 96944,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/Kanji_Revolution_v1.2.0-RC1_PREVIEW.html",
+          "sha256": "98a805948b6814c652f41d3cfb058025767ebf79a8c81ad73654487aae7153d7",
           "kind": "미리보기",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_v1.2.0-RC1_PREVIEW.zip",
+          "size": 54522,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/Kanji_Revolution_v1.2.0-RC1_PREVIEW.zip",
+          "sha256": "e9e14c6f9f36385ca3f790661025c980c6082b4f7a03796e76a591d54c79c493",
+          "kind": "미리보기",
+          "blocked": false
+        },
+        {
+          "name": "README_IMPORT_TEST.md",
+          "size": 1604,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.2.0/README_IMPORT_TEST.md",
+          "sha256": "7ff21509c5c607aad082c48a535e38ea9b2c21c4e76588e27d84dc90fc07b1fb",
+          "kind": "문서·자료",
           "blocked": false
         }
       ],
@@ -1413,6 +2260,254 @@ window.ANKI_LIBRARY = {
           "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Anki_KANJI_REVOLUTION/Kanji_Revolution_v1.1.0_QA.md",
           "sha256": "f892984836d58b7b23c11c40c40272b9d8a708573790af111c8bd33f089d598c",
           "kind": "문서·자료",
+          "blocked": false
+        }
+      ],
+      "blocked": false,
+      "counts": {},
+      "preview_scope": "릴리스에 연결된 실제 화면 2컷입니다."
+    },
+    {
+      "learner": null,
+      "qa_reported_at": null,
+      "id": "toeic-vocabulary-v1.1.0",
+      "product_id": "toeic-lab",
+      "title": "TOEIC LAB",
+      "subject": "english",
+      "subject_label": "영어·TOEIC",
+      "version": "v1.1.0",
+      "current": false,
+      "prerelease": true,
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/TOEIC_Vocabulary",
+      "published_at": "2026-09-22T00:40:25Z",
+      "purpose": "정답뿐 아니라 예문·해석·출제 표현·연상 단서를 함께 회상합니다.",
+      "study": "단어 뜻을 맞힌 뒤 예문 속 결합 표현까지 말할 수 있는지 확인합니다.",
+      "update": "기존 버전 위 업데이트 PASS 기록을 유지합니다. 사용자도 업데이트한 덱의 학습 기록 보존을 확인했습니다. 새 프로필 가져오기는 사용자 확인 PASS입니다.",
+      "structure": [
+        "단어",
+        "숙어",
+        "부사",
+        "실전 문제"
+      ],
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "NOT_TESTED",
+        "UPDATE": "NOT_TESTED",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "해당 버전의 Release 기록을 기준으로 표시합니다. 현재판 검증을 이전판으로 승계하지 않습니다.",
+      "device_note": "",
+      "runtime_devices": {},
+      "runtime_scope": "",
+      "download_note": "",
+      "preview": "previews/toeic-vocabulary/v1.1.0/index.html",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/toeic-vocabulary-v1.1.0-front.jpg",
+          "caption": "단어 앞면",
+          "sha256": "b58d185cbb75e15a9f8c5bdefd2e1b9072371797f924e92fde69dc9f25330ef8"
+        },
+        {
+          "path": "assets/release-screenshots/toeic-vocabulary-v1.1.0-back.jpg",
+          "caption": "정답·연상",
+          "sha256": "7ddf82164500e62e39f029e5a5882173d136b79a407676078ff5facbfa5fbebe"
+        }
+      ],
+      "shot_scope": "v1.1.0 실제 템플릿 미리보기의 기존 앞면·정답 캡처입니다.",
+      "assets": [
+        {
+          "name": "TOEIC_Vocabulary_Idiom_Adverb_LAB_Master_v1.1.0.xlsx",
+          "size": 1327910,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/TOEIC_Vocabulary/TOEIC_Vocabulary_Idiom_Adverb_LAB_Master_v1.1.0.xlsx",
+          "sha256": "8ac45474e1cd79c7655e7d3b90b100aff4f602e9d3f2c2f6f4cb2463e6800642",
+          "kind": "MASTER",
+          "blocked": false
+        },
+        {
+          "name": "TOEIC_Vocabulary_Idiom_Adverb_LAB_v1.1.0.apkg",
+          "size": 1635650,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/TOEIC_Vocabulary/TOEIC_Vocabulary_Idiom_Adverb_LAB_v1.1.0.apkg",
+          "sha256": "8c6c65d30ef3f331484ef488d00e4dbe5861fd6b9fd862f0f72aaeddeb22fb88",
+          "kind": "APKG",
+          "blocked": false
+        },
+        {
+          "name": "TOEIC_Vocabulary_Idiom_Adverb_LAB_v1.1.0_PREVIEW.zip",
+          "size": 9804,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/TOEIC_Vocabulary/TOEIC_Vocabulary_Idiom_Adverb_LAB_v1.1.0_PREVIEW.zip",
+          "sha256": "22919f5318aa6292dfd7146d6e897ff885a950cf9ab2fb8ed49032f1edb070fb",
+          "kind": "미리보기",
+          "blocked": false
+        }
+      ],
+      "blocked": false,
+      "counts": {}
+    },
+    {
+      "learner": {
+        "version": "v1.2.0-RC1",
+        "reviewed_at": "2026-10-02",
+        "steps": [
+          {
+            "title": "한자 인식부터",
+            "text": "급수 하나를 정해 의미와 읽기를 회상합니다."
+          },
+          {
+            "title": "쓰기·대표어 추가",
+            "text": "같은 급수에서 쓰기와 대표어 읽기를 단계적으로 더합니다."
+          },
+          {
+            "title": "실전 N4·N3",
+            "text": "해당 급수를 복습한 뒤 실전문제로 적용합니다."
+          }
+        ],
+        "change_title": "등록·검증 정리",
+        "changes": [
+          "실제 APKG에서 카드 템플릿 4종과 복원 MASTER를 추출했습니다.",
+          "v1.1.2 실파일이 없어 이전판 대비 콘텐츠 차이는 아직 산출하지 않았습니다."
+        ],
+        "issues": [],
+        "source": ".github/release-notes/jlpt-kanji-lab-v1.2.0.md"
+      },
+      "qa_reported_at": "2026-10-02",
+      "id": "jlpt-kanji-lab-v1.2.0",
+      "product_id": "jlpt-kanji-lab",
+      "title": "JLPT Kanji LAB 2136",
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "version": "v1.2.0-RC1",
+      "current": false,
+      "prerelease": true,
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_2136",
+      "published_at": "2026-09-12T04:47:40Z",
+      "purpose": "한자의 의미·읽기·쓰기와 대표어를 서로 다른 회상 행동으로 익히고, N4·N3 형식의 실전문제로 적용합니다.",
+      "study": "급수 하나에서 한자 인식 카드를 먼저 익힌 뒤 쓰기와 대표어 읽기를 단계적으로 추가합니다. 실전문제는 해당 급수 복습 뒤 풉니다.",
+      "update": "v1.1.2 실제 APKG가 없어 업데이트 검증은 아직 미수행입니다. 기존 프로필을 백업하고 테스트 프로필에서 중복과 학습 이력 보존을 먼저 확인합니다.",
+      "structure": [
+        "한자 읽기 N5~N1",
+        "한자 쓰기 N5~N1",
+        "단어 읽기 N5~N1",
+        "실전문제 N4·N3"
+      ],
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "PASS",
+        "UPDATE": "NOT_TESTED",
+        "DEVICE": "PARTIAL"
+      },
+      "qa_note": "파일·카드 구조 검사 PASS. 새 프로필 가져오기는 사용자 확인 PASS이며 Desktop·iPhone·iPad 기본 실행도 확인했습니다. DEVICE PARTIAL은 세부 기능·동기화 QA가 남았다는 뜻입니다. 업데이트 대상이 특정되지 않아 기존 UPDATE 판정을 유지합니다.",
+      "device_note": "2026-10-02 사용자 보고 · 기기별 기본 실행 확인. 실제 시험일·앱/OS 버전·세부 기능·왕복 동기화 증거는 별도입니다.",
+      "runtime_devices": {
+        "Desktop": "PASS",
+        "iPhone": "PASS",
+        "iPad": "PASS",
+        "Android": "NOT_TESTED"
+      },
+      "runtime_scope": "기본 실행 확인; 세부 기능·동기화 QA 미완료",
+      "download_note": "",
+      "preview": "previews/jlpt-kanji-lab/v1.2.0/index.html",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/jlpt-kanji-lab-v1.2.0-writing.jpg",
+          "caption": "한자 필기",
+          "sha256": "c270ecf53a82cec8d741a1ffba3c5ff59d046d3a24dd298ae3005eaf91e2adfe"
+        },
+        {
+          "path": "assets/release-screenshots/jlpt-kanji-lab-v1.2.0-writing-back.jpg",
+          "caption": "필기·정답 비교",
+          "sha256": "9cfd51e916a893444cccc8b7cf19d303e8a0eb55dc1173b747889713e815f47a"
+        }
+      ],
+      "shot_scope": "v1.2.0 실제 템플릿의 필기 화면과 정답 비교 화면입니다.",
+      "assets": [
+        {
+          "name": "JLPT_Kanji_LAB_2136_v1.2.0.apkg",
+          "size": 2868487,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136/JLPT_Kanji_LAB_2136_v1.2.0.apkg",
+          "sha256": "b166ad378ccb79aa33cf7aeb84f499eae9a4539d0dffc7f9b3d6fd87d1a7e936",
+          "kind": "APKG",
+          "blocked": false
+        },
+        {
+          "name": "JLPT_Kanji_LAB_2136_v1.2.0_PREVIEW.zip",
+          "size": 50379,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_2136/JLPT_Kanji_LAB_2136_v1.2.0_PREVIEW.zip",
+          "sha256": "818d5677830922f4e82f263859d55b32e463a8170bbbff4e8ce4483c45212eb3",
+          "kind": "미리보기",
+          "blocked": false
+        }
+      ],
+      "blocked": false,
+      "counts": {
+        "notes": 2376,
+        "cards": 6648,
+        "media": 0,
+        "needs_review": 0,
+        "excluded": 0
+      }
+    },
+    {
+      "learner": null,
+      "qa_reported_at": null,
+      "id": "kanji-revolution-v1.0.4",
+      "product_id": "kanji-revolution",
+      "title": "Kanji Revolution",
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "version": "v1.0.4",
+      "current": false,
+      "prerelease": true,
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Anki",
+      "published_at": "2026-09-12T04:46:11Z",
+      "purpose": "한자 형태를 구성 요소와 이미지에 연결해 장기 기억 단서를 강화합니다.",
+      "study": "답을 보기 전에 형태를 말로 분해하고 본인만의 연상을 한 번 만들어 봅니다.",
+      "update": "기존 버전 사용자는 백업 후 별도 테스트 프로필에서 v1.2.0-RC1 업데이트를 검증해야 합니다. 이번 사용자 보고에는 Update 결과가 없어 NOT_TESTED입니다.",
+      "structure": [
+        "한자",
+        "생성원리",
+        "연상법",
+        "원본 확인"
+      ],
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "NOT_TESTED",
+        "UPDATE": "NOT_TESTED",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "해당 버전의 Release 기록을 기준으로 표시합니다. 현재판 검증을 이전판으로 승계하지 않습니다.",
+      "device_note": "",
+      "runtime_devices": {},
+      "runtime_scope": "",
+      "download_note": "",
+      "preview": "previews/kanji-revolution/v1.0.4/index.html",
+      "shots": [
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.0.4-reading-front.png",
+          "caption": "한자 읽기 앞면",
+          "sha256": "ea318e47e61fb8330dc94c18a689bac70911cf40d552062f3ae7456cfa66d591"
+        },
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.0.4-reading-answer.png",
+          "caption": "정답·기억 그림",
+          "sha256": "7069d8fc9b8365d7a250ce421d7309101854981610460fb3c663294e6b330169"
+        }
+      ],
+      "shot_scope": "v1.0.4 실제 템플릿 미리보기의 읽기 앞면·정답 화면입니다.",
+      "assets": [
+        {
+          "name": "complete_v104.zip",
+          "size": 426723448,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Anki/complete_v104.zip",
+          "sha256": "d4813fb72d7bc77ce413c19c8a4e9fdd3ba80d43134a6196c0c686962f3cb4d9",
+          "kind": "배포 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_TEXT_COMPLETE_v1.0.4_PREVIEW_BUNDLE.zip",
+          "size": 961898,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Anki/Kanji_Revolution_TEXT_COMPLETE_v1.0.4_PREVIEW_BUNDLE.zip",
+          "sha256": "e7c6c5db68fe46bdce0ef9b6db5ff82875b24c7cbdecffc9175939a46de3f0fd",
+          "kind": "미리보기",
           "blocked": false
         }
       ],

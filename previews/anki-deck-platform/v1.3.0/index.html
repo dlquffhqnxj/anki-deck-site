@@ -1,0 +1,2101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anki Deck 플랫폼 v1.3.0 미리보기</title>
+<style>
+:root {
+  color-scheme: light only;
+  --kr-bg:#f2f0e8;
+  --kr-surface:#fffefa;
+  --kr-soft:#f8f5ec;
+  --kr-surface-3:#eef5eb;
+  --kr-text:#242a24;
+  --kr-muted:#687168;
+  --kr-line:#d5d9cf;
+  --kr-green:#41664b;
+  --kr-accent:#8a672f;
+  --kr-pale:#f1f5ed;
+  --kr-good:#316b3d;
+  --kr-good-bg:#e7f2e6;
+  --kr-bad:#a64841;
+  --kr-bad-bg:#f8e8e5;
+  --kr-shadow:0 14px 36px rgba(48,57,47,.11);
+}
+
+html, body, .card, body.nightMode, body.night_mode, .nightMode, .night_mode {
+  color-scheme:light only !important;
+  background:var(--kr-bg) !important;
+  color:var(--kr-text) !important;
+}
+
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+.card {
+  min-height:100vh;
+  margin:0;
+  padding:28px 16px 80px;
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans CJK KR","Malgun Gothic",sans-serif;
+  font-size:17px;
+  line-height:1.7;
+  text-align:left;
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+
+.kr-card {
+  width:100%;
+  max-width:760px;
+  margin:0 auto;
+  padding:clamp(18px,4vw,28px);
+  color:var(--kr-text) !important;
+  background:var(--kr-surface) !important;
+  border:1px solid var(--kr-line);
+  border-radius:22px;
+  box-shadow:var(--kr-shadow);
+  word-break:keep-all;
+  overflow:hidden;
+}
+
+.kr-meta {
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  align-items:center;
+  margin:0 0 18px;
+  color:var(--kr-muted);
+  font-size:12px;
+  letter-spacing:.01em;
+}
+.kr-brand { color:var(--kr-green); font-weight:800; }
+.kr-dot { color:var(--kr-line); }
+.kr-pill {
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:3px 10px;
+  color:var(--kr-muted);
+  background:rgba(255,255,255,.75);
+  border:1px solid var(--kr-line);
+  border-radius:999px;
+  font-size:12px;
+}
+
+.kr-hero {
+  margin:0;
+  padding:0;
+  text-align:center;
+  background:transparent !important;
+  border:0;
+  box-shadow:none;
+}
+.kr-section {
+  margin:16px 0 0;
+  padding:18px 20px;
+  background:var(--kr-soft) !important;
+  border:1px solid var(--kr-line);
+  border-radius:16px;
+}
+.kr-prompt { margin:0 0 14px; color:#59645a; font-size:15px; }
+.kr-glyph {
+  margin:10px 0 18px;
+  font-family:"Noto Sans CJK JP","Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+  font-size:clamp(72px,20vw,104px);
+  font-weight:500;
+  line-height:1.15;
+  letter-spacing:.02em;
+}
+.kr-word-prompt {
+  margin:8px 0 12px;
+  font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif;
+  font-size:clamp(40px,10vw,58px);
+  line-height:1.35;
+}
+.kr-write-hint { margin:8px 0 20px; font-size:clamp(26px,7vw,36px); font-weight:750; line-height:1.4; }
+.kr-footnote { margin:12px 0 0; color:var(--kr-muted); font-size:12px; line-height:1.65; }
+.kr-small-title { display:block; margin:0 0 8px; color:var(--kr-muted); font-size:12px; font-weight:700; letter-spacing:.03em; }
+.kr-answer {
+  display:grid;
+  grid-template-columns:148px minmax(0,1fr);
+  gap:22px;
+  align-items:center;
+  text-align:left;
+}
+.kr-answer .kr-glyph { margin:0; font-size:92px; line-height:1; text-align:center; }
+.kr-answer-main { color:var(--kr-green); font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif; font-size:23px; font-weight:800; line-height:1.5; }
+.kr-answer-meaning { margin-top:5px; font-size:17px; }
+.kr-section h3 { margin:0 0 11px; color:var(--kr-green); font-size:14px; }
+.kr-reading-row { display:grid; grid-template-columns:44px 1fr; gap:10px; padding:7px 0; }
+.kr-reading-row label { padding-top:3px; color:var(--kr-muted); font-size:12px; }
+.kr-ja { font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif; }
+.kr-facts { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; color:var(--kr-muted); font-size:12px; }
+.kr-facts span { padding:4px 8px; background:#fff; border:1px solid var(--kr-line); border-radius:8px; }
+
+.kr-memory {
+  padding:20px;
+  background:var(--kr-surface) !important;
+  border-left:4px solid #a7b89f;
+}
+.kr-memory-content { margin-top:3px; }
+.kr-memory p { margin:0; font-size:18px; line-height:1.85; }
+.kr-memory .kr-footnote { margin-top:11px; font-size:11px; line-height:1.6; }
+.kr-mnemonic {
+  display:grid;
+  grid-template-columns:148px minmax(0,1fr);
+  gap:22px;
+  align-items:center;
+  margin:0;
+  padding:0;
+}
+.kr-mnemonic + .kr-mnemonic { margin-top:18px; padding-top:18px; border-top:1px solid var(--kr-line); }
+.kr-mnemonic > img {
+  width:148px;
+  max-width:100%;
+  height:auto;
+  background:#fff;
+  border:1px solid #d0d5ca;
+  border-radius:16px;
+}
+.kr-mnemonic figcaption { min-width:0; }
+.kr-memory-origin { display:block; margin:0 0 7px; color:var(--kr-green); font-size:11px; font-weight:800; letter-spacing:.04em; }
+.kr-mnemonic figcaption p { margin:0; font-size:18px; line-height:1.85; word-break:keep-all; overflow-wrap:anywhere; }
+.kr-mnemonic small { display:block; margin-top:11px; color:var(--kr-muted); font-size:11px; }
+
+.kr-word-list { display:grid; gap:0; }
+.kr-word { display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:10px 0; border-bottom:1px solid var(--kr-line); }
+.kr-word:last-child { border:0; }
+.kr-word ruby { font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif; font-size:22px; white-space:normal; }
+.kr-word rt { color:var(--kr-green); font-size:11px; }
+.kr-word span { color:var(--kr-muted); font-size:14px; text-align:right; }
+.kr-parent-source { margin-bottom:14px; }
+.kr-parent-source > p, .kr-word-origins { color:var(--kr-muted); font-size:12px; }
+.kr-card[data-kind="word"] .kr-answer { grid-template-columns:auto minmax(0,1fr); }
+.kr-card[data-kind="word"] .kr-answer .kr-glyph { max-width:220px; font-size:44px; line-height:1.4; }
+
+.kr-card details {
+  margin:16px 0 0;
+  overflow:hidden;
+  background:var(--kr-soft) !important;
+  border:1px solid var(--kr-line);
+  border-radius:16px;
+}
+.kr-card summary { padding:13px 16px; color:var(--kr-green); cursor:pointer; font-size:14px; font-weight:800; list-style-position:inside; }
+.kr-detail-body { padding:0 16px 16px; }
+.kr-card img { display:block; max-width:100%; height:auto; }
+.kr-source img { background:#fff; border-radius:10px; }
+.kr-card a { color:var(--kr-accent); text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere; }
+.kr-source-meta { margin:9px 0; color:var(--kr-muted); font-size:12px; word-break:keep-all; }
+.kr-audit { padding-top:7px; color:var(--kr-muted); font-size:11px; line-height:1.8; }
+.kr-card-id { margin:18px 2px 0; padding-top:12px; color:var(--kr-muted); border-top:1px solid var(--kr-line); font-size:11px; line-height:1.55; word-break:break-word; }
+
+.kr-tools { display:flex; flex-wrap:wrap; justify-content:center; gap:7px; margin:13px 0; }
+.kr-card button {
+  appearance:none;
+  padding:9px 13px;
+  color:var(--kr-green);
+  background:var(--kr-surface);
+  border:1px solid var(--kr-line);
+  border-radius:10px;
+  cursor:pointer;
+  touch-action:manipulation;
+  font:700 13px/1.3 -apple-system,BlinkMacSystemFont,"Noto Sans CJK KR",sans-serif;
+}
+.kr-card button.primary { color:#fff; background:var(--kr-green); border-color:var(--kr-green); }
+.kr-card button:focus-visible, .kr-card summary:focus-visible { outline:3px solid var(--kr-accent); outline-offset:3px; }
+.kr-card button[aria-pressed="true"] { background:var(--kr-bad-bg); border-color:var(--kr-accent); }
+.kr-card button:disabled { cursor:default; opacity:.58; }
+
+.kr-pad { margin-top:14px; }
+.kr-pad[hidden], .kr-ghost[hidden] { display:none !important; }
+.kr-pad-board { position:relative; width:min(286px,100%); aspect-ratio:1; margin:0 auto; overflow:hidden; background:#fff; border:1px solid var(--kr-line); border-radius:14px; }
+.kr-pad-board:before, .kr-pad-board:after { position:absolute; z-index:0; content:""; pointer-events:none; opacity:.75; }
+.kr-pad-board:before { left:50%; height:100%; border-left:1px dashed var(--kr-line); }
+.kr-pad-board:after { top:50%; width:100%; border-top:1px dashed var(--kr-line); }
+.kr-pad canvas { position:absolute; z-index:2; inset:0; width:100%; height:100%; cursor:default; pointer-events:none; touch-action:auto; user-select:none; -webkit-user-select:none; }
+.kr-pad.kr-active canvas { cursor:crosshair; pointer-events:auto; touch-action:none; }
+.kr-pad.kr-active .kr-pad-board { border-color:var(--kr-green); box-shadow:0 0 0 2px var(--kr-pale); }
+.kr-ghost { position:absolute; z-index:1; inset:0; display:flex; align-items:center; justify-content:center; color:var(--kr-accent); opacity:.18; font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif; font-size:200px; line-height:1; pointer-events:none; }
+.kr-pad-status { min-height:20px; margin:6px 0; color:var(--kr-muted); font-size:12px; text-align:center; }
+.kr-stroke img { width:260px; max-width:100%; margin:8px auto; background:#fff; border-radius:12px; }
+.kr-license { color:var(--kr-muted); font-size:11px; line-height:1.6; }
+
+.kr-stable-media { display:block; max-width:100%; height:auto; object-fit:contain; }
+.kr-source-text { background:#fff; border-radius:3px; }
+.kr-answer-main > .kr-stable-media, .kr-word-prompt > .kr-stable-media, .kr-write-hint > .kr-stable-media { margin:6px auto; }
+.kr-glyph > .kr-stable-media { margin:0 auto; border-radius:8px; }
+.kr-ghost > .kr-stable-media { width:78%; margin:auto; }
+.kr-scan-word-row { padding:11px 0; border-bottom:1px solid var(--kr-line); }
+.kr-scan-word-row:last-child { border:0; }
+.kr-mnemonic figcaption .kr-source-text { width:auto; max-width:100%; }
+
+.kr-quiz .kr-hero { text-align:left; }
+.kr-quiz-expression { margin:8px 0 20px; font-family:"Noto Sans CJK JP","Yu Gothic",sans-serif; font-size:48px; line-height:1.25; }
+.kr-quiz-options { display:grid; gap:10px; margin:0; }
+.kr-quiz .kr-choice {
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center;
+  width:100%;
+  min-height:58px;
+  padding:12px 14px;
+  color:var(--kr-text);
+  background:var(--kr-soft);
+  border:1px solid var(--kr-line);
+  border-radius:14px;
+  font-size:17px;
+  font-weight:500;
+  line-height:1.6;
+  text-align:left;
+  transition:transform .12s ease,border-color .12s ease,background .12s ease;
+}
+.kr-quiz .kr-choice:hover { border-color:#879b87; transform:translateY(-1px); }
+.kr-quiz .kr-choice:disabled { opacity:1; transform:none; }
+.kr-choice b { display:grid; place-items:center; width:30px; height:30px; padding:0; color:var(--kr-green); background:#fff; border:1px solid #aab4a7; border-radius:8px; font-size:13px; font-weight:800; }
+.kr-choice-state { margin-left:auto; color:transparent; font-size:12px; font-weight:800; }
+.kr-quiz .kr-correct { background:var(--kr-good-bg) !important; border:2px solid var(--kr-good) !important; }
+.kr-quiz .kr-correct .kr-choice-state { color:var(--kr-good); }
+.kr-quiz .kr-incorrect { background:var(--kr-bad-bg) !important; border:2px solid var(--kr-bad) !important; }
+.kr-quiz .kr-incorrect .kr-choice-state { color:var(--kr-bad); }
+.kr-quiz-status { margin:12px 0 0; color:var(--kr-muted); font-size:13px; line-height:1.6; }
+.kr-quiz-feedback { display:none; margin-top:16px; padding:20px; background:var(--kr-surface-3) !important; border:1px solid var(--kr-line); border-radius:18px; }
+.kr-quiz-feedback.is-visible { display:block; animation:krReveal .22s ease-out; }
+.kr-quiz-result { margin:0 0 10px; color:var(--kr-good); font-size:14px; font-weight:900; }
+.kr-quiz .kr-explanation { margin:0 0 14px; font-size:18px; }
+.kr-quiz .kr-options-answer { color:#394139; font-size:14px; line-height:1.8; }
+.kr-quiz .kr-options-answer h3 { margin:17px 0 7px; color:var(--kr-green); font-size:13px; }
+.kr-quiz ul { margin:0; padding-left:21px; }
+.kr-quiz li { margin:6px 0; }
+.kr-rating-note { margin-top:15px; padding:15px 16px; color:#4d584d; background:var(--kr-pale); border-left:4px solid #a7b89f; border-radius:12px; font-size:13px; }
+@keyframes krReveal { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+@media (max-width:560px) {
+  .card { padding:18px 10px 56px; }
+  .kr-card { border-radius:18px; }
+  .kr-section { padding:17px 16px; }
+  .kr-answer { grid-template-columns:108px minmax(0,1fr); gap:14px; align-items:start; }
+  .kr-answer .kr-glyph { font-size:70px; }
+  .kr-answer-main { font-size:21px; }
+  .kr-mnemonic { grid-template-columns:108px minmax(0,1fr); gap:14px; align-items:start; }
+  .kr-mnemonic > img { width:108px; }
+  .kr-mnemonic figcaption p, .kr-memory p { font-size:16px; line-height:1.75; }
+  .kr-quiz-expression { font-size:41px; }
+  .kr-quiz .kr-choice { grid-template-columns:34px minmax(0,1fr); }
+  .kr-choice-state { grid-column:2; margin-left:0; }
+  .kr-card[data-kind="word"] .kr-answer .kr-glyph { max-width:130px; font-size:36px; }
+}
+@media (max-width:350px) {
+  .kr-mnemonic { grid-template-columns:1fr; }
+  .kr-mnemonic > img { width:128px; margin:0 auto; }
+}
+@media (prefers-reduced-motion:reduce) {
+  * { scroll-behavior:auto !important; animation:none !important; transition:none !important; }
+}
+
+/* Kanji Revolution v1.2.0-RC1 - shared settings and local records UI. */
+
+/* The release remains bright by default. "Device settings" removes the light
+   lock and follows the host/WebView colour preference. */
+:root.kr-force-light,
+body.kr-force-light,
+.nightMode.kr-force-light,
+.night_mode.kr-force-light {
+  color-scheme: light !important;
+  --kr-bg:#f3f6f0;
+  --kr-surface:#fffefa;
+  --kr-soft:#f7f8f2;
+  --kr-surface-3:#eef5eb;
+  --kr-text:#242a24;
+  --kr-muted:#687168;
+  --kr-line:#d5d9cf;
+  --kr-green:#41664b;
+  --kr-accent:#8a672f;
+  --kr-pale:#f8e8e5;
+  --kr-good:#316b3d;
+  --kr-good-bg:#e7f2e6;
+  --kr-bad:#a64841;
+  --kr-bad-bg:#f8e8e5;
+  --kr-shadow:0 14px 36px rgba(48,57,47,.10);
+}
+
+:root.kr-force-dark,
+body.kr-force-dark,
+.nightMode:not(.kr-force-light),
+.night_mode:not(.kr-force-light) {
+  color-scheme: dark !important;
+  --kr-bg:#171b18;
+  --kr-surface:#232923;
+  --kr-soft:#2a312a;
+  --kr-surface-3:#29372c;
+  --kr-text:#f2f5ee;
+  --kr-muted:#b5beb3;
+  --kr-line:#465047;
+  --kr-green:#b7ddb9;
+  --kr-accent:#f1c77f;
+  --kr-pale:#3a302e;
+  --kr-good:#a9e0ad;
+  --kr-good-bg:#26422b;
+  --kr-bad:#ffb5ac;
+  --kr-bad-bg:#4a2d2b;
+  --kr-shadow:none;
+}
+
+body.kr-force-light,
+body.kr-force-dark,
+.kr-force-light .card,
+.kr-force-dark .card {
+  background:var(--kr-bg) !important;
+  color:var(--kr-text) !important;
+}
+
+body.kr-font-serif,
+.kr-font-serif .card,
+.kr-font-serif .kr-card {
+  font-family:Georgia,"Times New Roman","Noto Serif KR","Noto Serif CJK KR",serif !important;
+}
+
+body.kr-size-large,
+.kr-size-large .card { font-size:19px !important; }
+
+body.kr-size-xlarge,
+.kr-size-xlarge .card { font-size:21px !important; }
+
+.kr-meta { overflow:visible; }
+
+.kr-meta-actions {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-left:auto;
+}
+
+.kr-settings-host { position:relative; display:inline-flex; }
+
+.kr-card .kr-top-button {
+  min-height:32px;
+  padding:6px 10px;
+  border:1px solid var(--kr-line);
+  border-radius:10px;
+  background:var(--kr-surface);
+  color:var(--kr-green);
+  box-shadow:none;
+  font:800 12px/1.25 -apple-system,BlinkMacSystemFont,"Noto Sans CJK KR","Malgun Gothic",sans-serif;
+  white-space:nowrap;
+}
+
+.kr-card .kr-record-button { background:var(--kr-soft); }
+
+.kr-card .kr-settings-button[aria-expanded="true"] {
+  border-color:var(--kr-green);
+  background:var(--kr-surface-3);
+}
+
+.kr-settings-panel {
+  display:none;
+  position:fixed;
+  z-index:190;
+  top:58px;
+  right:12px;
+  width:min(390px,calc(100vw - 24px));
+  max-height:calc(100vh - 76px);
+  max-height:calc(100dvh - 76px);
+  padding:14px;
+  overflow:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  color:var(--kr-text);
+  background:var(--kr-surface);
+  border:1px solid var(--kr-line);
+  border-radius:15px;
+  box-shadow:0 22px 60px rgba(0,0,0,.22);
+}
+
+.kr-settings-panel.open { display:block; }
+
+.kr-setting-title {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 0 8px;
+  color:var(--kr-text);
+  font-size:14px;
+  font-weight:900;
+}
+
+.kr-setting-kicker {
+  color:var(--kr-muted);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.06em;
+}
+
+.kr-setting-row {
+  display:grid;
+  grid-template-columns:94px minmax(0,1fr);
+  align-items:center;
+  gap:9px;
+  padding:7px 0;
+}
+
+.kr-setting-label {
+  color:var(--kr-text);
+  font-size:12px;
+  font-weight:850;
+}
+
+.kr-segments {
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  padding:3px;
+  background:var(--kr-soft);
+  border:1px solid var(--kr-line);
+  border-radius:9px;
+}
+
+.kr-card .kr-segments button {
+  min-height:29px;
+  padding:5px 8px;
+  color:var(--kr-muted);
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:7px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.kr-card .kr-segments button.active {
+  color:var(--kr-green);
+  background:var(--kr-surface);
+  border-color:var(--kr-green);
+}
+
+.kr-setting-note {
+  margin:8px 1px 0;
+  color:var(--kr-muted);
+  font-size:10px;
+  line-height:1.5;
+}
+
+.kr-record-modal[aria-hidden="true"] { display:none !important; }
+
+.kr-record-modal {
+  position:fixed;
+  z-index:210;
+  inset:0;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  height:100vh;
+  height:100dvh;
+  min-height:0;
+  padding:18px;
+  overflow:hidden;
+  overscroll-behavior:contain;
+  background:rgba(13,20,15,.68);
+  box-sizing:border-box;
+}
+
+.kr-record-sheet {
+  position:relative;
+  box-sizing:border-box;
+  width:min(790px,100%);
+  max-height:calc(100vh - 36px);
+  max-height:calc(100dvh - 36px);
+  margin:auto;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+  color:var(--kr-text);
+  background:var(--kr-bg);
+  border:1px solid var(--kr-line);
+  border-radius:22px;
+  box-shadow:0 28px 90px rgba(0,0,0,.30);
+}
+
+.kr-record-head {
+  position:sticky;
+  z-index:3;
+  top:0;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  padding:23px 24px 18px;
+  background:var(--kr-surface);
+  border-bottom:1px solid var(--kr-line);
+}
+
+.kr-record-eyebrow {
+  display:inline-flex;
+  padding:4px 10px;
+  color:var(--kr-green);
+  background:var(--kr-surface-3);
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+
+.kr-record-head h2 {
+  margin:8px 0 2px;
+  color:var(--kr-text);
+  font-size:28px;
+  line-height:1.2;
+  letter-spacing:-.03em;
+}
+
+.kr-record-head p { margin:0; color:var(--kr-muted); font-size:11px; }
+
+.kr-card .kr-record-close,
+.kr-record-close {
+  flex:0 0 auto;
+  width:42px;
+  height:42px;
+  padding:0;
+  color:var(--kr-text);
+  background:var(--kr-soft);
+  border:1px solid var(--kr-line);
+  border-radius:12px;
+  font-size:21px;
+  font-weight:500;
+}
+
+.kr-record-content { min-height:0; padding:20px 22px 34px; }
+
+.kr-record-top {
+  display:grid;
+  grid-template-columns:1.2fr 1fr 1fr;
+  gap:11px;
+}
+
+.kr-record-card,
+.kr-record-control,
+.kr-record-metric,
+.kr-record-chart {
+  color:var(--kr-text);
+  background:var(--kr-surface);
+  border:1px solid var(--kr-line);
+  border-radius:16px;
+}
+
+.kr-record-card { min-height:126px; padding:15px; }
+
+.kr-record-card.today {
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.kr-record-ring {
+  --kr-pct:0%;
+  display:grid;
+  flex:0 0 auto;
+  place-items:center;
+  width:78px;
+  height:78px;
+  border-radius:50%;
+  background:conic-gradient(var(--kr-green) var(--kr-pct),var(--kr-line) 0);
+}
+
+.kr-record-ring:before {
+  grid-area:1/1;
+  width:61px;
+  height:61px;
+  content:"";
+  background:var(--kr-surface);
+  border-radius:50%;
+}
+
+.kr-record-ring strong {
+  z-index:1;
+  grid-area:1/1;
+  font-size:17px;
+}
+
+.kr-record-ring span { color:var(--kr-muted); font-size:10px; }
+
+.kr-record-label { color:var(--kr-muted); font-size:11px; font-weight:800; }
+
+.kr-record-value { margin-top:5px; font-size:28px; font-weight:900; line-height:1.1; }
+
+.kr-record-value small { margin-left:2px; color:var(--kr-muted); font-size:12px; }
+
+.kr-record-note { margin-top:7px; color:var(--kr-muted); font-size:10px; line-height:1.45; }
+
+.kr-record-controls {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+  margin-top:11px;
+}
+
+.kr-record-control {
+  display:grid;
+  grid-template-columns:1fr minmax(120px,42%);
+  align-items:center;
+  gap:10px;
+  padding:12px 14px;
+}
+
+.kr-record-control label { font-size:12px; font-weight:850; }
+
+.kr-record-control input {
+  box-sizing:border-box;
+  width:100%;
+  min-height:38px;
+  padding:7px 9px;
+  color:var(--kr-text);
+  background:var(--kr-soft);
+  border:1px solid var(--kr-line);
+  border-radius:9px;
+  font:700 12px/1.3 inherit;
+}
+
+.kr-record-metrics {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+  margin-top:11px;
+}
+
+.kr-record-metric { padding:13px; }
+
+.kr-record-metric strong { display:block; margin-top:4px; font-size:19px; line-height:1.25; }
+
+.kr-record-metric span { color:var(--kr-muted); font-size:10px; }
+
+.kr-record-metric em {
+  display:block;
+  margin-top:5px;
+  color:var(--kr-green);
+  font-size:10px;
+  font-style:normal;
+  font-weight:800;
+}
+
+.kr-record-progress {
+  height:7px;
+  margin-top:9px;
+  overflow:hidden;
+  background:var(--kr-line);
+  border-radius:99px;
+}
+
+.kr-record-progress span { display:block; height:100%; background:var(--kr-green); border-radius:99px; }
+
+.kr-record-chart { margin-top:11px; padding:16px; }
+
+.kr-record-section-head {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.kr-record-section-head h3 { margin:0; color:var(--kr-text); font-size:14px; }
+
+.kr-record-section-head span { color:var(--kr-muted); font-size:10px; }
+
+.kr-record-bars {
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  align-items:end;
+  gap:7px;
+  height:146px;
+  margin-top:14px;
+  padding-top:9px;
+  border-bottom:1px solid var(--kr-line);
+}
+
+.kr-record-day {
+  display:grid;
+  grid-template-rows:18px 1fr 20px;
+  height:100%;
+  text-align:center;
+}
+
+.kr-record-count { color:var(--kr-muted); font-size:9px; }
+
+.kr-record-barbox { display:flex; align-items:flex-end; justify-content:center; }
+
+.kr-record-bar {
+  box-sizing:border-box;
+  width:min(30px,70%);
+  min-height:3px;
+  background:var(--kr-soft);
+  border:1px solid var(--kr-line);
+  border-radius:7px 7px 2px 2px;
+}
+
+.kr-record-day.today .kr-record-bar { background:var(--kr-green); border-color:var(--kr-green); }
+
+.kr-record-daylabel { align-self:end; color:var(--kr-muted); font-size:9px; }
+
+.kr-record-day.today .kr-record-daylabel { color:var(--kr-green); font-weight:900; }
+
+.kr-record-foot {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-top:11px;
+  padding:13px 14px;
+  background:var(--kr-soft);
+  border:1px dashed var(--kr-line);
+  border-radius:13px;
+}
+
+.kr-record-foot p { margin:0; color:var(--kr-muted); font-size:10px; line-height:1.5; }
+
+.kr-card .kr-record-reset,
+.kr-record-reset {
+  flex:0 0 auto;
+  padding:7px 10px;
+  color:var(--kr-bad);
+  background:transparent;
+  border:1px solid var(--kr-bad);
+  border-radius:9px;
+  font-size:10px;
+  font-weight:850;
+}
+
+body.kr-record-body-lock { overflow:hidden !important; }
+
+.kr-force-dark .kr-prompt,
+.nightMode:not(.kr-force-light) .kr-prompt,
+.night_mode:not(.kr-force-light) .kr-prompt,
+.kr-force-dark .kr-quiz .kr-options-answer,
+.nightMode:not(.kr-force-light) .kr-quiz .kr-options-answer,
+.night_mode:not(.kr-force-light) .kr-quiz .kr-options-answer,
+.kr-force-dark .kr-rating-note,
+.nightMode:not(.kr-force-light) .kr-rating-note,
+.night_mode:not(.kr-force-light) .kr-rating-note {
+  color:var(--kr-text) !important;
+}
+
+.kr-force-dark .kr-pill,
+.nightMode:not(.kr-force-light) .kr-pill,
+.night_mode:not(.kr-force-light) .kr-pill,
+.kr-force-dark .kr-facts span,
+.nightMode:not(.kr-force-light) .kr-facts span,
+.night_mode:not(.kr-force-light) .kr-facts span {
+  background:var(--kr-soft) !important;
+}
+
+.kr-top-button:focus-visible,
+.kr-settings-panel button:focus-visible,
+.kr-record-modal button:focus-visible,
+.kr-record-modal input:focus-visible {
+  outline:3px solid var(--kr-accent) !important;
+  outline-offset:2px;
+}
+
+@media (max-width:650px) {
+  .kr-meta { align-items:flex-start; }
+  .kr-meta-actions { width:100%; justify-content:flex-end; margin-left:0; }
+  .kr-settings-panel { top:52px; right:8px; width:calc(100vw - 16px); max-height:calc(100dvh - 62px); }
+  .kr-setting-row { grid-template-columns:82px minmax(0,1fr); }
+  .kr-record-modal { display:block; height:100vh; height:100dvh; padding:0; }
+  .kr-record-sheet {
+    width:100%;
+    height:100vh;
+    height:100dvh;
+    max-height:100vh;
+    max-height:100dvh;
+    min-height:100vh;
+    min-height:100dvh;
+    margin:0;
+    overflow-x:hidden;
+    overflow-y:scroll;
+    border:0;
+    border-radius:0;
+  }
+  .kr-record-head { padding:18px 15px 14px; }
+  .kr-record-content { padding:14px 12px max(64px,calc(28px + env(safe-area-inset-bottom))); }
+  .kr-record-top { grid-template-columns:1fr 1fr; }
+  .kr-record-card.today { grid-column:1/-1; }
+  .kr-record-controls { grid-template-columns:1fr; }
+  .kr-record-metrics { grid-template-columns:1fr 1fr; }
+  .kr-record-bars { gap:4px; height:132px; }
+  .kr-record-foot { align-items:flex-start; flex-direction:column; }
+  .kr-record-reset { align-self:stretch; width:100%; }
+}
+
+@media (max-width:380px) {
+  .kr-card .kr-top-button { padding:6px 8px; font-size:11px; }
+  .kr-record-top { grid-template-columns:1fr; }
+  .kr-record-card.today { grid-column:auto; }
+}
+
+/* KR Common UI 1.3.0. Operating standard RULE-06 1.0.0, 2026-11-10. */
+.kr-card { --kr-scale:1; --kr-ja-font:"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans CJK JP",sans-serif; }
+.kr-size-large .kr-card { --kr-scale:1.12; }
+.kr-size-xlarge .kr-card { --kr-scale:1.24; }
+.kr-font-serif .kr-card { --kr-ja-font:"Hiragino Mincho ProN","Yu Mincho","Noto Serif CJK JP",serif; }
+.kr-card .kr-meta { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:10px 14px; overflow:visible; }
+.kr-meta-info { display:flex; flex-wrap:wrap; align-items:center; gap:7px; min-width:0; }
+.kr-meta-info > * { flex:0 0 auto; white-space:nowrap; }
+.kr-card .kr-pill { display:inline-flex; align-items:center; min-height:28px; white-space:nowrap; flex-shrink:0; }
+.kr-card .kr-meta-actions { display:flex; width:auto; flex-wrap:wrap; align-items:center; justify-content:flex-end; margin:0; gap:8px; }
+.kr-card .kr-top-button { min-height:40px; padding:8px 12px; font-size:12px; touch-action:manipulation; }
+.kr-card .kr-settings-panel { position:static; width:100%; max-height:none; margin:0 0 16px; box-shadow:none; overflow:visible; }
+.kr-setting-title { flex-wrap:wrap; }
+.kr-setting-head-actions { display:flex; align-items:center; gap:8px; margin-left:auto; }
+.kr-setting-head-actions button { min-height:36px; padding:5px 10px; }
+.kr-card .kr-segments button { min-height:40px; padding:7px 9px; touch-action:manipulation; }
+.kr-card .kr-segments button[aria-pressed="true"] { font-weight:900; }
+.kr-card .kr-setting-note { font-size:11px; }
+.kr-card .kr-record-modal { position:static; inset:auto; display:block; height:auto; min-height:0; padding:0; margin:0 0 16px; overflow:visible; background:transparent; }
+.kr-card .kr-record-modal[aria-hidden="true"] { display:none!important; }
+.kr-card .kr-record-sheet { width:100%; height:auto; min-height:0; max-height:none; margin:0; overflow:visible; border:1px solid var(--kr-line); border-radius:16px; box-shadow:none; }
+.kr-card .kr-record-head { position:static; padding:16px; }
+.kr-card .kr-record-head h2 { font-size:22px; }
+.kr-card .kr-record-head p { font-size:12px; }
+.kr-card .kr-record-content { padding:16px; }
+.kr-card .kr-record-close { min-width:40px; min-height:40px; }
+.kr-card .kr-record-chart { box-shadow:none; }
+.kr-card .kr-version { display:flex; flex-wrap:wrap; gap:3px 12px; padding-top:7px; font-size:11px; }
+.kr-version span { white-space:nowrap; }
+.kr-platform-date { margin-top:3px; font-size:10px; }
+.kr-card .kr-glyph, .kr-card .kr-ja, .kr-card .kr-answer-main, .kr-card .kr-word ruby,
+.kr-card .kr-quiz-expression, .kr-card .kr-word-prompt { font-family:var(--kr-ja-font)!important; }
+.kr-card .kr-prompt { font-size:calc(15px * var(--kr-scale)); }
+.kr-card .kr-footnote { font-size:calc(12px * var(--kr-scale)); }
+.kr-card .kr-answer-main { font-size:calc(23px * var(--kr-scale)); overflow-wrap:anywhere; }
+.kr-card .kr-answer-meaning { font-size:calc(17px * var(--kr-scale)); }
+.kr-card .kr-explanation, .kr-card .kr-memory p, .kr-card .kr-mnemonic figcaption p,
+.kr-card .kr-reading-row .kr-ja { font-size:calc(17px * var(--kr-scale)); }
+.kr-card .kr-word ruby { font-size:calc(22px * var(--kr-scale)); }
+.kr-card .kr-word > span { font-size:calc(14px * var(--kr-scale)); }
+.kr-card .kr-glyph { font-size:calc(clamp(70px,22vw,108px) * var(--kr-scale)); }
+.kr-card .kr-answer .kr-glyph { font-size:calc(clamp(56px,16vw,76px) * var(--kr-scale)); }
+.kr-card .kr-choice > span:not(.kr-choice-state) { font-size:calc(17px * var(--kr-scale)); min-width:0; overflow-wrap:anywhere; }
+.kr-card .kr-choice { min-height:48px; }
+.kr-card .kr-quiz-expression, .kr-card .kr-word-prompt { font-size:calc(clamp(32px,9vw,58px) * var(--kr-scale)); overflow-wrap:anywhere; }
+.kr-card .kr-detail-body, .kr-card .kr-options-answer, .kr-card .kr-rating-note { overflow-wrap:anywhere; }
+.kr-card .kr-detail-body { font-size:calc(15px * var(--kr-scale)); }
+.kr-learning-note { margin:16px 0; padding:15px; background:var(--kr-soft); border:1px solid var(--kr-line); border-radius:14px; }
+.kr-learning-note h3 { margin:0 0 5px; font-size:14px; color:var(--kr-green); }
+.kr-learning-note p { margin:4px 0 10px; color:var(--kr-muted); font-size:12px; }
+.kr-cause-buttons { display:flex; flex-wrap:wrap; gap:7px; }
+.kr-card .kr-cause-buttons button { min-height:42px; font-size:12px; padding:8px 11px; }
+.kr-card .kr-cause-buttons button[aria-pressed="true"] { background:var(--kr-surface-3); border-color:var(--kr-green); }
+.kr-cause-status { min-height:1.4em; margin-bottom:0!important; }
+.kr-weak-list { list-style:none; padding:0; margin:12px 0 0; display:grid; gap:9px; }
+.kr-weak-list li { padding:12px; background:var(--kr-soft); border:1px solid var(--kr-line); border-radius:10px; min-width:0; }
+.kr-weak-title { display:block; font:700 20px/1.4 var(--kr-ja-font); overflow-wrap:anywhere; }
+.kr-weak-meta { display:block; font-size:11px; margin:5px 0; color:var(--kr-muted); overflow-wrap:anywhere; }
+.kr-weak-search { display:block; width:100%; min-height:38px; padding:7px; font:11px/1.5 monospace; color:var(--kr-text); background:var(--kr-surface); border:1px solid var(--kr-line); border-radius:7px; }
+.kr-weak-filter { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
+.kr-card .kr-weak-filter button, .kr-card .kr-copy-search { min-height:38px; font-size:11px; padding:6px 10px; }
+.kr-weak-filter button[aria-pressed="true"] { border-color:var(--kr-green); background:var(--kr-surface-3); }
+.kr-weak-more { margin:10px 0 0; font-size:11px; color:var(--kr-muted); }
+.kr-storage-state { color:var(--kr-muted); font-size:11px; margin:7px 0; }
+.kr-card .kr-card-id { overflow-wrap:anywhere; }
+.kr-card [hidden] { display:none!important; }
+@media(max-width:650px) {
+ .kr-card .kr-meta { grid-template-columns:minmax(0,1fr); gap:9px; }
+ .kr-card .kr-meta-actions { width:100%; justify-content:flex-end; }
+ .kr-card .kr-record-content { padding:12px; }
+ .kr-card .kr-setting-row { grid-template-columns:78px minmax(0,1fr); gap:7px; }
+ .kr-card .kr-record-sheet { height:auto; min-height:0; max-height:none; }
+}
+@media(max-width:380px) {
+ .kr-card .kr-setting-row { grid-template-columns:minmax(0,1fr); gap:5px; }
+ .kr-card .kr-top-button { min-height:40px; font-size:12px; }
+ .kr-card .kr-answer { grid-template-columns:86px minmax(0,1fr); }
+ .kr-card .kr-record-metrics { grid-template-columns:minmax(0,1fr); }
+}
+
+
+/* Common UI v2.3.2: native Anki filter query helper, offline. */
+.af-helper {margin:12px 0 0;border-top:1px solid var(--line,#d5d9cf);padding-top:10px;min-width:0}
+.af-helper>summary,.af-guide>summary {cursor:pointer;font-weight:650}
+.af-body {padding-top:10px;min-width:0}
+.af-fields {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 10px}
+.af-fields label,.af-query-label {display:grid;gap:4px;min-width:0;color:var(--ink,#20251f)}
+.af-fields select,.af-query-label textarea {font:inherit;color:var(--ink,#20251f);background:var(--panel,#fffdfa);border:1px solid var(--line,#d5d9cf);border-radius:8px;padding:8px;min-height:42px;width:100%;min-width:0;box-sizing:border-box}
+.af-fields select:disabled {opacity:.6}
+.af-query-label textarea {font-family:Consolas,monospace;font-size:calc(12px * var(--ap-scale,1));line-height:1.5;resize:vertical;overflow-wrap:anywhere}
+.af-query-label textarea {-webkit-user-select:text!important;user-select:text!important;-webkit-touch-callout:default;touch-action:auto}
+.af-summary {margin:10px 0 4px;font-weight:700;overflow-wrap:anywhere}
+.af-description {margin:0 0 10px;color:var(--muted,#596259);overflow-wrap:anywhere}
+.af-buttons {display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.af-buttons button {margin:0;padding:7px 10px;min-height:42px;cursor:pointer;font:inherit;color:var(--ink,#20251f);background:var(--panel,#fffdfa);border:1px solid var(--line,#d5d9cf);border-radius:8px}
+.af-buttons [data-af-copy] {border-color:var(--level,#42614b);color:var(--level,#42614b);font-weight:700}
+.af-message {margin:8px 0;min-height:1.5em;overflow-wrap:anywhere;color:var(--ink,#20251f)}
+.af-settings {display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 12px;margin:10px 0;padding:10px;background:var(--paper,#f4f2ec);border-radius:8px}
+.af-settings dt {color:var(--muted,#596259)}
+.af-settings dd {margin:0;overflow-wrap:anywhere}
+.af-guide {margin-top:10px;color:var(--muted,#596259)}
+.af-guide p {margin:.6em 0}
+.af-guide ol {margin:.6em 0;padding-left:1.5em}
+.af-guide [data-af-demo-build] {font:inherit;min-height:44px;padding:8px 12px;color:var(--ink,#242424);background:var(--panel,#fff);border:1px solid var(--line,#d5d9cf);border-radius:8px;cursor:pointer}
+.af-table-wrap {overflow-x:auto;max-width:100%;margin:10px 0}
+.af-demo-table {border-collapse:collapse;min-width:540px;width:100%;font-size:13px;text-align:left;color:var(--ink,#242424)}
+.af-demo-table th,.af-demo-table td {padding:8px;border-bottom:1px solid var(--line,#d5d9cf);white-space:nowrap}
+.af-demo-table th {background:var(--panel-soft,#f7f7f6)}
+.af-demo-table tr[data-matches="yes"] {background:var(--panel-soft,#f7f7f6)}
+.af-settings code {font-size:12px;white-space:normal;overflow-wrap:anywhere;user-select:text;-webkit-user-select:text}
+.af-message[data-state="match"] {border-left:3px solid #55764d;padding-left:10px}
+.af-message[data-state="different"] {border-left:3px solid #a06935;padding-left:10px}
+.af-review-hint {margin:10px 0;padding:10px 12px;border-left:3px solid var(--level,#42614b);background:var(--panel-soft,#eeece5);font-size:calc(13px * var(--ap-scale,1));line-height:1.6;overflow-wrap:anywhere;color:var(--ink,#20251f)}
+.af-helper :focus-visible {outline:2px solid var(--accent,#415c75);outline-offset:2px}
+@media(max-width:480px){.af-fields select,.af-query-label textarea{font-size:16px}.af-buttons button,.af-fields select{min-height:44px}}
+@media(max-width:350px){.af-fields{grid-template-columns:minmax(0,1fr)}.af-settings{grid-template-columns:minmax(0,1fr);gap:2px}.af-settings dd{margin-bottom:7px}}
+
+.kr-card[data-kr-unified]{
+  max-width:720px;
+  overflow:hidden;
+}
+.kr-card[data-kr-unified] .kr-meta-info{white-space:normal}
+.kr-card[data-kr-unified] .kr-meta-info > *{flex-shrink:1;white-space:normal;overflow-wrap:anywhere}
+.kr-card[data-kr-unified] .kr-prompt{color:var(--kr-text)}
+.kr-card[data-kr-unified] .kr-extra{
+  margin:-6px 0 16px;color:var(--kr-muted);white-space:pre-line;font-size:calc(14px * var(--kr-scale));
+}
+.kr-card[data-kr-unified] .kr-quiz-expression{
+  line-height:1.4;
+}
+.kr-card[data-kr-unified] .kr-expression-compact{
+  font-size:calc(clamp(20px,5.4vw,33px) * var(--kr-scale));
+  line-height:1.55;
+}
+.kr-card[data-kr-unified] .kr-quiz-feedback{
+  background:var(--kr-soft)!important;
+  padding:clamp(14px,3.4vw,20px);
+  overflow-wrap:anywhere;
+}
+.kr-card[data-kr-unified] .kr-answer-main{color:var(--kr-text);line-height:1.5;margin:4px 0 6px;}
+.kr-card[data-kr-unified] .kr-answer-main strong{
+  color:var(--kr-green);text-decoration:underline;text-underline-offset:.17em;
+}
+.kr-card[data-kr-unified] .kr-answer-main small{font-size:.62em;color:var(--kr-muted);display:inline-block;}
+.kr-card[data-kr-unified] .kr-result-caption{color:var(--kr-green);font-weight:800;margin:0 0 3px;}
+.kr-card[data-kr-unified] .kr-result-field{color:var(--kr-muted);margin:0;font-size:calc(14px * var(--kr-scale));}
+.kr-card[data-kr-unified] .kr-answer-section{border-top:1px solid var(--kr-line);padding:12px 0 0;margin:13px 0 0;min-width:0;}
+.kr-card[data-kr-unified] .kr-answer-section h3{font-size:calc(13px * var(--kr-scale));color:var(--kr-green);margin:0 0 5px;}
+.kr-card[data-kr-unified] .kr-answer-section p{margin:0 0 5px;white-space:pre-line;font-size:calc(15px * var(--kr-scale));}
+.kr-card[data-kr-unified] .kr-answer-section summary{cursor:pointer;color:var(--kr-green);min-height:32px;}
+.kr-card[data-kr-unified] .kr-answer-section img{max-width:100%;height:auto;}
+.kr-card[data-kr-unified] .kr-answer-section a{overflow-wrap:anywhere;color:var(--kr-green);}
+.kr-card[data-kr-unified] .kr-sim,.kr-card[data-kr-unified] .sk-shapes{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:4px 0;
+}
+.kr-card[data-kr-unified] .kr-sim div,.kr-card[data-kr-unified] .sk-shapes article,.kr-card[data-kr-unified] .kr-choice-reason{
+  min-width:0;background:var(--kr-surface);border:1px solid var(--kr-line);border-radius:9px;padding:8px;
+}
+.kr-card[data-kr-unified] .sk-glyph,.kr-card[data-kr-unified] .kr-sim dt{
+  display:block;font:600 calc(27px * var(--kr-scale))/1.25 var(--kr-ja-font);margin:0 0 5px;
+}
+.kr-card[data-kr-unified] .kr-sim dd,.kr-card[data-kr-unified] .sk-shapes span:not(.sk-glyph){
+  display:block;margin:0;overflow-wrap:anywhere;color:var(--kr-muted);font-size:calc(12px * var(--kr-scale));
+}
+.kr-card[data-kr-unified] .kr-choice-reason{margin-top:7px;}
+.kr-card[data-kr-unified] .kr-choice-reason h4{margin:0 0 5px;color:var(--kr-green);font-size:14px;}
+.kr-card[data-kr-unified] .kr-choice-state:empty{display:none;}
+.kr-card[data-kr-unified] .kr-card-id{border-top:1px solid var(--kr-line);margin-top:21px;padding-top:13px;color:var(--kr-muted);}
+.kr-card[data-kr-unified] .kr-id-line{min-width:0;overflow-wrap:anywhere;font-size:12px;}
+.kr-card[data-kr-unified] .kr-version{gap:2px 12px;font-size:12px;}
+.kr-card[data-kr-unified] .kr-platform-date{margin-top:4px;font-size:11px;}
+.kr-card[data-ruby="off"] rt,.kr-card[data-ruby="off"] rp{display:none!important;}
+.kr-card[data-kr-unified] rt{font-size:.52em;}
+.kr-card[data-kr-unified] mark{background:var(--kr-surface-3);color:var(--kr-text);text-decoration:underline;text-underline-offset:.16em;border-radius:3px;padding:0 2px;}
+.kr-card[data-kr-unified] .kr-quiz-result[data-outcome="wrong"]{color:var(--kr-bad);}
+.kr-card[data-kr-unified] .kr-options-disclosure{margin:14px 0 0;}
+.kr-card[data-kr-unified] .kr-options-disclosure summary{color:var(--kr-green);min-height:38px;cursor:pointer;}
+.kr-card[data-kr-unified] .kr-record-completion{margin:0;}
+.kr-card[data-kr-unified] .af-helper,.kr-card[data-kr-unified] .af-review-hint{
+  --ink:var(--kr-text);--muted:var(--kr-muted);--panel:var(--kr-surface);
+  --panel-soft:var(--kr-surface-3);--paper:var(--kr-soft);--line:var(--kr-line);
+  --level:var(--kr-green);--accent:var(--kr-accent);--ap-scale:1;
+  font:13px/1.6 -apple-system,BlinkMacSystemFont,"Noto Sans CJK KR","Malgun Gothic",sans-serif;
+}
+.kr-card[data-kr-unified] .af-settings{grid-template-columns:minmax(68px,.8fr) minmax(0,1.2fr);}
+.kr-card[data-kr-unified] .af-helper select,.kr-card[data-kr-unified] .af-helper textarea{color:var(--kr-text);background:var(--kr-surface);}
+.kr-card[data-kr-unified] .af-helper .af-settings dt{overflow-wrap:anywhere;}
+.kr-card[data-kr-unified] [hidden]{display:none!important;}
+@media(max-width:400px){
+  .kr-card[data-kr-unified] .kr-choice{min-height:54px;}
+  .kr-card[data-kr-unified] .kr-sim,.kr-card[data-kr-unified] .sk-shapes{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .kr-card[data-kr-unified] .kr-sim div,.kr-card[data-kr-unified] .sk-shapes article{padding:6px;}
+  .kr-card[data-kr-unified] .kr-meta-info{row-gap:6px;}
+}
+
+html,body.card{margin:0;min-height:100%;padding:0}
+.platform-page{max-width:1060px;margin:auto;padding:24px 18px 44px;color:var(--kr-text)}
+.platform-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,340px);gap:24px;align-items:start;padding:0 0 20px;margin-bottom:18px;border-bottom:1px solid var(--kr-line)}
+.platform-hero h1{font-size:clamp(21px,3.5vw,32px);line-height:1.25;margin:3px 0 12px;letter-spacing:-.035em}
+.platform-hero p{font-size:14px;line-height:1.55;margin:0 0 9px;color:var(--kr-muted)}
+.platform-hero a{display:inline-block;margin-top:4px;text-underline-offset:3px;color:var(--kr-text)}
+.platform-counts{width:100%;border-collapse:collapse;font-size:13px;background:var(--kr-surface);color:var(--kr-text)}
+.platform-counts caption{text-align:left;font-size:13px;font-weight:650;margin-bottom:5px}
+.platform-counts th,.platform-counts td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--kr-line)}
+.platform-counts th:first-child,.platform-counts td:first-child{text-align:left}
+.platform-counts tfoot{font-weight:750}
+.preview-layout{display:grid;grid-template-columns:minmax(208px,255px) minmax(0,1fr);gap:18px}
+.preview-tools{border:1px solid var(--kr-line);background:var(--kr-surface);border-radius:14px;padding:15px;align-self:start;min-width:0}
+.preview-tools h2{font-size:16px;line-height:1.3;margin:0 0 9px;color:var(--kr-text)}
+.preview-tools label{display:grid;gap:4px;margin-top:8px;color:var(--kr-muted);font-size:13px}
+.preview-tools input,.preview-tools select,.preview-nav button,.preview-tools button{min-height:42px;padding:7px 9px;font:inherit;border:1px solid var(--kr-line);background:var(--kr-soft);color:var(--kr-text);border-radius:8px;max-width:100%;min-width:0}
+.preview-tools button{margin-top:11px;width:100%;font-size:13px;cursor:pointer}
+.preview-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 9px;padding:0 2px}
+.preview-nav button{cursor:pointer;font-weight:700;font-size:14px}
+.preview-nav button:disabled{opacity:.45;cursor:default}
+.preview-pos{margin-left:auto;font-size:13px;color:var(--kr-muted);white-space:nowrap}
+.preview-empty{background:var(--kr-surface);border:1px solid var(--kr-line);border-radius:10px;padding:18px}
+main,#study{min-width:0}
+[hidden]{display:none!important}
+@media(max-width:680px){
+.platform-page{padding:15px 10px 24px}.platform-hero{grid-template-columns:minmax(0,1fr);gap:12px;padding-bottom:12px}
+.preview-layout{grid-template-columns:minmax(0,1fr);gap:11px}.preview-tools{padding:10px}
+.preview-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 8px}.preview-nav{gap:5px}
+}
+</style>
+</head>
+<body class="card">
+<div class="platform-page">
+  <header class="platform-hero">
+    <div>
+      <h1>Anki Deck 플랫폼 v1.3.0</h1><p>실제 실전 카드 5장으로 학습 설정·내 기록·오답 필터 동작을 체험합니다.</p>
+      <p id="reference-name"></p>
+      <p id="scope" aria-live="polite"></p>
+      <p>APKG에서 읽은 앞·뒷면, 스타일, 학습 설정과 내 기록을 이 화면에 적용했습니다.</p>
+      <a id="reference-link" target="_blank" rel="noopener noreferrer" hidden>적용 사례 릴리스</a>
+    </div>
+    <table class="platform-counts">
+      <caption>참조 덱 문항 수</caption>
+      <thead><tr><th scope="col">파트</th><th scope="col">이번 추가</th><th scope="col">누적</th></tr></thead>
+      <tbody id="counts"></tbody><tfoot id="totals"></tfoot>
+    </table>
+  </header>
+  <div class="preview-layout">
+    <aside class="preview-tools" aria-label="미리보기 카드 고르기">
+      <h2>카드 미리보기</h2>
+      <div class="preview-fields">
+        <label>수록 범위<select id="stage"><option value="all">전체</option><option value="more">이번 추가</option><option value="prior">직전판에도 수록</option></select></label>
+        <label>파트<select id="part"><option value="">전체</option></select></label>
+        <label>유형<select id="subtype"><option value="">전체</option></select></label>
+        <label id="level-label">급수 · 학습용<select id="level"><option value="">전체</option></select></label>
+        <label id="group-label"><span id="group-text">세부 분류</span><select id="group"><option value="">전체</option></select></label>
+        <label>단어·NoteID·유형 검색<input id="query" type="search"></label>
+        <label>문항 번호로 이동<input id="index" type="number" min="1" step="1" inputmode="numeric"></label>
+      </div>
+      <button id="preview-theme" type="button" aria-pressed="false">어두운 화면 미리보기</button>
+    </aside>
+    <main>
+      <div class="preview-nav" aria-label="카드 이동">
+        <button id="previous" type="button">이전</button>
+        <button id="next" type="button">다음</button>
+        <button id="show-answer" type="button" aria-pressed="false">답 보기</button>
+        <span class="preview-pos" id="position" aria-live="polite"></span>
+      </div>
+      <div id="study"></div>
+    </main>
+  </div>
+</div>
+<script id="card-bank" type="application/json">{"parts":{"SIM":"유사 한자","BAS":"기본 뜻·읽기","CTX":"어휘·문맥","VRB":"동사 활용","MIX":"종합 실전"},"cards":[["KR-N-X-SIM-0001","SIM","닮은 글자 구별","N5",0,"日本","","1795037400101",["KR-N-X-SIM-0001","유사 한자","닮은 글자 구별","N5 · 학습용","뜻과 읽기에 맞는 한자 한 글자를 고르세요.","〔　〕本","읽기 · にほん　뜻 · 일본","\u003cbutton type=\"button\" data-idx=\"1\" aria-pressed=\"false\">申\u003c/button>\u003cbutton type=\"button\" data-idx=\"2\" aria-pressed=\"false\">由\u003c/button>\u003cbutton type=\"button\" data-idx=\"3\" aria-pressed=\"false\">日\u003c/button>","3","日 \u003csmall lang=\"ja\">\u003cruby>日本\u003crt>にほん\u003c/rt>\u003c/ruby>\u003c/small>","にほん","일본","日本（にほん）는 ‘일본’입니다. 日는 4획, 부수는 日 날 일입니다. 由·申와 뜻과 글자 구조를 함께 비교하세요.","\u003cdl class=\"kr-sim\">\u003cdiv>\u003cdt lang=\"ja\">申\u003c/dt>\u003cdd>펼 신 · 5획 / 부수 日 날 일\u003c/dd>\u003c/div>\u003cdiv>\u003cdt lang=\"ja\">由\u003c/dt>\u003cdd>말미암을 유 · 5획 / 부수 日 날 일\u003c/dd>\u003c/div>\u003cdiv>\u003cdt lang=\"ja\">日\u003c/dt>\u003cdd>날 일 · 4획 / 부수 日 날 일\u003c/dd>\u003c/div>\u003c/dl>","","","같은 자리에 由·申를 넣으면 이 단어의 표기와 달라집니다.","JLPT Kanji LAB 2136 v1.2.0 · 0001 / Anki 1788160437936; JMdict 1582710 · N3-V-1264 / Anki 1788159779720; JMdict 1582710 · 한자·어휘 기준 자료 기반 표기 판별","https://www.edrdg.org/jmdict/j_jmdict.html","v1.5.0","KR-C-X-881130D0B42740","KR-K-U65E5"]],["KR-N-X-BAS-0991","BAS","뜻 회상","N5",1,"辞書","","1795037400101",["KR-N-X-BAS-0991","기본 뜻·읽기","뜻 회상","N5 · 학습용","이 단어의 한국어 뜻을 떠올리세요.","\u003cruby>辞書\u003crt>じしょ\u003c/rt>\u003c/ruby>","","","0","사전","じしょ","","辞書（じしょ） · 사전","","この\u003cruby>辞書\u003crt>じしょ\u003c/rt>\u003c/ruby>でよろしいですか。","이 사전이면 될까요?","","JLPT Vocabulary &amp; Grammar LAB v2.0.0-RC2 · N5-V-0277 / Anki 1788159776741; JMdict 1318970 · 기준 어휘 뜻·읽기 회상","https://www.edrdg.org/jmdict/j_jmdict.html","v1.7.0","KR-C-X-65CB0252CBD39E","KR-V-N5-V-0277"]],["KR-N-X-CTX-1291","CTX","문맥 속 뜻","N5",1,"テーブル","","1795037400101",["KR-N-X-CTX-1291","어휘·문맥","문맥 속 뜻","N5 · 학습용","문장 속 밑줄 친 말의 뜻을 떠올리세요.","本は\u003cmark>テーブル\u003c/mark>の上にあります。","","","0","테이블","てーぶる","","이 문장에서 テーブル는 ‘테이블’이라는 뜻입니다. 표제어 · テーブル（てーぶる）","","\u003cruby>本\u003crt>ほん\u003c/rt>\u003c/ruby>はテーブルの\u003cruby>上\u003crt>うえ\u003c/rt>\u003c/ruby>にあります。","이 책은 테이블에.","","JLPT Vocabulary &amp; Grammar LAB v2.0.0-RC2 · N5-V-0400 · JLPT Vocabulary &amp; Grammar LAB v2.0.0-RC2 / N5-V-0400 / Anki 1788159776999; JMdict 1078630 · 기준 예문 기반 어휘 문맥 적용","https://www.edrdg.org/jmdict/j_jmdict.html","v1.7.0","KR-C-X-74A742E5F143FE","KR-V-N5-V-0400"]],["KR-N-X-VRB-0665","VRB","부정형 · ない형","N5",1,"答える","1단 동사","1795037400101",["KR-N-X-VRB-0665","동사 활용","부정형 · ない형","N5 · 학습용","부정형 · ない형을 만들어 보세요.","\u003cruby>答える\u003crt>こたえる\u003c/rt>\u003c/ruby>","기본형 · 대답하다","","0","\u003cspan lang=\"ja\">答え\u003cstrong>ない\u003c/strong>\u003c/span>","こたえない","대답하다","기본형 答える（こたえる） · 1단 · 2그룹\n마지막 る를 빼고 ない를 붙입니다.\n기능 · ～않다","","","","사전형이 る로 끝나는 동사에는 1단과 5단이 모두 있으므로 활용 그룹을 확인하세요.","JLPT Vocabulary &amp; Grammar LAB v2.0.0-RC2 · N5-V-0242 / Anki 1788159776675; JMdict 1449540 · https://www.edrdg.org/jmdict/j_jmdict.html · 사전 동사군·표준 활용 규칙 기반","https://www.coelang.tufs.ac.jp/mt/ja/gmod/contents/explanation/038.html","v1.7.0","KR-C-X-905BF903010C2E","KR-V-N5-V-0242"]],["KR-N-X-MIX-0801","MIX","문장 내용 파악","N5",1,"","","1795037400101",["KR-N-X-MIX-0801","종합 실전","문장 내용 파악","N5 · 학습용","문장 전체가 전하는 내용을 한국어로 말해 보세요.","雨が降ってるからタクシーに乗りました。","","","0","비가 내려서 택시를 탔습니다.","","","화자·행동·조건을 중심으로 해석하고 같은 뜻의 번역이면 맞게 보세요.","","\u003cruby>雨\u003crt>あめ\u003c/rt>\u003c/ruby>が\u003cruby>降っ\u003crt>ふっ\u003c/rt>\u003c/ruby>てるからタクシーに\u003cruby>乗り\u003crt>のり\u003c/rt>\u003c/ruby>ました。","비가 내려서 택시를 탔습니다.","","JLPT Vocabulary &amp; Grammar LAB v2.0.0-RC2 · N5-V-0036 · 어휘·문맥에서 같은 문장이 쓰인 경우 문장 전체 해석이 회상 목표 · 기준 한일 예문 기반 내용 파악","","v1.7.0","KR-C-X-F3DA4438BA6BA5","KR-SENT-7fc26db432af"]]],"templates":{"1794914010":["\u003cdiv class=\"kr-card kr-quiz\" data-ap-root data-ap-face=\"front\" data-kr-unified data-mid=\"1794914010\" data-side=\"front\" data-deck=\"quiz\" data-total=\"10000\" data-note=\"{{NoteID}}\" data-kind=\"{{CardType}}\" data-mode=\"{{QuizKind}}\" data-correct=\"{{CorrectChoice}}\">\u003cheader class=\"kr-meta\">\u003cdiv class=\"kr-meta-info\">\u003cspan class=\"kr-brand\">한자혁명 퀴즈\u003c/span>\u003cspan data-part-name>기본 뜻·읽기\u003c/span>\u003cspan class=\"kr-pill\">{{QuizKind}}\u003c/span>\u003c/div>\u003cdiv class=\"kr-meta-actions\">\u003cbutton type=\"button\" class=\"kr-top-button kr-record-button\">내 기록\u003c/button>\u003cbutton type=\"button\" class=\"kr-top-button kr-settings-button\" aria-expanded=\"false\">학습 설정\u003c/button>\u003c/div>\u003c/header>\u003csection class=\"kr-settings-panel\" aria-label=\"학습 설정\" aria-hidden=\"true\">\u003c/section>\u003csection class=\"kr-hero\">\u003cp class=\"kr-prompt\">{{Prompt}}\u003c/p>\u003cdiv class=\"kr-quiz-expression\" lang=\"ja\">{{Expression}}\u003c/div>\u003cdetails class=\"kr-options-disclosure\">\u003csummary>선택지 펼치기\u003c/summary>{{#ChoiceA}}\u003cdiv class=\"kr-quiz-options\" role=\"group\" aria-label=\"선택지\">{{#ChoiceA}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"A\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">A\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceA}}\u003c/span>\u003c/button>{{/ChoiceA}}{{#ChoiceB}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"B\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">B\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceB}}\u003c/span>\u003c/button>{{/ChoiceB}}{{#ChoiceC}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"C\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">C\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceC}}\u003c/span>\u003c/button>{{/ChoiceC}}{{#ChoiceD}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"D\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">D\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceD}}\u003c/span>\u003c/button>{{/ChoiceD}}\u003c/div>{{/ChoiceA}}\u003c/details>\u003cp class=\"kr-quiz-status\" aria-live=\"polite\">먼저 떠올린 뒤 답면을 확인하세요.\u003c/p>\u003cdiv class=\"kr-quiz-feedback\" tabindex=\"-1\" aria-live=\"polite\" aria-hidden=\"true\">\u003cp class=\"kr-quiz-result\">\u003c/p>\u003cp class=\"kr-result-caption\">정답\u003c/p>\u003cdiv class=\"kr-answer-main\">{{Answer}}\u003c/div>{{#Reading}}\u003cp class=\"kr-result-field\">읽기 · {{Reading}}\u003c/p>{{/Reading}}{{#KoreanMeaningReading}}\u003cp class=\"kr-result-field\">뜻 · {{KoreanMeaningReading}}\u003c/p>{{/KoreanMeaningReading}}{{#Explanation}}\u003csection class=\"kr-answer-section\">\u003ch3>핵심 해설\u003c/h3>\u003cp>{{Explanation}}\u003c/p>\u003c/section>{{/Explanation}}{{#ComparisonHTML}}\u003csection class=\"kr-answer-section\">\u003ch3>비교\u003c/h3>\u003cdiv>{{ComparisonHTML}}\u003c/div>\u003c/section>{{/ComparisonHTML}}{{#FullSentenceRuby}}\u003csection class=\"kr-answer-section\">\u003ch3>예문과 해석\u003c/h3>\u003cp lang=\"ja\">{{FullSentenceRuby}}\u003c/p>{{#SentenceKO}}\u003cp>{{SentenceKO}}\u003c/p>{{/SentenceKO}}\u003c/section>{{/FullSentenceRuby}}{{#CommonTrap}}\u003csection class=\"kr-answer-section\">\u003ch3>혼동 주의\u003c/h3>\u003cp>{{CommonTrap}}\u003c/p>\u003c/section>{{/CommonTrap}}{{#WrongAnswerAnalysis}}\u003csection class=\"kr-answer-section\">\u003ch3>선택지 해설\u003c/h3>\u003cdiv class=\"kr-options-answer\">{{WrongAnswerAnalysis}}\u003c/div>\u003c/section>{{/WrongAnswerAnalysis}}{{#SourceFile}}\u003csection class=\"kr-answer-section\">\u003cdetails>\u003csummary>문항 근거\u003c/summary>\u003cp>{{SourceFile}}{{#SourceURL}} · \u003ca href=\"{{SourceURL}}\">근거 열기\u003c/a>{{/SourceURL}}\u003c/p>\u003c/details>\u003c/section>{{/SourceFile}}\u003c/div>\u003c/section>\u003cfooter class=\"kr-card-id\">\u003cdiv class=\"kr-id-line\">{{#SourceEntryID}}기준키 {{SourceEntryID}} · {{/SourceEntryID}}NoteID {{NoteID}}{{#SourcePagePDF}} · PDF {{SourcePagePDF}}쪽{{/SourcePagePDF}}{{#SourcePagePrinted}} · 인쇄 {{SourcePagePrinted}}쪽{{/SourcePagePrinted}}\u003c/div>\u003cdiv class=\"kr-version\">\u003cspan>덱 v1.7.0\u003c/span>\u003cspan>공통 UI KR-1.7.0\u003c/span>\u003cspan>수정 2026-11-19\u003c/span>\u003c/div>\u003cdiv class=\"kr-platform-date\">운영 기준 2026-11-12 · RULE-06 v1.2.0\u003c/div>\u003c/footer>\u003c/div>","\u003cdiv class=\"kr-card kr-quiz\" data-ap-root data-ap-face=\"back\" data-kr-unified data-mid=\"1794914010\" data-side=\"back\" data-deck=\"quiz\" data-total=\"10000\" data-note=\"{{NoteID}}\" data-kind=\"{{CardType}}\" data-mode=\"{{QuizKind}}\" data-correct=\"{{CorrectChoice}}\">\u003cheader class=\"kr-meta\">\u003cdiv class=\"kr-meta-info\">\u003cspan class=\"kr-brand\">한자혁명 퀴즈\u003c/span>\u003cspan data-part-name>기본 뜻·읽기\u003c/span>\u003cspan class=\"kr-pill\">{{QuizKind}}\u003c/span>\u003c/div>\u003cdiv class=\"kr-meta-actions\">\u003cbutton type=\"button\" class=\"kr-top-button kr-record-button\">내 기록\u003c/button>\u003cbutton type=\"button\" class=\"kr-top-button kr-settings-button\" aria-expanded=\"false\">학습 설정\u003c/button>\u003c/div>\u003c/header>\u003csection class=\"kr-settings-panel\" aria-label=\"학습 설정\" aria-hidden=\"true\">\u003c/section>\u003csection class=\"kr-hero\">\u003cp class=\"kr-prompt\">{{Prompt}}\u003c/p>\u003cdiv class=\"kr-quiz-expression\" lang=\"ja\">{{Expression}}\u003c/div>{{#ChoiceA}}\u003cdiv class=\"kr-quiz-options\" role=\"group\" aria-label=\"선택지\">{{#ChoiceA}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"A\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">A\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceA}}\u003c/span>\u003c/button>{{/ChoiceA}}{{#ChoiceB}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"B\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">B\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceB}}\u003c/span>\u003c/button>{{/ChoiceB}}{{#ChoiceC}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"C\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">C\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceC}}\u003c/span>\u003c/button>{{/ChoiceC}}{{#ChoiceD}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"D\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">D\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceD}}\u003c/span>\u003c/button>{{/ChoiceD}}\u003c/div>{{/ChoiceA}}\u003cdiv class=\"kr-quiz-feedback is-visible\" tabindex=\"-1\" aria-live=\"polite\">\u003cp class=\"kr-quiz-result\">\u003c/p>\u003cp class=\"kr-result-caption\">정답\u003c/p>\u003cdiv class=\"kr-answer-main\">{{Answer}}\u003c/div>{{#Reading}}\u003cp class=\"kr-result-field\">읽기 · {{Reading}}\u003c/p>{{/Reading}}{{#KoreanMeaningReading}}\u003cp class=\"kr-result-field\">뜻 · {{KoreanMeaningReading}}\u003c/p>{{/KoreanMeaningReading}}{{#Explanation}}\u003csection class=\"kr-answer-section\">\u003ch3>핵심 해설\u003c/h3>\u003cp>{{Explanation}}\u003c/p>\u003c/section>{{/Explanation}}{{#ComparisonHTML}}\u003csection class=\"kr-answer-section\">\u003ch3>비교\u003c/h3>\u003cdiv>{{ComparisonHTML}}\u003c/div>\u003c/section>{{/ComparisonHTML}}{{#FullSentenceRuby}}\u003csection class=\"kr-answer-section\">\u003ch3>예문과 해석\u003c/h3>\u003cp lang=\"ja\">{{FullSentenceRuby}}\u003c/p>{{#SentenceKO}}\u003cp>{{SentenceKO}}\u003c/p>{{/SentenceKO}}\u003c/section>{{/FullSentenceRuby}}{{#CommonTrap}}\u003csection class=\"kr-answer-section\">\u003ch3>혼동 주의\u003c/h3>\u003cp>{{CommonTrap}}\u003c/p>\u003c/section>{{/CommonTrap}}{{#WrongAnswerAnalysis}}\u003csection class=\"kr-answer-section\">\u003ch3>선택지 해설\u003c/h3>\u003cdiv class=\"kr-options-answer\">{{WrongAnswerAnalysis}}\u003c/div>\u003c/section>{{/WrongAnswerAnalysis}}{{#SourceFile}}\u003csection class=\"kr-answer-section\">\u003cdetails>\u003csummary>문항 근거\u003c/summary>\u003cp>{{SourceFile}}{{#SourceURL}} · \u003ca href=\"{{SourceURL}}\">근거 열기\u003c/a>{{/SourceURL}}\u003c/p>\u003c/details>\u003c/section>{{/SourceFile}}\u003c/div>\u003c/section>\u003cfooter class=\"kr-card-id\">\u003cdiv class=\"kr-id-line\">{{#SourceEntryID}}기준키 {{SourceEntryID}} · {{/SourceEntryID}}NoteID {{NoteID}}{{#SourcePagePDF}} · PDF {{SourcePagePDF}}쪽{{/SourcePagePDF}}{{#SourcePagePrinted}} · 인쇄 {{SourcePagePrinted}}쪽{{/SourcePagePrinted}}\u003c/div>\u003cdiv class=\"kr-version\">\u003cspan>덱 v1.7.0\u003c/span>\u003cspan>공통 UI KR-1.7.0\u003c/span>\u003cspan>수정 2026-11-19\u003c/span>\u003c/div>\u003cdiv class=\"kr-platform-date\">운영 기준 2026-11-12 · RULE-06 v1.2.0\u003c/div>\u003c/footer>\u003c/div>"],"1794987614001":["\u003cdiv class=\"kr-card kr-quiz\" data-ap-root data-ap-face=\"front\" data-kr-unified data-mid=\"1794987614001\" data-side=\"front\" data-deck=\"quiz\" data-total=\"10000\" data-note=\"{{NoteID}}\" data-kind=\"{{CardType}}\" data-mode=\"{{QuestionType}}\" data-correct=\"{{CorrectChoice}}\">\u003cheader class=\"kr-meta\">\u003cdiv class=\"kr-meta-info\">\u003cspan class=\"kr-brand\">한자혁명 퀴즈\u003c/span>\u003cspan data-part-name>동사 활용\u003c/span>\u003cspan class=\"kr-pill\">{{QuestionType}}\u003c/span>\u003c/div>\u003cdiv class=\"kr-meta-actions\">\u003cbutton type=\"button\" class=\"kr-top-button kr-record-button\">내 기록\u003c/button>\u003cbutton type=\"button\" class=\"kr-top-button kr-settings-button\" aria-expanded=\"false\">학습 설정\u003c/button>\u003c/div>\u003c/header>\u003csection class=\"kr-settings-panel\" aria-label=\"학습 설정\" aria-hidden=\"true\">\u003c/section>\u003csection class=\"kr-hero\">\u003cp class=\"kr-prompt\">{{Prompt}}\u003c/p>\u003cdiv class=\"kr-quiz-expression\" lang=\"ja\">{{#QuestionRuby}}{{QuestionRuby}}{{/QuestionRuby}}{{^QuestionRuby}}{{QuestionText}}{{/QuestionRuby}}\u003c/div>{{#ShowLemma}}\u003cp class=\"kr-extra\">기본형 · {{LemmaRuby}}\u003c/p>{{/ShowLemma}}\u003cdetails class=\"kr-options-disclosure\">\u003csummary>선택지 펼치기\u003c/summary>{{#ChoiceA}}\u003cdiv class=\"kr-quiz-options\" role=\"group\" aria-label=\"선택지\">{{#ChoiceA}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"A\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">A\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceA}}\u003c/span>\u003c/button>{{/ChoiceA}}{{#ChoiceB}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"B\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">B\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceB}}\u003c/span>\u003c/button>{{/ChoiceB}}{{#ChoiceC}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"C\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">C\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceC}}\u003c/span>\u003c/button>{{/ChoiceC}}\u003c/div>{{/ChoiceA}}\u003c/details>\u003cp class=\"kr-quiz-status\" aria-live=\"polite\">먼저 떠올린 뒤 답면을 확인하세요.\u003c/p>\u003cdiv class=\"kr-quiz-feedback\" tabindex=\"-1\" aria-live=\"polite\" aria-hidden=\"true\">\u003cp class=\"kr-quiz-result\">\u003c/p>\u003cp class=\"kr-result-caption\">정답\u003c/p>\u003cdiv class=\"kr-answer-main\">{{AnswerHTML}}\u003c/div>{{#AnswerReading}}\u003cp class=\"kr-result-field\">읽기 · {{AnswerReading}}\u003c/p>{{/AnswerReading}}{{#AnswerMeaning}}\u003cp class=\"kr-result-field\">뜻 · {{AnswerMeaning}}\u003c/p>{{/AnswerMeaning}}{{#CoreExplanation}}\u003csection class=\"kr-answer-section\">\u003ch3>핵심 해설\u003c/h3>\u003cp>{{CoreExplanation}}\u003c/p>\u003c/section>{{/CoreExplanation}}{{#MemoryHook}}\u003csection class=\"kr-answer-section\">\u003ch3>비교\u003c/h3>\u003cdiv>{{MemoryHook}}\u003c/div>\u003c/section>{{/MemoryHook}}{{#ExampleRuby}}\u003csection class=\"kr-answer-section\">\u003ch3>예문과 해석\u003c/h3>\u003cp lang=\"ja\">{{ExampleRuby}}\u003c/p>{{#ExampleKO}}\u003cp>{{ExampleKO}}\u003c/p>{{/ExampleKO}}\u003c/section>{{/ExampleRuby}}{{#CommonTrap}}\u003csection class=\"kr-answer-section\">\u003ch3>혼동 주의\u003c/h3>\u003cp>{{CommonTrap}}\u003c/p>\u003c/section>{{/CommonTrap}}{{#OptionReview}}\u003csection class=\"kr-answer-section\">\u003ch3>선택지 해설\u003c/h3>\u003cdiv class=\"kr-options-answer\">{{OptionReview}}\u003c/div>\u003c/section>{{/OptionReview}}{{#SourceFile}}\u003csection class=\"kr-answer-section\">\u003cdetails>\u003csummary>문항 근거\u003c/summary>\u003cp>{{SourceFile}}{{#SourceURL}} · \u003ca href=\"{{SourceURL}}\">근거 열기\u003c/a>{{/SourceURL}}\u003c/p>\u003c/details>\u003c/section>{{/SourceFile}}\u003c/div>\u003c/section>\u003cfooter class=\"kr-card-id\">\u003cdiv class=\"kr-id-line\">NoteID {{NoteID}}{{#SourcePagePDF}} · PDF {{SourcePagePDF}}쪽{{/SourcePagePDF}}{{#SourcePagePrinted}} · 인쇄 {{SourcePagePrinted}}쪽{{/SourcePagePrinted}}\u003c/div>\u003cdiv class=\"kr-version\">\u003cspan>덱 v1.7.0\u003c/span>\u003cspan>공통 UI KR-1.7.0\u003c/span>\u003cspan>수정 2026-11-19\u003c/span>\u003c/div>\u003cdiv class=\"kr-platform-date\">운영 기준 2026-11-12 · RULE-06 v1.2.0\u003c/div>\u003c/footer>\u003c/div>","\u003cdiv class=\"kr-card kr-quiz\" data-ap-root data-ap-face=\"back\" data-kr-unified data-mid=\"1794987614001\" data-side=\"back\" data-deck=\"quiz\" data-total=\"10000\" data-note=\"{{NoteID}}\" data-kind=\"{{CardType}}\" data-mode=\"{{QuestionType}}\" data-correct=\"{{CorrectChoice}}\">\u003cheader class=\"kr-meta\">\u003cdiv class=\"kr-meta-info\">\u003cspan class=\"kr-brand\">한자혁명 퀴즈\u003c/span>\u003cspan data-part-name>동사 활용\u003c/span>\u003cspan class=\"kr-pill\">{{QuestionType}}\u003c/span>\u003c/div>\u003cdiv class=\"kr-meta-actions\">\u003cbutton type=\"button\" class=\"kr-top-button kr-record-button\">내 기록\u003c/button>\u003cbutton type=\"button\" class=\"kr-top-button kr-settings-button\" aria-expanded=\"false\">학습 설정\u003c/button>\u003c/div>\u003c/header>\u003csection class=\"kr-settings-panel\" aria-label=\"학습 설정\" aria-hidden=\"true\">\u003c/section>\u003csection class=\"kr-hero\">\u003cp class=\"kr-prompt\">{{Prompt}}\u003c/p>\u003cdiv class=\"kr-quiz-expression\" lang=\"ja\">{{#QuestionRuby}}{{QuestionRuby}}{{/QuestionRuby}}{{^QuestionRuby}}{{QuestionText}}{{/QuestionRuby}}\u003c/div>{{#ShowLemma}}\u003cp class=\"kr-extra\">기본형 · {{LemmaRuby}}\u003c/p>{{/ShowLemma}}{{#ChoiceA}}\u003cdiv class=\"kr-quiz-options\" role=\"group\" aria-label=\"선택지\">{{#ChoiceA}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"A\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">A\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceA}}\u003c/span>\u003c/button>{{/ChoiceA}}{{#ChoiceB}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"B\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">B\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceB}}\u003c/span>\u003c/button>{{/ChoiceB}}{{#ChoiceC}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"C\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">C\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceC}}\u003c/span>\u003c/button>{{/ChoiceC}}\u003c/div>{{/ChoiceA}}\u003cdiv class=\"kr-quiz-feedback is-visible\" tabindex=\"-1\" aria-live=\"polite\">\u003cp class=\"kr-quiz-result\">\u003c/p>\u003cp class=\"kr-result-caption\">정답\u003c/p>\u003cdiv class=\"kr-answer-main\">{{AnswerHTML}}\u003c/div>{{#AnswerReading}}\u003cp class=\"kr-result-field\">읽기 · {{AnswerReading}}\u003c/p>{{/AnswerReading}}{{#AnswerMeaning}}\u003cp class=\"kr-result-field\">뜻 · {{AnswerMeaning}}\u003c/p>{{/AnswerMeaning}}{{#CoreExplanation}}\u003csection class=\"kr-answer-section\">\u003ch3>핵심 해설\u003c/h3>\u003cp>{{CoreExplanation}}\u003c/p>\u003c/section>{{/CoreExplanation}}{{#MemoryHook}}\u003csection class=\"kr-answer-section\">\u003ch3>비교\u003c/h3>\u003cdiv>{{MemoryHook}}\u003c/div>\u003c/section>{{/MemoryHook}}{{#ExampleRuby}}\u003csection class=\"kr-answer-section\">\u003ch3>예문과 해석\u003c/h3>\u003cp lang=\"ja\">{{ExampleRuby}}\u003c/p>{{#ExampleKO}}\u003cp>{{ExampleKO}}\u003c/p>{{/ExampleKO}}\u003c/section>{{/ExampleRuby}}{{#CommonTrap}}\u003csection class=\"kr-answer-section\">\u003ch3>혼동 주의\u003c/h3>\u003cp>{{CommonTrap}}\u003c/p>\u003c/section>{{/CommonTrap}}{{#OptionReview}}\u003csection class=\"kr-answer-section\">\u003ch3>선택지 해설\u003c/h3>\u003cdiv class=\"kr-options-answer\">{{OptionReview}}\u003c/div>\u003c/section>{{/OptionReview}}{{#SourceFile}}\u003csection class=\"kr-answer-section\">\u003cdetails>\u003csummary>문항 근거\u003c/summary>\u003cp>{{SourceFile}}{{#SourceURL}} · \u003ca href=\"{{SourceURL}}\">근거 열기\u003c/a>{{/SourceURL}}\u003c/p>\u003c/details>\u003c/section>{{/SourceFile}}\u003c/div>\u003c/section>\u003cfooter class=\"kr-card-id\">\u003cdiv class=\"kr-id-line\">NoteID {{NoteID}}{{#SourcePagePDF}} · PDF {{SourcePagePDF}}쪽{{/SourcePagePDF}}{{#SourcePagePrinted}} · 인쇄 {{SourcePagePrinted}}쪽{{/SourcePagePrinted}}\u003c/div>\u003cdiv class=\"kr-version\">\u003cspan>덱 v1.7.0\u003c/span>\u003cspan>공통 UI KR-1.7.0\u003c/span>\u003cspan>수정 2026-11-19\u003c/span>\u003c/div>\u003cdiv class=\"kr-platform-date\">운영 기준 2026-11-12 · RULE-06 v1.2.0\u003c/div>\u003c/footer>\u003c/div>"],"1794987714001":["\u003cdiv class=\"kr-card kr-quiz\" data-ap-root data-ap-face=\"front\" data-kr-unified data-mid=\"1794987714001\" data-side=\"front\" data-deck=\"quiz\" data-total=\"10000\" data-note=\"{{NoteID}}\" data-kind=\"{{CardType}}\" data-mode=\"{{QuestionType}}\" data-correct=\"{{CorrectChoice}}\">\u003cheader class=\"kr-meta\">\u003cdiv class=\"kr-meta-info\">\u003cspan class=\"kr-brand\">한자혁명 퀴즈\u003c/span>\u003cspan data-part-name>유사 한자\u003c/span>\u003cspan class=\"kr-pill\">{{QuestionType}}\u003c/span>\u003cspan class=\"kr-pill\">즉시 해설\u003c/span>\u003c/div>\u003cdiv class=\"kr-meta-actions\">\u003cbutton type=\"button\" class=\"kr-top-button kr-record-button\">내 기록\u003c/button>\u003cbutton type=\"button\" class=\"kr-top-button kr-settings-button\" aria-expanded=\"false\">학습 설정\u003c/button>\u003c/div>\u003c/header>\u003csection class=\"kr-settings-panel\" aria-label=\"학습 설정\" aria-hidden=\"true\">\u003c/section>\u003csection class=\"kr-hero\">\u003cp class=\"kr-prompt\">{{Prompt}}\u003c/p>\u003cdiv class=\"kr-quiz-expression\" lang=\"ja\">{{#QuestionRuby}}{{QuestionRuby}}{{/QuestionRuby}}{{^QuestionRuby}}{{QuestionText}}{{/QuestionRuby}}\u003c/div>{{#ShowLemma}}\u003cp class=\"kr-extra\">기본형 · {{LemmaRuby}}\u003c/p>{{/ShowLemma}}{{#ChoiceA}}\u003cdiv class=\"kr-quiz-options\" role=\"group\" aria-label=\"선택지\">{{#ChoiceA}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"1\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">1\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceA}}\u003c/span>\u003c/button>{{/ChoiceA}}{{#ChoiceB}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"2\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">2\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceB}}\u003c/span>\u003c/button>{{/ChoiceB}}{{#ChoiceC}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"3\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">3\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceC}}\u003c/span>\u003c/button>{{/ChoiceC}}\u003c/div>{{/ChoiceA}}\u003cp class=\"kr-quiz-status\" aria-live=\"polite\">먼저 떠올린 뒤 답면을 확인하세요.\u003c/p>\u003cdiv class=\"kr-quiz-feedback\" tabindex=\"-1\" aria-live=\"polite\" aria-hidden=\"true\">\u003cp class=\"kr-quiz-result\">\u003c/p>\u003cp class=\"kr-result-caption\">정답\u003c/p>\u003cdiv class=\"kr-answer-main\">{{AnswerHTML}}\u003c/div>{{#AnswerReading}}\u003cp class=\"kr-result-field\">읽기 · {{AnswerReading}}\u003c/p>{{/AnswerReading}}{{#AnswerMeaning}}\u003cp class=\"kr-result-field\">뜻 · {{AnswerMeaning}}\u003c/p>{{/AnswerMeaning}}{{#CoreExplanation}}\u003csection class=\"kr-answer-section\">\u003ch3>핵심 해설\u003c/h3>\u003cp>{{CoreExplanation}}\u003c/p>\u003c/section>{{/CoreExplanation}}{{#ShapeSet}}\u003csection class=\"kr-answer-section\">\u003ch3>비교\u003c/h3>\u003cdiv>{{ShapeSet}}\u003c/div>\u003c/section>{{/ShapeSet}}{{#ExampleRuby}}\u003csection class=\"kr-answer-section\">\u003ch3>예문과 해석\u003c/h3>\u003cp lang=\"ja\">{{ExampleRuby}}\u003c/p>{{#ExampleKO}}\u003cp>{{ExampleKO}}\u003c/p>{{/ExampleKO}}\u003c/section>{{/ExampleRuby}}{{#CommonTrap}}\u003csection class=\"kr-answer-section\">\u003ch3>혼동 주의\u003c/h3>\u003cp>{{CommonTrap}}\u003c/p>\u003c/section>{{/CommonTrap}}{{#OptionReview}}\u003csection class=\"kr-answer-section\">\u003ch3>선택지 해설\u003c/h3>\u003cdiv class=\"kr-options-answer\">{{OptionReview}}\u003c/div>\u003c/section>{{/OptionReview}}{{#SourceFile}}\u003csection class=\"kr-answer-section\">\u003cdetails>\u003csummary>문항 근거\u003c/summary>\u003cp>{{SourceFile}}{{#SourceURL}} · \u003ca href=\"{{SourceURL}}\">근거 열기\u003c/a>{{/SourceURL}}\u003c/p>\u003c/details>\u003c/section>{{/SourceFile}}\u003c/div>\u003c/section>\u003cfooter class=\"kr-card-id\">\u003cdiv class=\"kr-id-line\">NoteID {{NoteID}}{{#SourcePagePDF}} · PDF {{SourcePagePDF}}쪽{{/SourcePagePDF}}{{#SourcePagePrinted}} · 인쇄 {{SourcePagePrinted}}쪽{{/SourcePagePrinted}}\u003c/div>\u003cdiv class=\"kr-version\">\u003cspan>덱 v1.7.0\u003c/span>\u003cspan>공통 UI KR-1.7.0\u003c/span>\u003cspan>수정 2026-11-19\u003c/span>\u003c/div>\u003cdiv class=\"kr-platform-date\">운영 기준 2026-11-12 · RULE-06 v1.2.0\u003c/div>\u003c/footer>\u003c/div>","\u003cdiv class=\"kr-card kr-quiz\" data-ap-root data-ap-face=\"back\" data-kr-unified data-mid=\"1794987714001\" data-side=\"back\" data-deck=\"quiz\" data-total=\"10000\" data-note=\"{{NoteID}}\" data-kind=\"{{CardType}}\" data-mode=\"{{QuestionType}}\" data-correct=\"{{CorrectChoice}}\">\u003cheader class=\"kr-meta\">\u003cdiv class=\"kr-meta-info\">\u003cspan class=\"kr-brand\">한자혁명 퀴즈\u003c/span>\u003cspan data-part-name>유사 한자\u003c/span>\u003cspan class=\"kr-pill\">{{QuestionType}}\u003c/span>\u003cspan class=\"kr-pill\">즉시 해설\u003c/span>\u003c/div>\u003cdiv class=\"kr-meta-actions\">\u003cbutton type=\"button\" class=\"kr-top-button kr-record-button\">내 기록\u003c/button>\u003cbutton type=\"button\" class=\"kr-top-button kr-settings-button\" aria-expanded=\"false\">학습 설정\u003c/button>\u003c/div>\u003c/header>\u003csection class=\"kr-settings-panel\" aria-label=\"학습 설정\" aria-hidden=\"true\">\u003c/section>\u003csection class=\"kr-hero\">\u003cp class=\"kr-prompt\">{{Prompt}}\u003c/p>\u003cdiv class=\"kr-quiz-expression\" lang=\"ja\">{{#QuestionRuby}}{{QuestionRuby}}{{/QuestionRuby}}{{^QuestionRuby}}{{QuestionText}}{{/QuestionRuby}}\u003c/div>{{#ShowLemma}}\u003cp class=\"kr-extra\">기본형 · {{LemmaRuby}}\u003c/p>{{/ShowLemma}}{{#ChoiceA}}\u003cdiv class=\"kr-quiz-options\" role=\"group\" aria-label=\"선택지\">{{#ChoiceA}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"1\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">1\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceA}}\u003c/span>\u003c/button>{{/ChoiceA}}{{#ChoiceB}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"2\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">2\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceB}}\u003c/span>\u003c/button>{{/ChoiceB}}{{#ChoiceC}}\u003cbutton type=\"button\" class=\"kr-choice\" data-choice=\"3\" aria-pressed=\"false\">\u003cb aria-hidden=\"true\">3\u003c/b>\u003cspan class=\"kr-choice-copy\">{{ChoiceC}}\u003c/span>\u003c/button>{{/ChoiceC}}\u003c/div>{{/ChoiceA}}\u003cdiv class=\"kr-quiz-feedback is-visible\" tabindex=\"-1\" aria-live=\"polite\">\u003cp class=\"kr-quiz-result\">\u003c/p>\u003cp class=\"kr-result-caption\">정답\u003c/p>\u003cdiv class=\"kr-answer-main\">{{AnswerHTML}}\u003c/div>{{#AnswerReading}}\u003cp class=\"kr-result-field\">읽기 · {{AnswerReading}}\u003c/p>{{/AnswerReading}}{{#AnswerMeaning}}\u003cp class=\"kr-result-field\">뜻 · {{AnswerMeaning}}\u003c/p>{{/AnswerMeaning}}{{#CoreExplanation}}\u003csection class=\"kr-answer-section\">\u003ch3>핵심 해설\u003c/h3>\u003cp>{{CoreExplanation}}\u003c/p>\u003c/section>{{/CoreExplanation}}{{#ShapeSet}}\u003csection class=\"kr-answer-section\">\u003ch3>비교\u003c/h3>\u003cdiv>{{ShapeSet}}\u003c/div>\u003c/section>{{/ShapeSet}}{{#ExampleRuby}}\u003csection class=\"kr-answer-section\">\u003ch3>예문과 해석\u003c/h3>\u003cp lang=\"ja\">{{ExampleRuby}}\u003c/p>{{#ExampleKO}}\u003cp>{{ExampleKO}}\u003c/p>{{/ExampleKO}}\u003c/section>{{/ExampleRuby}}{{#CommonTrap}}\u003csection class=\"kr-answer-section\">\u003ch3>혼동 주의\u003c/h3>\u003cp>{{CommonTrap}}\u003c/p>\u003c/section>{{/CommonTrap}}{{#OptionReview}}\u003csection class=\"kr-answer-section\">\u003ch3>선택지 해설\u003c/h3>\u003cdiv class=\"kr-options-answer\">{{OptionReview}}\u003c/div>\u003c/section>{{/OptionReview}}{{#SourceFile}}\u003csection class=\"kr-answer-section\">\u003cdetails>\u003csummary>문항 근거\u003c/summary>\u003cp>{{SourceFile}}{{#SourceURL}} · \u003ca href=\"{{SourceURL}}\">근거 열기\u003c/a>{{/SourceURL}}\u003c/p>\u003c/details>\u003c/section>{{/SourceFile}}\u003c/div>\u003c/section>\u003cfooter class=\"kr-card-id\">\u003cdiv class=\"kr-id-line\">NoteID {{NoteID}}{{#SourcePagePDF}} · PDF {{SourcePagePDF}}쪽{{/SourcePagePDF}}{{#SourcePagePrinted}} · 인쇄 {{SourcePagePrinted}}쪽{{/SourcePagePrinted}}\u003c/div>\u003cdiv class=\"kr-version\">\u003cspan>덱 v1.7.0\u003c/span>\u003cspan>공통 UI KR-1.7.0\u003c/span>\u003cspan>수정 2026-11-19\u003c/span>\u003c/div>\u003cdiv class=\"kr-platform-date\">운영 기준 2026-11-12 · RULE-06 v1.2.0\u003c/div>\u003c/footer>\u003c/div>"],"1795037400101":["\u003cdiv class=\"kr-card kr-quiz\" data-ap-root data-ap-face=\"front\" data-kr-unified data-mid=\"1795037400101\" data-side=\"front\" data-deck=\"quiz\" data-total=\"10000\" data-note=\"{{NoteID}}\" data-kind=\"{{Subtype}}\" data-mode=\"{{Subtype}}\" data-correct=\"{{CorrectIndex}}\">\u003cheader class=\"kr-meta\">\u003cdiv class=\"kr-meta-info\">\u003cspan class=\"kr-brand\">한자혁명 퀴즈\u003c/span>\u003cspan data-part-name>{{Part}}\u003c/span>\u003cspan class=\"kr-pill\">{{Subtype}}\u003c/span>{{#JLPT}}\u003cspan class=\"kr-pill\">{{JLPT}}\u003c/span>{{/JLPT}}\u003c/div>\u003cdiv class=\"kr-meta-actions\">\u003cbutton type=\"button\" class=\"kr-top-button kr-record-button\">내 기록\u003c/button>\u003cbutton type=\"button\" class=\"kr-top-button kr-settings-button\" aria-expanded=\"false\">학습 설정\u003c/button>\u003c/div>\u003c/header>\u003csection class=\"kr-settings-panel\" aria-label=\"학습 설정\" aria-hidden=\"true\">\u003c/section>\u003csection class=\"kr-hero\">\u003cp class=\"kr-prompt\">{{Prompt}}\u003c/p>\u003cdiv class=\"kr-quiz-expression\" lang=\"ja\">{{Question}}\u003c/div>{{#FrontExtra}}\u003cp class=\"kr-extra\">{{FrontExtra}}\u003c/p>{{/FrontExtra}}{{#OptionHTML}}\u003cdiv class=\"kr-quiz-options\" role=\"group\" aria-label=\"선택지\">{{OptionHTML}}\u003c/div>{{/OptionHTML}}\u003cp class=\"kr-quiz-status\" aria-live=\"polite\">먼저 떠올린 뒤 답면을 확인하세요.\u003c/p>{{#OptionHTML}}\u003cdiv class=\"kr-quiz-feedback\" tabindex=\"-1\" aria-live=\"polite\" aria-hidden=\"true\">\u003cp class=\"kr-quiz-result\">\u003c/p>\u003cp class=\"kr-result-caption\">정답\u003c/p>\u003cdiv class=\"kr-answer-main\">{{Answer}}\u003c/div>{{#Reading}}\u003cp class=\"kr-result-field\">읽기 · {{Reading}}\u003c/p>{{/Reading}}{{#Meaning}}\u003cp class=\"kr-result-field\">뜻 · {{Meaning}}\u003c/p>{{/Meaning}}{{#Explanation}}\u003csection class=\"kr-answer-section\">\u003ch3>핵심 해설\u003c/h3>\u003cp>{{Explanation}}\u003c/p>\u003c/section>{{/Explanation}}{{#Comparison}}\u003csection class=\"kr-answer-section\">\u003ch3>비교\u003c/h3>\u003cdiv>{{Comparison}}\u003c/div>\u003c/section>{{/Comparison}}{{#Sentence}}\u003csection class=\"kr-answer-section\">\u003ch3>예문과 해석\u003c/h3>\u003cp lang=\"ja\">{{Sentence}}\u003c/p>{{#Translation}}\u003cp>{{Translation}}\u003c/p>{{/Translation}}\u003c/section>{{/Sentence}}{{#Trap}}\u003csection class=\"kr-answer-section\">\u003ch3>혼동 주의\u003c/h3>\u003cp>{{Trap}}\u003c/p>\u003c/section>{{/Trap}}{{#Provenance}}\u003csection class=\"kr-answer-section\">\u003cdetails>\u003csummary>문항 근거\u003c/summary>\u003cp>{{Provenance}}{{#SourceURL}} · \u003ca href=\"{{SourceURL}}\">근거 열기\u003c/a>{{/SourceURL}}\u003c/p>\u003c/details>\u003c/section>{{/Provenance}}\u003c/div>{{/OptionHTML}}\u003c/section>\u003cfooter class=\"kr-card-id\">\u003cdiv class=\"kr-id-line\">NoteID {{NoteID}}\u003c/div>\u003cdiv class=\"kr-version\">\u003cspan>덱 v1.7.0\u003c/span>\u003cspan>공통 UI KR-1.7.0\u003c/span>\u003cspan>수정 2026-11-19\u003c/span>\u003c/div>\u003cdiv class=\"kr-platform-date\">운영 기준 2026-11-12 · RULE-06 v1.2.0\u003c/div>\u003c/footer>\u003c/div>","\u003cdiv class=\"kr-card kr-quiz\" data-ap-root data-ap-face=\"back\" data-kr-unified data-mid=\"1795037400101\" data-side=\"back\" data-deck=\"quiz\" data-total=\"10000\" data-note=\"{{NoteID}}\" data-kind=\"{{Subtype}}\" data-mode=\"{{Subtype}}\" data-correct=\"{{CorrectIndex}}\">\u003cheader class=\"kr-meta\">\u003cdiv class=\"kr-meta-info\">\u003cspan class=\"kr-brand\">한자혁명 퀴즈\u003c/span>\u003cspan data-part-name>{{Part}}\u003c/span>\u003cspan class=\"kr-pill\">{{Subtype}}\u003c/span>{{#JLPT}}\u003cspan class=\"kr-pill\">{{JLPT}}\u003c/span>{{/JLPT}}\u003c/div>\u003cdiv class=\"kr-meta-actions\">\u003cbutton type=\"button\" class=\"kr-top-button kr-record-button\">내 기록\u003c/button>\u003cbutton type=\"button\" class=\"kr-top-button kr-settings-button\" aria-expanded=\"false\">학습 설정\u003c/button>\u003c/div>\u003c/header>\u003csection class=\"kr-settings-panel\" aria-label=\"학습 설정\" aria-hidden=\"true\">\u003c/section>\u003csection class=\"kr-hero\">\u003cp class=\"kr-prompt\">{{Prompt}}\u003c/p>\u003cdiv class=\"kr-quiz-expression\" lang=\"ja\">{{Question}}\u003c/div>{{#FrontExtra}}\u003cp class=\"kr-extra\">{{FrontExtra}}\u003c/p>{{/FrontExtra}}{{#OptionHTML}}\u003cdiv class=\"kr-quiz-options\" role=\"group\" aria-label=\"선택지\">{{OptionHTML}}\u003c/div>{{/OptionHTML}}\u003cdiv class=\"kr-quiz-feedback is-visible\" tabindex=\"-1\" aria-live=\"polite\">\u003cp class=\"kr-quiz-result\">\u003c/p>\u003cp class=\"kr-result-caption\">정답\u003c/p>\u003cdiv class=\"kr-answer-main\">{{Answer}}\u003c/div>{{#Reading}}\u003cp class=\"kr-result-field\">읽기 · {{Reading}}\u003c/p>{{/Reading}}{{#Meaning}}\u003cp class=\"kr-result-field\">뜻 · {{Meaning}}\u003c/p>{{/Meaning}}{{#Explanation}}\u003csection class=\"kr-answer-section\">\u003ch3>핵심 해설\u003c/h3>\u003cp>{{Explanation}}\u003c/p>\u003c/section>{{/Explanation}}{{#Comparison}}\u003csection class=\"kr-answer-section\">\u003ch3>비교\u003c/h3>\u003cdiv>{{Comparison}}\u003c/div>\u003c/section>{{/Comparison}}{{#Sentence}}\u003csection class=\"kr-answer-section\">\u003ch3>예문과 해석\u003c/h3>\u003cp lang=\"ja\">{{Sentence}}\u003c/p>{{#Translation}}\u003cp>{{Translation}}\u003c/p>{{/Translation}}\u003c/section>{{/Sentence}}{{#Trap}}\u003csection class=\"kr-answer-section\">\u003ch3>혼동 주의\u003c/h3>\u003cp>{{Trap}}\u003c/p>\u003c/section>{{/Trap}}{{#Provenance}}\u003csection class=\"kr-answer-section\">\u003cdetails>\u003csummary>문항 근거\u003c/summary>\u003cp>{{Provenance}}{{#SourceURL}} · \u003ca href=\"{{SourceURL}}\">근거 열기\u003c/a>{{/SourceURL}}\u003c/p>\u003c/details>\u003c/section>{{/Provenance}}\u003c/div>\u003c/section>\u003cfooter class=\"kr-card-id\">\u003cdiv class=\"kr-id-line\">NoteID {{NoteID}}\u003c/div>\u003cdiv class=\"kr-version\">\u003cspan>덱 v1.7.0\u003c/span>\u003cspan>공통 UI KR-1.7.0\u003c/span>\u003cspan>수정 2026-11-19\u003c/span>\u003c/div>\u003cdiv class=\"kr-platform-date\">운영 기준 2026-11-12 · RULE-06 v1.2.0\u003c/div>\u003c/footer>\u003c/div>"]},"fields":{"1794914010":["NoteID","ConceptID","LinkedConceptID","DeckPath","Subject","Chapter","Section","CardType","Direction","Prompt","Answer","CoreExplanation","MemoryHook","CommonTrap","SourceFile","SourcePagePDF","SourcePagePrinted","SourceURL","SourceCrop","ContentOrigin","VerificationStatus","VerificationReference","GenerateReverse","EnableScratchpad","Version","Status","Tags","ModelKey","Volume","SourceEntryID","Kanji","KoreanMeaningReading","OnReading","KunReading","Expression","Reading","MeaningKO","WordListHTML","LevelSource","LevelBasis","RadicalSource","StrokeCount","StrokeImage","StrokeSourceURL","StrokeLicense","HistoricalEtymologyStatus","ScratchpadStatus","ReferenceBaseline","GenerateRead","GenerateWrite","GUID","QuizKind","ChoiceA","ChoiceB","ChoiceC","ChoiceD","CorrectChoice","Explanation","WrongAnswerAnalysis","StudyNoteID","QuestionSource","PairKey","ComparisonHTML","FullSentenceRuby","SentenceKO","TargetWord","RelatedStudyNoteIDs","RelatedConceptIDs","LearningObjective"],"1794987614001":["NoteID","QuestionType","VerbGroup","Lemma","Prompt","Answer","AnswerReading","AnswerMeaning","CoreExplanation","MeaningKO","ExampleJA","ExampleKO","TargetForm","ChoiceA","ChoiceB","ChoiceC","CorrectChoice","ChoiceAMeaning","ChoiceAReason","ChoiceBMeaning","ChoiceBReason","ChoiceCMeaning","ChoiceCReason","ConceptID","LinkedConceptID","DeckPath","Subject","Chapter","Section","CardType","Direction","QuestionText","QuestionRuby","LemmaRuby","BaseReading","ShowLemma","AnswerHTML","ExampleRuby","OptionReview","MemoryHook","CommonTrap","SourceID","SourceFile","SourcePagePDF","SourcePagePrinted","SourceURL","SourceCrop","ContentOrigin","VerificationStatus","VerificationReference","QuestionSource","SourceLinks","GenerateReverse","EnableScratchpad","Version","Status","Tags","GUID","QuestionNumber","GroupCode"],"1794987714001":["NoteID","QuestionType","KanjiGroup","Lemma","Prompt","Answer","AnswerReading","AnswerMeaning","CoreExplanation","MeaningKO","ExampleJA","ExampleKO","Kanji","ChoiceA","ChoiceB","ChoiceC","CorrectChoice","ChoiceAMeaning","ChoiceAReason","ChoiceBMeaning","ChoiceBReason","ChoiceCMeaning","ChoiceCReason","ConceptID","LinkedConceptID","DeckPath","Subject","Chapter","Section","CardType","Direction","QuestionText","QuestionRuby","LemmaRuby","BaseReading","ShowLemma","AnswerHTML","ExampleRuby","OptionReview","MemoryHook","CommonTrap","SourceID","SourceFile","SourcePagePDF","SourcePagePrinted","SourceURL","SourceCrop","ContentOrigin","VerificationStatus","VerificationReference","QuestionSource","SourceLinks","GenerateReverse","EnableScratchpad","Version","Status","Tags","GUID","QuestionNumber","ShapeSet"],"1795037400101":["NoteID","Part","Subtype","JLPT","Prompt","Question","FrontExtra","OptionHTML","CorrectIndex","Answer","Reading","Meaning","Explanation","Comparison","Sentence","Translation","Trap","Provenance","SourceURL","Version","ConceptID","LinkedConceptID"]},"info":{"name":"한자혁명 5파트 실전","release":"v1.7.0","platform":"v1.3.0","rule":"1.2.0","ui":"KR-1.7.0","init":"krUnifiedInit","cleanup":"__krV120Cleanup","root":".kr-card","subgroups":["1단 동사","5단 동사"],"subgroup_label":"동사군","sample":true,"report":{"unit":"questions","rows":[{"part":"SIM","label":"유사 한자","previous":1200,"added":950,"removed":0,"moved_in":0,"moved_out":0,"cumulative":2150},{"part":"BAS","label":"기본 뜻·읽기","previous":1000,"added":450,"removed":0,"moved_in":0,"moved_out":0,"cumulative":1450},{"part":"CTX","label":"어휘·문맥","previous":1300,"added":190,"removed":0,"moved_in":0,"moved_out":0,"cumulative":1490},{"part":"VRB","label":"동사 활용","previous":700,"added":3250,"removed":0,"moved_in":0,"moved_out":0,"cumulative":3950},{"part":"MIX","label":"종합 실전","previous":800,"added":160,"removed":0,"moved_in":0,"moved_out":0,"cumulative":960}],"total":{"previous":5000,"added":5000,"removed":0,"moved":0,"cumulative":10000}},"reference_link":"https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_Revolution_V1.7.0"}}</script>
+<script>
+window.AnkiFilterHelperConfig={"product_id":"한자혁명","models":{"shared":"한자혁명 · 5파트 실전","practice":"한자혁명 · 구별과 문장 연습","verbs":"한자혁명 · 동사 활용 연습","similar":"한자혁명 · 유사 한자 연습"},"levels":[{"id":"N5","label":"N5","value":"N5 · 학습용"},{"id":"N4","label":"N4","value":"N4 · 학습용"},{"id":"N3","label":"N3","value":"N3 · 학습용"},{"id":"N2","label":"N2","value":"N2 · 학습용"},{"id":"N1","label":"N1","value":"N1 · 학습용"}],"level_field":"JLPT","areas":[{"id":"all","label":"전체","model":"all"},{"id":"SIM","label":"유사 한자","model":"shared","field":"Part","value":"유사 한자","legacy":{"model":"similar"}},{"id":"BAS","label":"기본 뜻·읽기","model":"shared","field":"Part","value":"기본 뜻·읽기","legacy":{"model":"practice","field":"QuizKind","value":"뜻 회상"}},{"id":"CTX","label":"어휘·문맥","model":"shared","field":"Part","value":"어휘·문맥","legacy":{"model":"practice","field":"QuizKind","value":"문장 적용"}},{"id":"VRB","label":"동사 활용","model":"shared","field":"Part","value":"동사 활용","legacy":{"model":"verbs"}},{"id":"MIX","label":"종합 실전","model":"shared","field":"Part","value":"종합 실전","legacy":null}]};
+window.krFiltersMarkup="<details class=\"af-helper\" data-af-helper>\n  <summary>오답·플래그로 복습할 카드 찾기</summary>\n  <div class=\"af-body\">\n    <p class=\"af-description\"><strong>1. 조건 선택 → 2. 검색식 복사 → 3. Anki의 ‘찾기’에 붙여넣기 → ‘모으기’</strong><br>이 도우미는 조건을 Anki 검색식으로 바꿉니다. 실제 카드 기록을 조회하고 모으는 일은 Anki가 합니다.</p>\n    <div class=\"af-fields\">\n      <label>급수 / 구분<select data-af-field=\"level\"></select></label>\n      <label>학습·문제 유형<select data-af-field=\"area\"></select></label>\n      <label>모을 기준<select data-af-field=\"reason\"><option value=\"again_or_flag\">오답 + 플래그</option><option value=\"again\">오답 : 다시 평가</option><option value=\"flag\">헷갈림 : 플래그</option><option value=\"hard\">어려움 평가</option><option value=\"lapses\">반복 실패 : 누적 3회 이상</option></select></label>\n      <label>평가 기록의 기간<select data-af-field=\"days\"><option value=\"1\">오늘</option><option value=\"7\" selected>최근 7일</option><option value=\"14\">최근 14일</option><option value=\"30\">최근 30일</option></select></label>\n      <label>한 번에 모을 카드<select data-af-field=\"limit\"><option value=\"20\">20장</option><option value=\"50\">50장</option><option value=\"100\">100장</option><option value=\"200\">200장</option></select></label>\n      <label>선택 기준<select data-af-field=\"order\"><option value=\"random\">랜덤</option><option value=\"lapses\">복습 실패 횟수 많은 순</option></select></label>\n    </div>\n    <p class=\"af-summary\" data-af-summary></p>\n    <p class=\"af-description\" data-af-explanation></p>\n    <p class=\"af-description\" data-af-order-explanation></p>\n    <label class=\"af-query-label\">Anki의 ‘찾기’에 넣을 검색식 — 아래 내용 전체<textarea data-af-query rows=\"3\" readonly spellcheck=\"false\" autocapitalize=\"off\" autocorrect=\"off\" aria-label=\"생성된 필터 검색식\"></textarea></label>\n    <div class=\"af-buttons\"><button type=\"button\" data-af-copy>검색식 복사</button><button type=\"button\" data-af-select>전체 선택 · 직접 복사</button></div>\n    <p class=\"af-message\" data-af-message role=\"status\" aria-live=\"polite\"></p>\n    <details class=\"af-guide\" data-af-copy-check><summary>복사·붙여넣기가 되는지 확인</summary>\n      <p>PC에서는 위 ‘전체 선택 · 직접 복사’를 누른 뒤 <strong>Ctrl+C</strong>를 누르세요. iPhone·iPad에서는 검색식 칸을 길게 눌러 전체 선택 후 ‘복사’를 누르세요.</p>\n      <label class=\"af-query-label\">이 확인 칸에 직접 붙여넣어 보세요<textarea data-af-paste rows=\"3\" spellcheck=\"false\" autocapitalize=\"off\" autocorrect=\"off\" placeholder=\"PC: 여기를 누르고 Ctrl+V / 모바일: 길게 눌러 붙여넣기\" aria-label=\"복사한 검색식 붙여넣기 확인\"></textarea></label>\n      <p data-af-paste-result class=\"af-message\" role=\"status\" aria-live=\"polite\">아직 확인하지 않았습니다.</p>\n      <p>이 칸은 붙여넣기 확인용입니다. 실제 필터 덱은 Anki에서 만듭니다. 여기에는 들어가는데 Anki에 들어가지 않으면 Anki 창의 ‘찾기’를 클릭한 뒤 Ctrl+A → Ctrl+V를 누르세요.</p>\n    </details>\n    <dl class=\"af-settings\">\n      <dt>Anki에 넣을 이름 예시</dt><dd data-af-name></dd>\n      <dt>개수 제한</dt><dd data-af-limit></dd>\n      <dt>선택 기준</dt><dd data-af-order></dd>\n      <dt>일정 조정</dt><dd>추가 연습에서 기존 간격을 유지하려면 체크 해제</dd>\n    </dl>\n    <details class=\"af-guide\" data-af-concept><summary>검색식이 카드 기록을 찾는 원리 · 예시로 보기</summary>\n      <p><strong>노트에는 한자·뜻·급수 같은 내용이 들어 있고, 그 노트에서 만든 각 카드에는 평가 이력과 깃발이 따로 연결됩니다.</strong> Anki의 카드 정보에서 그 기록을 확인할 수 있습니다. 같은 노트의 읽기·쓰기 카드도 평가와 깃발은 서로 다를 수 있습니다.</p>\n      <p>이 도우미는 선택한 급수·유형·수집 기준을 Anki가 원래 지원하는 검색 문법으로 조합합니다. 검색식 자체에 카드나 학습기록이 들어 있지는 않습니다.</p>\n      <dl class=\"af-settings\" data-af-tokens></dl>\n      <p>아래는 <strong>설명용 카드 5장</strong>입니다. 모두 선택한 급수·유형에 속한다고 가정합니다. 사용자의 실제 기록과 연결되어 있지 않습니다.</p>\n      <div class=\"af-table-wrap\"><table class=\"af-demo-table\"><thead><tr><th>카드</th><th>‘다시’ 기록</th><th>현재 주황 깃발</th><th>‘어려움’ 기록</th><th>복습 실패 누계</th><th>조건 일치</th></tr></thead><tbody data-af-demo-body></tbody></table></div>\n      <p class=\"af-description\">A는 오늘 ‘다시’를 누른 후 ‘알맞음’으로 맞혔습니다. 마지막 평가가 알맞음이어도 오늘의 다시 기록은 남습니다. 복습 실패 누계는 복습 단계에서 잊어 다시 학습으로 돌아간 횟수이며, 학습 중 누른 모든 ‘다시’의 합계와는 다릅니다.</p>\n      <button type=\"button\" data-af-demo-build>예시 카드로 ‘모으기’ 실행</button>\n      <p data-af-demo-result class=\"af-message\" role=\"status\" aria-live=\"polite\">조건을 고른 뒤 예시 버튼을 누르면, 모일 카드와 순서를 볼 수 있습니다.</p>\n    </details>\n    <details class=\"af-guide\"><summary>Anki에서 필터 덱 만들기 · 다음에 다시 모으기</summary>\n      <ol><li>위 검색식을 복사합니다. 자동 복사가 안 되면 ‘전체 선택 · 직접 복사’를 사용합니다.</li><li>PC Anki에서 <strong>도구 → 필터 덱 만들기</strong>를 엽니다.</li><li>‘이름’을 정하고, <strong>‘찾기’를 클릭 → Ctrl+A → Ctrl+V</strong>로 기존 검색식 전체를 교체합니다. 이름은 복습 공간의 이름이고, 어떤 카드를 모을지는 ‘찾기’가 정합니다.</li><li>개수 제한과 선택 기준을 위 안내대로 맞추고 ‘모으기(Build)’를 누릅니다. 검색식만 붙여넣은 단계에서는 아직 카드가 모이지 않습니다.</li><li>Anki 덱 목록에서 정한 이름을 열어 복습합니다. 다음에는 같은 덱의 ‘다시 만들기(Rebuild)’로 새 기록을 반영합니다.</li></ol>\n      <p>iPhone·iPad는 학습 화면의 Anki 도구 메뉴 → Filter/Cram에서 같은 검색식을 사용합니다. 앱·언어에 따라 버튼 이름이 다를 수 있습니다.</p>\n      <p>‘오답’은 Anki에서 직접 누른 ‘다시’ 평가 기록입니다. 카드 안에서 틀린 보기를 선택한 것만으로 이 기록이 생기지는 않습니다. ‘헷갈림’은 직접 붙인 주황 깃발입니다.</p>\n      <p>‘오답 + 플래그’는 <strong>둘 중 하나만 해당해도</strong> 모읍니다. 두 조건을 모두 충족해야 한다는 뜻이 아닙니다. 주황 깃발에는 기간 제한이 없습니다.</p>\n      <p>일시중지·묻힌 카드·다른 필터 덱에 들어간 카드는 모을 수 없습니다. 실제 수집 수는 Anki에서 확인하세요. 필터 덱의 학습 단계를 마친 카드는 원래 덱으로 돌아갑니다. 남은 카드는 ‘비우기(Empty)’로 돌려보낼 수 있습니다.</p>\n      <p>이미 저장한 Anki 필터 덱의 조건은 자동 변경되지 않습니다. 조건이나 노트 유형 이름을 바꿨다면 Anki의 찾기도 새 검색식으로 교체하세요.</p>\n      <p>선택 조건은 이 기기에 저장됩니다. 붙여넣기 확인 칸의 내용은 저장하지 않습니다.</p>\n    </details>\n  </div>\n</details>\n";
+(function () {
+  'use strict';
+  var VERSION = '1.0.0';
+  var PREF_KEY = 'anki-filter-helper:' + String((window.AnkiFilterHelperConfig || {}).product_id || 'unconfigured') + ':v1';
+  var PROVIDED = window.AnkiFilterHelperConfig;
+  if (!PROVIDED || !PROVIDED.product_id || !PROVIDED.models || !Array.isArray(PROVIDED.areas) || !PROVIDED.areas.length || !Array.isArray(PROVIDED.levels)) {
+    window.AnkiFilterHelperError = '과목별 필터 설정이 필요합니다.';
+    Array.from(document.querySelectorAll('[data-af-helper]')).forEach(function(box){box.textContent = window.AnkiFilterHelperError;});
+    return;
+  }
+  var MODELS = PROVIDED.models;
+  var AREAS = PROVIDED.areas;
+  var LEVELS = PROVIDED.levels;
+  var LEVEL_FIELD = PROVIDED.level_field || 'Level';
+  var ALL_LABEL = PROVIDED.all_levels_label || '전체';
+  var REASONS = [
+    {id:'again_or_flag',label:'오답 + 플래그',short:'오답·플래그'},
+    {id:'again',label:'오답 : 다시 평가',short:'최근오답'},
+    {id:'flag',label:'헷갈림 : 플래그',short:'플래그'},
+    {id:'hard',label:'어려움 평가',short:'어려움'},
+    {id:'lapses',label:'반복 실패 : 누적 3회 이상',short:'반복실패'}
+  ];
+  var DEFAULTS = Object.assign({level:'all',area:AREAS[0].id,reason:'again_or_flag',days:7,limit:20,order:'random'},PROVIDED.defaults || {});
+
+  function member(value, choices, fallback) {
+    return choices.indexOf(value) >= 0 ? value : fallback;
+  }
+  function normalize(value) {
+    value = value && typeof value === 'object' ? value : {};
+    return {
+      level: member(value.level,['all'].concat(LEVELS.map(function(x){return x.id;})),DEFAULTS.level),
+      area: member(value.area,AREAS.map(function(a){return a.id;}),DEFAULTS.area),
+      reason: member(value.reason,REASONS.map(function(a){return a.id;}),DEFAULTS.reason),
+      days: member(Number(value.days),[1,7,14,30],DEFAULTS.days),
+      limit: member(Number(value.limit),[20,50,100,200],DEFAULTS.limit),
+      order: member(value.order,['random','lapses'],DEFAULTS.order)
+    };
+  }
+  function term(field, value) {
+    return '"' + field + ':' + String(value).replace(/\\/g,'\\\\').replace(/"/g,'\\"') + '"';
+  }
+  function spec(config) {
+    var c = normalize(config);
+    var area = AREAS.filter(function(a){return a.id === c.area;})[0];
+    var reason = REASONS.filter(function(a){return a.id === c.reason;})[0];
+    var parts = [];
+    if (area.model === 'all') {
+      parts.push('(' + Object.keys(MODELS).map(function(k){return term('note',MODELS[k]);}).join(' or ') + ')');
+    } else parts.push(term('note',MODELS[area.model]));
+    if (area.card) parts.push('card:' + area.card);
+    if (area.legacy && c.level === 'all') {
+      var shared=parts[0]+' '+term(area.field,area.value);
+      var older=term('note',MODELS[area.legacy.model])+(area.legacy.field?' '+term(area.legacy.field,area.legacy.value):'');
+      parts[0]='(('+shared+') or ('+older+'))';
+    } else if (area.field) parts.push(term(area.field,area.value));
+    if (c.level !== 'all') parts.push(term(LEVEL_FIELD, LEVELS.filter(function(x){return x.id === c.level;})[0].value));
+    var recent = 'rated:' + c.days + ':';
+    var explanation;
+    if (c.reason === 'again_or_flag') {
+      parts.push('(' + recent + '1 or flag:2)');
+      explanation = '최근 ' + c.days + '일의 ‘다시’ 평가 또는 현재 주황 깃발, 둘 중 하나만 해당해도 모읍니다. 깃발에는 기간 제한이 없습니다.';
+    } else if (c.reason === 'again') {
+      parts.push(recent + '1');
+      explanation = '일반 학습에서 최근 ' + c.days + '일 안에 ‘다시’를 한 번 이상 누른 카드입니다.';
+    } else if (c.reason === 'flag') {
+      parts.push('flag:2');
+      explanation = '주황 깃발을 직접 단 카드입니다. 깃발을 단 날짜는 이 조건에 사용하지 않습니다.';
+    } else if (c.reason === 'hard') {
+      parts.push(recent + '2');
+      explanation = '최근 ' + c.days + '일 안에 Anki의 ‘어려움’을 누른 카드입니다.';
+    } else {
+      parts.push('is:review prop:lapses>=3');
+      explanation = '복습 단계에서 다시 학습으로 돌아간 누적 횟수가 3회 이상인 카드입니다. 기간 조건은 없습니다.';
+    }
+    var tokens = [{label:'노트 유형',code:parts[0],meaning:area.model === 'all' ? '이 제품의 학습·실전 노트 유형 안에서 찾습니다.' : '선택한 유형의 노트에서 만든 카드 안에서 찾습니다.'}];
+    if (area.card) tokens.push({label:'카드 유형',code:'card:' + area.card,meaning:'같은 노트에서 만든 카드 중 ‘' + area.label + '’ 카드만 찾습니다.'});
+    if (area.field) tokens.push({label:'문제 유형',code:term(area.field,area.value),meaning:area.value + '에 해당하는 내용만 찾습니다.'});
+    if (c.level !== 'all') tokens.push({label:PROVIDED.level_label || '급수·구분',code:term(LEVEL_FIELD,LEVELS.filter(function(x){return x.id === c.level;})[0].value),meaning:'선택한 급수·구분에 해당하는 카드만 찾습니다.'});
+    tokens.push({label:'카드 기록',code:parts[parts.length-1],meaning:explanation});
+    return {
+      config:c,search:parts.join(' '),limit:c.limit,
+      order:c.order === 'lapses' ? '복습 실패 횟수 많은 순 · Most lapses' : '랜덤',
+      deckName:'00_' + PROVIDED.product_id + '_복습_' + (c.level === 'all' ? ALL_LABEL : c.level) + '_' + area.label.replace(/\s+/g,'') + '_' + reason.short,
+      summary:(c.level === 'all' ? ALL_LABEL : c.level) + ' · ' + area.label + ' · ' + reason.label,
+      explanation:explanation,usesDays:c.reason !== 'flag' && c.reason !== 'lapses',tokens:tokens,
+      orderExplanation:c.order === 'lapses'
+        ? '선택 기준: 검색 조건에 맞는 카드 중, 복습 실패 누계가 많은 카드부터 최대 ' + c.limit + '장을 모읍니다. 이 누계는 최근 기간의 ‘다시’ 횟수와 다릅니다. Anki 창에서도 같은 선택 기준을 지정하세요.'
+        : '선택 기준: 검색 조건에 맞는 카드 중 무작위로 최대 ' + c.limit + '장을 모읍니다. Anki 창에서도 ‘랜덤’을 지정하세요.'
+    };
+  }
+  var DEMO_CARDS = [
+    {id:'A',again:[0],hard:[],flag:0,lapses:2,last:'알맞음'},
+    {id:'B',again:[],hard:[],flag:2,lapses:0,last:'알맞음'},
+    {id:'C',again:[10],hard:[],flag:0,lapses:5,last:'다시'},
+    {id:'D',again:[],hard:[0],flag:0,lapses:1,last:'어려움'},
+    {id:'E',again:[2],hard:[0],flag:2,lapses:4,last:'어려움'}
+  ];
+  function demoMatches(card, config) {
+    var c = normalize(config);
+    var again = card.again.some(function(day){return day < c.days;});
+    var hard = card.hard.some(function(day){return day < c.days;});
+    if (c.reason === 'again_or_flag') return again || card.flag === 2;
+    if (c.reason === 'again') return again;
+    if (c.reason === 'flag') return card.flag === 2;
+    if (c.reason === 'hard') return hard;
+    return card.lapses >= 3;
+  }
+  function readConfig() {
+    try {
+      var raw = window.localStorage.getItem(PREF_KEY);
+      return normalize(raw ? JSON.parse(raw) : window.__ankiFilterHelperPrefs);
+    }
+    catch (error) { return normalize(window.__ankiFilterHelperPrefs); }
+  }
+  function saveConfig(c) {
+    window.__ankiFilterHelperPrefs = c;
+    try { window.localStorage.setItem(PREF_KEY,JSON.stringify(c)); return true; }
+    catch (error) { return false; }
+  }
+  function feedbackHint(root) {
+    var recap = root.querySelector('[data-pq-choice-summary]');
+    var hint = root.querySelector('[data-af-review-hint]');
+    if (!recap || recap.dataset.pqResult !== 'wrong') {
+      if (hint) hint.remove();
+      return;
+    }
+    if (!hint) {
+      hint = document.createElement('p');
+      hint.className = 'af-review-hint';
+      hint.setAttribute('data-af-review-hint','');
+      hint.setAttribute('role','status');
+      recap.parentNode.insertBefore(hint,recap.nextSibling);
+    }
+    var preview = root.dataset.apMode === 'preview';
+    hint.textContent = preview
+      ? '실제 Anki 일반 학습에서 ‘다시’를 한 번 누르면 최근 오답 조건에 해당합니다. 카드 수집은 Anki 필터 덱의 ‘모으기(Build)’ 또는 ‘다시 만들기(Rebuild)’에서 실행하세요.'
+      : (root.dataset.apFace === 'front'
+        ? '일반 학습에서 Anki의 ‘정답 보기’를 연 뒤, 아래 평가에서 ‘다시’를 한 번 누르세요. 이후 Anki 필터 덱에서 ‘모으기(Build)’ 또는 ‘다시 만들기(Rebuild)’로 카드를 모읍니다.'
+        : '일반 학습에서 아래 Anki 평가의 ‘다시’를 한 번 누르세요. 이후 Anki 필터 덱에서 ‘모으기(Build)’ 또는 ‘다시 만들기(Rebuild)’로 카드를 모읍니다.');
+  }
+  function mount(root) {
+    if (!root || root.dataset.afReady === VERSION) return;
+    var box = root.querySelector('[data-af-helper]');
+    if (!box) return;
+    root.dataset.afReady = VERSION;
+    var controls = Array.from(box.querySelectorAll('[data-af-field]'));
+    var areaSelect = box.querySelector('[data-af-field="area"]');
+    var levelSelect = box.querySelector('[data-af-field="level"]');
+    levelSelect.textContent = '';
+    [{id:'all',label:ALL_LABEL}].concat(LEVELS).forEach(function(item){
+      var option = document.createElement('option');option.value=item.id;option.textContent=item.label || item.id;levelSelect.appendChild(option);
+    });
+    levelSelect.disabled = !LEVELS.length;
+    var current = readConfig();
+    var groups = {};
+    AREAS.forEach(function(a) {
+      if (!groups[a.group]) {
+        var group = document.createElement('optgroup');
+        group.label = a.group;
+        areaSelect.appendChild(group);
+        groups[a.group] = group;
+      }
+      var option = document.createElement('option');
+      option.value = a.id; option.textContent = a.label;
+      groups[a.group].appendChild(option);
+    });
+    controls.forEach(function(control){control.value = String(current[control.dataset.afField]);});
+    var query = box.querySelector('[data-af-query]');
+    var copy = box.querySelector('[data-af-copy]');
+    var message = box.querySelector('[data-af-message]');
+    var paste = box.querySelector('[data-af-paste]');
+    var pasteResult = box.querySelector('[data-af-paste-result]');
+    var copyCheck = box.querySelector('[data-af-copy-check]');
+    var demoBody = box.querySelector('[data-af-demo-body]');
+    var demoResult = box.querySelector('[data-af-demo-result]');
+    var displayed = null;
+    var revision = 0;
+    function refresh() {
+      revision += 1;
+      var raw = {};
+      controls.forEach(function(control){raw[control.dataset.afField] = control.value;});
+      displayed = spec(raw);
+      current = displayed.config;
+      controls.forEach(function(control){
+        control.value = String(current[control.dataset.afField]);
+        if (control.dataset.afField === 'days') control.disabled = !displayed.usesDays;
+      });
+      query.value = displayed.search;
+      box.querySelector('[data-af-summary]').textContent = displayed.summary;
+      box.querySelector('[data-af-explanation]').textContent = displayed.explanation;
+      box.querySelector('[data-af-order-explanation]').textContent = displayed.orderExplanation;
+      box.querySelector('[data-af-name]').textContent = displayed.deckName;
+      box.querySelector('[data-af-limit]').textContent = String(displayed.limit) + '장 · Anki의 개수 제한에 입력';
+      box.querySelector('[data-af-order]').textContent = displayed.order;
+      message.textContent = '';
+      copy.textContent = '검색식 복사';
+      paste.value = '';
+      pasteResult.textContent = '아직 확인하지 않았습니다.';
+      pasteResult.dataset.state = '';
+      var tokenBox = box.querySelector('[data-af-tokens]');
+      tokenBox.textContent = '';
+      displayed.tokens.forEach(function(t) {
+        var dt = document.createElement('dt'); dt.textContent = t.label;
+        var dd = document.createElement('dd');
+        var code = document.createElement('code'); code.textContent = t.code;
+        var detail = document.createElement('span'); detail.textContent = ' — ' + t.meaning;
+        dd.appendChild(code); dd.appendChild(detail); tokenBox.appendChild(dt); tokenBox.appendChild(dd);
+      });
+      demoBody.textContent = '';
+      DEMO_CARDS.forEach(function(card) {
+        var tr = document.createElement('tr');
+        var matches = demoMatches(card,current);
+        var dayText = function(days){return days.length ? days.map(function(d){return d === 0 ? '오늘' : d + '일 전';}).join(', ') : '없음';};
+        [card.id,dayText(card.again),card.flag === 2 ? '있음' : '없음',dayText(card.hard),String(card.lapses) + '회',matches ? '해당' : '제외'].forEach(function(value) {
+          var td = document.createElement('td'); td.textContent = value; tr.appendChild(td);
+        });
+        tr.dataset.matches = matches ? 'yes' : 'no'; demoBody.appendChild(tr);
+      });
+      demoResult.textContent = '예시 버튼을 누르면, 현재 조건으로 모일 카드와 순서를 볼 수 있습니다.';
+      if (!saveConfig(current)) message.textContent = '설정 저장이 지원되지 않아 선택 조건을 임시로 적용합니다.';
+    }
+    function selectText() {
+      try {
+        query.focus(); query.select();
+        if (query.setSelectionRange) query.setSelectionRange(0,query.value.length);
+      } catch (error) {}
+    }
+    function copied() {
+      copy.textContent = '복사 요청됨';
+      message.textContent = '아래 ‘붙여넣기 확인’ 칸에 직접 붙여넣어 검색식이 들어가는지 확인하세요. 확인되면 Anki 창의 ‘찾기’를 클릭 → Ctrl+A → Ctrl+V로 전체 교체하고 ‘모으기’를 누릅니다.';
+      copyCheck.open = true;
+    }
+    function directCopy() {
+      selectText();
+      var ok = false;
+      try { ok = Boolean(document.execCommand && document.execCommand('copy')); } catch (error) {}
+      return ok;
+    }
+    function manualCopy() {
+      selectText(); copyCheck.open = true;
+      copy.textContent = '직접 복사 필요';
+      message.textContent = '검색식 전체를 선택했습니다. PC는 Ctrl+C, iPhone·iPad는 검색식 칸을 길게 눌러 ‘복사’를 선택하세요. 아래 확인 칸에 직접 붙여넣으면 일치 여부를 알려드립니다.';
+    }
+    controls.forEach(function(control){control.addEventListener('change',refresh);});
+    box.querySelector('[data-af-select]').addEventListener('click',function() {
+      manualCopy();
+    });
+    query.addEventListener('copy',function(event) {
+      if (event.clipboardData && displayed) {
+        event.clipboardData.setData('text/plain',displayed.search);
+        event.preventDefault();
+      }
+    });
+    copy.addEventListener('click',function() {
+      // Copy during this user gesture; async permission denial can lose activation in WebViews.
+      if (directCopy()) { copied(); return; }
+      var requestedRevision = revision;
+      function ifCurrent(fn) { return function(){if (revision === requestedRevision) fn();}; }
+      var clipboard = window.navigator && window.navigator.clipboard;
+      if (clipboard && typeof clipboard.writeText === 'function') {
+        try { Promise.resolve(clipboard.writeText(displayed.search)).then(ifCurrent(copied),ifCurrent(manualCopy)); }
+        catch (error) { manualCopy(); }
+      } else manualCopy();
+    });
+    paste.addEventListener('input',function() {
+      var value = paste.value.trim();
+      var match = value === displayed.search;
+      pasteResult.dataset.state = value ? (match ? 'match' : 'different') : '';
+      pasteResult.textContent = !value ? '아직 붙여넣은 내용이 없습니다.' : match
+        ? '검색식이 일치합니다. 이 내용을 Anki의 ‘찾기’에 붙여넣으세요.'
+        : '현재 검색식과 다릅니다. 위 검색식 전체를 다시 복사해 이 칸의 내용을 교체하세요.';
+    });
+    box.querySelector('[data-af-demo-build]').addEventListener('click',function() {
+      var cards = DEMO_CARDS.filter(function(card){return demoMatches(card,current);});
+      if (current.order === 'lapses') cards.sort(function(a,b){return b.lapses-a.lapses;});
+      else {
+        for (var i=cards.length-1;i>0;i--) {
+          var j=Math.floor(Math.random()*(i+1)),temp=cards[i];cards[i]=cards[j];cards[j]=temp;
+        }
+      }
+      cards = cards.slice(0,current.limit);
+      demoResult.textContent = cards.length
+        ? '설명용 복습 공간에 ' + cards.length + '장: ' + cards.map(function(c){return c.id;}).join(' → ') + ' (' + displayed.order + '). 실제 Anki 덱은 변경하지 않았습니다.'
+        : '설명용 카드 중 현재 조건에 맞는 카드가 없습니다. 실제 Anki 덱은 변경하지 않았습니다.';
+    });
+    ['keydown','keyup','keypress','click','pointerdown','pointerup','touchstart','touchend'].forEach(function(type) {
+      box.addEventListener(type,function(event){event.stopPropagation();});
+    });
+    root.addEventListener('pqfeedback',function(){feedbackHint(root);});
+    refresh();
+    feedbackHint(root);
+  }
+  window.AnkiFilterHelper = {version:VERSION,areas:AREAS,reasons:REASONS,models:MODELS,defaults:DEFAULTS,normalize:normalize,spec:spec,mount:mount,feedbackHint:feedbackHint,demoCards:DEMO_CARDS,demoMatches:demoMatches};
+  
+})();
+
+window.krUnifiedInit = function (root) {
+  'use strict';
+
+  var script = document.currentScript;
+  root = root || (script && script.closest ? script.closest('.kr-card[data-kr-unified]') : null);
+  if (!root) {
+    var roots = document.querySelectorAll('.kr-card[data-kr-unified]');
+    root = roots.length ? roots[roots.length - 1] : null;
+  }
+  if (!root || root.getAttribute('data-kr-v170-ready') === '1') return;
+  root.setAttribute('data-kr-v170-ready', '1');
+
+  if (typeof window.__krV120Cleanup === 'function') {
+    try { window.__krV120Cleanup(); } catch (_) {}
+  }
+
+  var PREF_KEY = 'kanjiRevolutionPrefsV120';
+  var PANEL_KEY = 'kanjiRevolutionSettingsOpenV120';
+  var RECORD_KEY = 'kanjiRevolutionRecordsV120';
+  var defaults = { theme:'auto', font:'sans', size:'base', panel:'close', ruby:'on' };
+  var cleanup = [];
+  var q = function (selector, host) { return (host || document).querySelector(selector); };
+  var qa = function (selector, host) { return Array.prototype.slice.call((host || document).querySelectorAll(selector)); };
+  var deck = root.getAttribute('data-deck') === 'quiz' ? 'quiz' : 'study';
+  var total = Math.max(1, Number(root.getAttribute('data-total')) || (deck === 'quiz' ? 1000 : 13290));
+  var noteId = (root.getAttribute('data-note') || '').trim();
+  var kind = (root.getAttribute('data-kind') || (deck === 'quiz' ? 'quiz' : 'card')).trim();
+  var side = root.getAttribute('data-side') || 'front';
+  if (root.getAttribute('data-mid')==='1794914010' && noteId.indexOf('KR-N-Q-CTX-')===0)
+    root.querySelector('[data-part-name]').textContent='어휘·문맥';
+  var similar = root.querySelector('[data-part-name]').textContent.trim() === '유사 한자';
+  var group = root.querySelector('.kr-quiz-options');
+  var filterNode = null;
+  var alternatives = group ? Array.prototype.slice.call(group.querySelectorAll('button')) : [];
+  var choiceMode = alternatives.length > 0;
+  function optionKey(value) {
+    var n = /^[A-D]$/.test(value) ? 'ABCD'.indexOf(value)+1 : Number(value);
+    return n>=1 && n<=4 ? (similar?String(n):'ABCD'[n-1]) : '';
+  }
+  root.setAttribute('data-correct',optionKey(root.getAttribute('data-correct')));
+  alternatives.forEach(function (button,i) {
+    var original = button.querySelector('.kr-choice-copy');
+    var content = original ? original.innerHTML : button.innerHTML;
+    var key = optionKey(String(i+1));
+    button.classList.add('kr-choice');
+    button.setAttribute('data-choice',key);
+    button.innerHTML = '<b aria-hidden="true">'+key+'</b><span class="kr-choice-copy" lang="ja">'+content+'</span><span class="kr-choice-state" aria-hidden="true"></span>';
+  });
+  var hint = q('.kr-quiz-status',root);
+  if (hint && choiceMode && side === 'front') hint.textContent='선택하면 바로 채점되고 아래 해설이 열립니다.';
+  var expression = q('.kr-quiz-expression',root);
+  if (expression && expression.textContent.replace(/\s/g,'').length>14) expression.classList.add('kr-expression-compact');
+  var optionSections = qa('[data-choice-review]',root);
+  if (similar) optionSections.forEach(function (box) {
+    var heading=q('h4',box);
+    if (heading) heading.textContent=heading.textContent.replace(/^([A-D])(?=\s|[.·])/,function (_,lit){return optionKey(lit);});
+  });
+  var settingsButton = q('.kr-settings-button', root);
+  var settingsPanel = q('.kr-settings-panel', root);
+  var recordButton = q('.kr-record-button', root);
+  var modal = null;
+  var previousFocus = null;
+
+  function addEvent(target, name, handler, options) {
+    if (!target || !target.addEventListener) return;
+    target.addEventListener(name, handler, options || false);
+    cleanup.push(function () { try { target.removeEventListener(name, handler, options || false); } catch (_) {} });
+  }
+
+  window.__krV120Cleanup = function () {
+    for (var i = 0; i < cleanup.length; i++) cleanup[i]();
+    cleanup = [];
+    var stale = document.querySelector('[data-kr-record-modal="1"]');
+    if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
+    if (document.body) document.body.classList.remove('kr-record-body-lock');
+  };
+
+  function safeParse(raw, fallback) {
+    try { return JSON.parse(raw); } catch (_) { return fallback; }
+  }
+
+  function loadPrefs() {
+    var saved = null;
+    try { saved = safeParse(localStorage.getItem(PREF_KEY) || '{}', {}); } catch (_) { saved = {}; }
+    if (!saved || typeof saved !== 'object' || Array.isArray(saved)) saved = {};
+    try {
+      if (saved.ruby === undefined && (safeParse(localStorage.getItem('kr-expansion-ruby-v1'),'on')==='off' || safeParse(localStorage.getItem('kr-full-preview-ruby'),true)===false)) saved.ruby='off';
+    } catch (_) {}
+    for (var key in defaults) if (typeof saved[key] === 'undefined') saved[key] = defaults[key];
+    if (saved.theme !== 'auto' && saved.theme !== 'light') saved.theme = defaults.theme;
+    if (saved.font !== 'serif') saved.font = 'sans';
+    if (['base','large','xlarge'].indexOf(saved.size) < 0) saved.size = 'base';
+    if (saved.panel !== 'keep') saved.panel = 'close';
+    return saved;
+  }
+
+  var prefs = loadPrefs();
+  var panelOpen = false;
+  try { panelOpen = prefs.panel === 'keep' && localStorage.getItem(PANEL_KEY) === '1'; } catch (_) {}
+
+  function savePrefs() {
+    try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch (_) {}
+  }
+
+  function setClass(host, name, enabled) {
+    if (host && host.classList) host.classList.toggle(name, !!enabled);
+  }
+
+  function deviceIsDark() {
+    var body = document.body;
+    if (body && (body.classList.contains('nightMode') || body.classList.contains('night_mode'))) return true;
+    try { return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); } catch (_) { return false; }
+  }
+
+  function applyPrefs() {
+    var forceLight = prefs.theme === 'light';
+    var forceDark = prefs.theme === 'auto' && deviceIsDark();
+    root.setAttribute('data-ruby',prefs.ruby==='off'?'off':'on');
+    var hosts = [document.documentElement, document.body];
+    for (var i = 0; i < hosts.length; i++) {
+      setClass(hosts[i], 'kr-force-light', forceLight);
+      setClass(hosts[i], 'kr-force-dark', forceDark);
+      setClass(hosts[i], 'kr-font-serif', prefs.font === 'serif');
+      setClass(hosts[i], 'kr-size-large', prefs.size === 'large');
+      setClass(hosts[i], 'kr-size-xlarge', prefs.size === 'xlarge');
+    }
+  }
+
+  function segment(label, key, options) {
+    var html = '<div class="kr-setting-row"><div class="kr-setting-label">' + label + '</div><div class="kr-segments">';
+    for (var i = 0; i < options.length; i++) {
+      var option = options[i];
+      html += '<button type="button" data-pref="' + key + '" data-value="' + option[0] + '" aria-pressed="' + String(String(prefs[key]) === String(option[0])) + '" class="' + (String(prefs[key]) === String(option[0]) ? 'active' : '') + '">' + option[1] + '</button>';
+    }
+    return html + '</div></div>';
+  }
+
+  function persistPanelState() {
+    try { localStorage.setItem(PANEL_KEY, panelOpen ? '1' : '0'); } catch (_) {}
+  }
+
+  function renderSettings() {
+    if (!settingsPanel || !settingsButton) return;
+    settingsButton.setAttribute('aria-expanded', String(panelOpen));
+    settingsPanel.setAttribute('aria-hidden', String(!panelOpen));
+    settingsPanel.classList.toggle('open', panelOpen);
+    settingsPanel.innerHTML =
+      '<div class="kr-setting-title"><span>학습 설정</span><span class="kr-setting-head-actions"><span class="kr-setting-kicker">UI KR-1.7.0</span><button type="button" data-close-settings aria-label="학습 설정 닫기">닫기</button></span></div>' +
+      segment('화면 테마', 'theme', [['light','밝게 고정'],['auto','기기 설정']]) +
+      segment('글꼴', 'font', [['sans','고딕'],['serif','명조']]) +
+      segment('글자 크기', 'size', [['base','기본'],['large','크게'],['xlarge','더 크게']]) +
+      segment('후리가나', 'ruby', [['on','표시'],['off','숨기기']]) +
+      segment('설정창 동작', 'panel', [['close','카드 변경 시 닫기'],['keep','열린 상태 유지']]) +
+      '<p class="kr-setting-note">설정은 이 기기에 저장됩니다. “기기 설정”은 Anki/기기의 밝은·어두운 화면 설정을 따릅니다.</p>';
+    if (panelOpen && window.AnkiFilterHelper && window.krFiltersMarkup) {
+      if (filterNode) settingsPanel.appendChild(filterNode);
+      else {
+        settingsPanel.insertAdjacentHTML('beforeend',window.krFiltersMarkup);
+        filterNode=q('[data-af-helper]',settingsPanel);
+        window.AnkiFilterHelper.mount(root);
+      }
+    }
+    var closeSetting = q('[data-close-settings]', settingsPanel);
+    if (closeSetting) closeSetting.onclick = function(event) { event.stopPropagation(); closeSettings(); settingsButton.focus(); };
+    qa('[data-pref]', settingsPanel).forEach(function (button) {
+      button.onclick = function (event) {
+        event.stopPropagation();
+        var key = button.getAttribute('data-pref');
+        var value = button.getAttribute('data-value');
+        prefs[key] = value;
+        if (key === 'panel' && value === 'close') panelOpen = true;
+        savePrefs();
+        persistPanelState();
+        applyPrefs();
+        renderSettings();
+      };
+    });
+  }
+
+  function blankRecords() {
+    return { schema:3, items:{}, goal:20, examDate:'', days:{}, seenStudy:{}, seenQuiz:{}, lastEvent:null, expansionMarksImported:false };
+  }
+
+  function loadRecords() {
+    var data = null;
+    try { data = safeParse(localStorage.getItem(RECORD_KEY) || 'null', null); } catch (_) {}
+    if (!data || typeof data !== 'object' || Array.isArray(data)) data = blankRecords();
+    if (!data.days || typeof data.days !== 'object') data.days = {};
+    if (!data.seenStudy || typeof data.seenStudy !== 'object') data.seenStudy = {};
+    if (!data.seenQuiz || typeof data.seenQuiz !== 'object') data.seenQuiz = {};
+    if (data.seen && !Object.keys(data.seenStudy).length) data.seenStudy = data.seen;
+    data.goal = Math.max(1, Math.min(500, Number(data.goal) || 20));
+    data.examDate = /^\d{4}-\d{2}-\d{2}$/.test(data.examDate || '') ? data.examDate : '';
+    if (!data.items || typeof data.items !== 'object' || Array.isArray(data.items)) data.items = {};
+    data.schema = 3;
+    if (!data.expansionMarksImported) {
+      var imported={};
+      ['kr-expansion-marks-v1','kr-full-preview-marks'].forEach(function (key) {
+        try {
+          var previous=safeParse(localStorage.getItem(key) || '{}',{});
+          if (previous && typeof previous==='object') Object.keys(previous).forEach(function (note) { if(previous[note]) imported[note]=true; });
+        } catch (_) {}
+      });
+      var existing={};
+      Object.keys(data.items).forEach(function(key){var item=data.items[key];if(item && item.noteId) existing[item.noteId]=true;});
+      Object.keys(imported).forEach(function(note) {
+        if (!existing[note]) data.items['quiz:'+note+':v160']={noteId:note,kind:'기존 표시',deck:'quiz',title:note,attempts:0,wrong:0,selfMarked:1,causes:{},last:''};
+      });
+      data.expansionMarksImported = true;
+      try { localStorage.setItem(RECORD_KEY,JSON.stringify(data)); } catch (_) {}
+    }
+    return data;
+  }
+
+  var records = loadRecords();
+  /* Extension inside the shared settings/records closure. */
+  var weakFilter = 'all';
+  var storageOK = true;
+  try { var probe = 'kr130StorageProbe'; localStorage.setItem(probe,'1'); localStorage.removeItem(probe); }
+  catch (_) { storageOK = false; }
+  var reviewKey = deck + ':' + noteId + ':' + kind;
+  var review = null;
+  var reviewStore = 'kanjiRevolutionReviewV130';
+  if (side === 'back') {
+    review = window.__kr130Review || null;
+    if (!review) try { review = safeParse(sessionStorage.getItem(reviewStore) || 'null', null); } catch (_) {}
+    if (!review || review.key !== reviewKey) review = null;
+  }
+  if (!review) review = {key:reviewKey,token:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),choice:null,counted:false,studyCounted:false,cause:''};
+  window.__kr130Review = review;
+  function saveReview() {
+    window.__kr130Review = review;
+    try { sessionStorage.setItem(reviewStore,JSON.stringify(review)); } catch (_) {}
+  }
+  saveReview();
+  function cardLabel() {
+    var target = q('.kr-quiz-expression',root) || q('.kr-word-prompt',root) || q('.kr-glyph',root) || q('.kr-answer-main',root);
+    return target ? (target.textContent || '').replace(/\s+/g,' ').trim().slice(0,80) : noteId;
+  }
+  function learningItem() {
+    var item = records.items[reviewKey];
+    if (!item || typeof item !== 'object') item = {noteId:noteId,kind:kind,deck:deck,title:cardLabel(),attempts:0,wrong:0,selfMarked:0,causes:{},last:''};
+    var beforeKey='quiz:'+noteId+':v160';
+    if (records.items[beforeKey]) {
+      item.selfMarked=Math.max(1,Number(item.selfMarked)||0);
+      delete records.items[beforeKey];
+    }
+    item.title = cardLabel(); item.mode = root.getAttribute('data-mode') || kind;
+    records.items[reviewKey] = item;
+    return item;
+  }
+  function recordLearning(correct) {
+    if (!noteId) return;
+    if (deck === 'quiz' && review.counted) return;
+    if (deck === 'study' && review.studyCounted) return;
+    var today = dateKey(new Date()), day = dayData(today), item = learningItem();
+    if (deck === 'quiz') {
+      day.quiz += 1;
+      if (typeof correct === 'boolean') {
+        day.attempts += 1; if (correct) day.correct += 1;
+        item.attempts += 1; if (!correct) item.wrong += 1;
+      }
+      records.seenQuiz[reviewKey] = 1; review.counted = true;
+    } else {
+      day.study += 1; records.seenStudy[reviewKey] = 1; review.studyCounted = true;
+    }
+    item.last = today; records.days[today] = day;
+    records.lastEvent = {id:reviewKey,time:Date.now(),deck:deck};
+    saveReview(); saveRecords();
+  }
+  var causeLabels = {reading:'읽기',meaning:'뜻',shape:'한자 모양',form:'활용 규칙',context:'문맥'};
+  function causePanel() {
+    var box = q('.kr-learning-note',root);
+    if (!box) {
+      box = document.createElement('section'); box.className='kr-learning-note';
+      box.innerHTML='<h3>헷갈린 부분 기록 <small>선택 사항</small></h3><p>'+ (deck==='quiz'?'이번 문제에서 헷갈린 원인을 남깁니다.':'답을 확인한 뒤 직접 표시하는 학습 메모입니다.') +'</p><div class="kr-cause-buttons"></div><p class="kr-cause-status" role="status"></p>';
+      var host = q('.kr-quiz-feedback',root);
+      if (host) host.appendChild(box);
+      else { var footer=q('.kr-card-id',root); root.insertBefore(box,footer); }
+    }
+    var buttons=q('.kr-cause-buttons',box); buttons.innerHTML='';
+    Object.keys(causeLabels).forEach(function(key){
+      var button=document.createElement('button'); button.type='button'; button.setAttribute('data-cause',key);
+      button.setAttribute('aria-pressed',String(review.cause===key)); button.textContent=causeLabels[key];
+      button.onclick=function(e){ e.stopPropagation(); setCause(review.cause===key?'':key); };
+      buttons.appendChild(button);
+    });
+    q('.kr-cause-status',box).textContent=review.cause?causeLabels[review.cause]+' 혼동 기록됨 · 다시 누르면 취소':'현재 기기에 저장됩니다. Anki 평점은 따로 선택하세요.';
+  }
+  function setCause(cause) {
+    var item=learningItem(), old=review.cause || '';
+    if (old) item.causes[old]=Math.max(0,(Number(item.causes[old])||0)-1);
+    if (cause) item.causes[cause]=(Number(item.causes[cause])||0)+1;
+    if (deck==='study'||!choiceMode||!review.choice||review.choice===root.getAttribute('data-correct')) item.selfMarked=Math.max(0,(Number(item.selfMarked)||0)+(cause?1:0)-(old?1:0));
+    review.cause=cause; item.last=dateKey(new Date());
+    saveReview(); saveRecords(); causePanel();
+  }
+  function paintQuiz(selected) {
+    var correct=root.getAttribute('data-correct'), ok=selected===correct;
+    qa('[data-choice]',root).forEach(function(b){
+      var v=b.getAttribute('data-choice'), state=q('.kr-choice-state',b);
+      b.classList.toggle('kr-correct',v===correct); b.classList.toggle('kr-incorrect',v===selected&&v!==correct);
+      b.setAttribute('aria-pressed',String(v===selected)); b.disabled=true;
+      if (!state) {state=document.createElement('span');state.className='kr-choice-state';b.appendChild(state);}
+      state.textContent=v===correct?(v===selected?'내 선택 · 정답':'정답'):(v===selected?'내 선택 · 오답':'');
+    });
+    var status=q('.kr-quiz-status',root), feedback=q('.kr-quiz-feedback',root), result=q('.kr-quiz-result',root);
+    var msg=selected?(ok?'내 선택 '+selected+' · 정답':'내 선택 '+selected+' · 오답 · 정답 '+correct):'선택 없이 답면을 열었습니다.';
+    if (status) status.hidden=true; if (result) result.textContent=msg;
+    if (result) result.setAttribute('data-outcome',selected && !ok?'wrong':'');
+    if (feedback) {feedback.classList.add('is-visible');feedback.removeAttribute('aria-hidden');}
+    causePanel();
+  }
+  function setupLearning() {
+    if (deck==='study') {
+      if (side==='back') {recordLearning();causePanel();}
+      return;
+    }
+    if (!choiceMode) {
+      if (side==='back') { recordLearning(); causePanel(); }
+      return;
+    }
+    if (side==='back') { if (!review.counted) recordLearning(); paintQuiz(optionKey(review.choice||''));return;}
+    qa('[data-choice]',root).forEach(function(b){
+      addEvent(b,'click',function(e){
+        e.stopPropagation(); if (review.choice) return;
+        var selected=b.getAttribute('data-choice'), correct=root.getAttribute('data-correct');
+        if (!/^(?:[A-D]|[1-4])$/.test(selected)||!/^(?:[A-D]|[1-4])$/.test(correct)) return;
+        review.choice=selected;recordLearning(selected===correct);saveReview();paintQuiz(selected);
+        var feedback=q('.kr-quiz-feedback',root);
+        if (feedback) {
+          try{feedback.focus({preventScroll:true});}catch(_){feedback.focus();}
+          try { feedback.scrollIntoView({block:'start',behavior:'auto'}); } catch (_) { feedback.scrollIntoView(); }
+        }
+      });
+    });
+  }
+  function weakItems() {
+    return Object.keys(records.items).map(function(k){return records.items[k];}).filter(function(item){
+      if (!item||item.deck!==deck||!(item.wrong>0||item.selfMarked>0))return false;
+      return weakFilter==='all'||Number((item.causes||{})[weakFilter])>0;
+    }).sort(function(a,b){return (b.wrong+b.selfMarked)-(a.wrong+a.selfMarked)||(b.last||'').localeCompare(a.last||'');});
+  }
+  function searchFor(item) {return 'NoteID:"'+String(item.noteId).replace(/["\\]/g,'')+'"';}
+  function weakSection() {
+    var items=weakItems(), rows=items.slice(0,20);
+    var filters='<div class="kr-weak-filter">'+['all'].concat(Object.keys(causeLabels)).map(function(k){return '<button type="button" data-weak-filter="'+k+'" aria-pressed="'+String(weakFilter===k)+'">'+(k==='all'?'전체':causeLabels[k])+'</button>';}).join('')+'</div>';
+    return '<section class="kr-record-chart"><div class="kr-record-section-head"><h3>취약 항목</h3><span>'+items.length+'개</span></div><p class="kr-setting-note">'+(deck==='quiz'?'선택형에서 틀린 문제와 답면에서 직접 표시한 문제입니다.':'학습 답면에서 직접 혼동을 표시한 항목입니다.')+' v1.3.0 이후 기록부터 표시됩니다.</p>'+filters+
+      (rows.length?'<ol class="kr-weak-list">'+rows.map(function(item){
+        var causes=Object.keys(causeLabels).filter(function(k){return Number((item.causes||{})[k])>0;}).map(function(k){return causeLabels[k]+' '+item.causes[k]+'회';}).join(' · ');
+        return '<li><span class="kr-weak-title" lang="ja">'+escapeHtml(item.title)+'</span><span class="kr-weak-meta">'+escapeHtml(item.mode||item.kind)+' · '+((item.attempts?'오답 '+item.wrong+' / '+item.attempts+'회':'')+(item.selfMarked?(item.attempts?' · ':'')+'직접 표시 '+item.selfMarked+'회':''))+'<br>'+escapeHtml(causes||'원인 미지정')+' · '+escapeHtml(item.last)+'</span><input class="kr-weak-search" readonly aria-label="Anki 검색어" value="'+escapeHtml(searchFor(item))+'"><button type="button" class="kr-copy-search">검색어 복사</button></li>';
+      }).join('')+'</ol>':'<p class="kr-setting-note">해당하는 기록이 없습니다.</p>')+
+      (items.length>20?'<p class="kr-weak-more">혼동 횟수가 많은 20개를 표시합니다. 원인 버튼으로 목록을 좁힐 수 있습니다.</p>':'')+'</section>';
+  }
+  function bindWeak() {
+    qa('[data-weak-filter]',modal).forEach(function(b){b.onclick=function(e){e.stopPropagation();weakFilter=b.getAttribute('data-weak-filter');renderRecords();};});
+    qa('.kr-copy-search',modal).forEach(function(b){b.onclick=function(e){
+      e.stopPropagation();var input=q('.kr-weak-search',b.parentNode);input.focus();input.select();
+      var done=function(){b.textContent='복사됨';};
+      if (navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(input.value).then(done,function(){b.textContent='선택된 검색어를 복사하세요';});
+      else {try {if(document.execCommand('copy'))done();else b.textContent='선택된 검색어를 복사하세요';}catch(_){b.textContent='선택된 검색어를 복사하세요';}}
+    };});
+    qa('.kr-weak-search',modal).forEach(function(input){input.onclick=function(e){e.stopPropagation();input.select();};});
+  }
+
+
+  function saveRecords() {
+    try { localStorage.setItem(RECORD_KEY, JSON.stringify(records)); } catch (_) { storageOK = false; }
+  }
+
+  function pad(value) { return String(value).length < 2 ? '0' + value : String(value); }
+  function dateKey(date) { return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()); }
+  function shifted(date, days) { return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days, 12, 0, 0, 0); }
+  function localDate(key) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(key || '')) return null;
+    var parts = key.split('-');
+    var value = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), 12, 0, 0, 0);
+    return isNaN(value.getTime()) ? null : value;
+  }
+
+  function dayData(key) {
+    var value = records.days[key] || {};
+    return {
+      study:Math.max(0, Number(value.study) || 0),
+      quiz:Math.max(0, Number(value.quiz) || 0),
+      attempts:Math.max(0, Number(value.attempts) || 0),
+      correct:Math.max(0, Number(value.correct) || 0)
+    };
+  }
+
+  function currentCount(data) { return deck === 'quiz' ? data.quiz : data.study; }
+
+  function weekStart(date) {
+    var delta = (date.getDay() + 6) % 7;
+    return shifted(date, -delta);
+  }
+
+  function sumDeck(start, count) {
+    var sum = 0;
+    for (var i = 0; i < count; i++) sum += currentCount(dayData(dateKey(shifted(start, i))));
+    return sum;
+  }
+
+  function currentStreak(today) {
+    var cursor = today;
+    if (!currentCount(dayData(dateKey(cursor)))) cursor = shifted(cursor, -1);
+    var streak = 0;
+    while (streak < 3660 && currentCount(dayData(dateKey(cursor))) > 0) {
+      streak += 1;
+      cursor = shifted(cursor, -1);
+    }
+    return streak;
+  }
+
+  function practiceTotals() {
+    var attempts = 0, correct = 0;
+    Object.keys(records.days).forEach(function (key) {
+      var day = dayData(key);
+      attempts += day.attempts;
+      correct += day.correct;
+    });
+    return { attempts:attempts, correct:correct, rate:attempts ? Math.round(correct * 100 / attempts) : 0 };
+  }
+
+  function dday(today) {
+    var target = localDate(records.examDate);
+    if (!target) return { value:'미설정', note:'시험일을 입력하세요' };
+    var diff = Math.round((target.getTime() - new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12).getTime()) / 86400000);
+    if (diff === 0) return { value:'D-DAY', note:records.examDate };
+    return { value:diff > 0 ? 'D-' + diff : 'D+' + Math.abs(diff), note:records.examDate };
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char];
+    });
+  }
+
+  function metric(label, value, note, detail, progress) {
+    return '<section class="kr-record-metric"><span>' + label + '</span><strong>' + value + '</strong>' +
+      (typeof progress === 'number' ? '<div class="kr-record-progress"><span style="width:' + progress + '%"></span></div>' : '') +
+      '<em>' + note + '</em><span>' + detail + '</span></section>';
+  }
+
+  function chart(today) {
+    var labels = ['일','월','화','수','목','금','토'];
+    var values = [], max = 1;
+    for (var i = 6; i >= 0; i--) {
+      var date = shifted(today, -i);
+      var count = currentCount(dayData(dateKey(date)));
+      values.push({ date:date, count:count, today:i === 0 });
+      if (count > max) max = count;
+    }
+    return values.map(function (item) {
+      var height = item.count ? Math.max(8, Math.round(item.count * 100 / max)) : 3;
+      return '<div class="kr-record-day' + (item.today ? ' today' : '') + '"><div class="kr-record-count">' + item.count + '</div><div class="kr-record-barbox"><div class="kr-record-bar" style="height:' + height + '%"></div></div><div class="kr-record-daylabel">' + labels[item.date.getDay()] + '</div></div>';
+    }).join('');
+  }
+
+  function renderRecords() {
+    if (!modal) return;
+    var today = new Date();
+    var todayCount = currentCount(dayData(dateKey(today)));
+    var goal = records.goal;
+    var goalPct = Math.min(100, Math.round(todayCount * 100 / goal));
+    var streak = currentStreak(today);
+    var exam = dday(today);
+    var seenMap = deck === 'quiz' ? records.seenQuiz : records.seenStudy;
+    var seen = Math.min(total, new Set(Object.keys(seenMap).map(function(k){return k.split(':')[1];}).filter(function(id){
+      return /^KR-N-(?:X-|SIM-|VERB-|Q-MEAN-|Q-CTX-)/.test(id||'');
+    })).size);
+    var progress = Math.round(seen * 100 / total);
+    var thisStart = weekStart(today);
+    var lastStart = shifted(thisStart, -7);
+    var thisWeek = sumDeck(thisStart, 7);
+    var lastWeek = sumDeck(lastStart, 7);
+    var delta = thisWeek - lastWeek;
+    var deltaText = lastWeek === 0 ? (thisWeek ? '이번 주 기록 시작' : '변화 없음') : (delta === 0 ? '지난주와 같음' : (delta > 0 ? '+' : '') + delta + '회');
+    var practice = practiceTotals();
+    var content = q('.kr-record-content', modal);
+    content.innerHTML = [
+      '<div class="kr-record-top">',
+      '<section class="kr-record-card today"><div class="kr-record-ring" style="--kr-pct:' + goalPct + '%"><strong>' + todayCount + '<span>/' + goal + '</span></strong></div><div><div class="kr-record-label">오늘 학습 활동</div><div class="kr-record-value">' + goalPct + '<small>% 달성</small></div><div class="kr-record-note">' + (deck === 'quiz' ? '선택·답면 열기 기준' : '답면 열기 기준') + '</div></div></section>',
+      '<section class="kr-record-card"><div class="kr-record-label">연속 학습</div><div class="kr-record-value">' + streak + '<small>일</small></div><div class="kr-record-note">오늘 또는 어제부터 이어진 기록</div></section>',
+      '<section class="kr-record-card"><div class="kr-record-label">시험일까지</div><div class="kr-record-value">' + exam.value + '</div><div class="kr-record-note">' + exam.note + '</div></section>',
+      '</div>',
+      '<div class="kr-record-controls"><div class="kr-record-control"><label for="kr-record-goal">하루 목표</label><input id="kr-record-goal" data-record-goal type="number" min="1" max="500" inputmode="numeric" value="' + goal + '"></div><div class="kr-record-control"><label for="kr-record-exam">시험일</label><input id="kr-record-exam" data-record-exam type="date" value="' + escapeHtml(records.examDate) + '"></div></div>',
+      '<div class="kr-record-metrics">',
+      metric(deck === 'quiz' ? '퀴즈 덱 진행률' : '학습 덱 진행률', seen + ' / ' + total, progress + '%', seen ? '이 기기에서 본 카드' : '첫 카드를 학습해 보세요', progress),
+      metric('이번 주', thisWeek + '회', '월요일부터', deltaText),
+      metric('지난 주', lastWeek + '회', '이전 7일', '주간 비교'),
+      metric('문제 정답률', practice.attempts ? practice.rate + '%' : '—', practice.correct + ' / ' + practice.attempts + '문제', practice.attempts ? '선택 기록 기준' : '퀴즈 선택 기록 없음'),
+      '</div>',
+      '<section class="kr-record-chart"><div class="kr-record-section-head"><h3>최근 7일 학습 활동</h3><span>최대 ' + Math.max(1, todayCount) + '회</span></div><div class="kr-record-bars">' + chart(today) + '</div></section>',
+      weakSection(),
+      '<div class="kr-storage-state">' + (storageOK ? '저장 범위: 이 기기' : '저장이 제한되어 현재 화면에서만 임시 적용됩니다.') + '</div>',
+      '<div class="kr-record-foot"><p><b>현재 기기에만 저장됩니다.</b><br>Anki의 공식 통계·평점 기록과 별도이며 기기 간 자동 동기화되지 않습니다.</p><button type="button" class="kr-record-reset" data-record-reset>이 기기 기록 초기화</button></div>'
+    ].join('');
+
+    bindWeak();
+    var goalInput = q('[data-record-goal]', content);
+    var examInput = q('[data-record-exam]', content);
+    var resetButton = q('[data-record-reset]', content);
+    goalInput.onchange = function () { records.goal = Math.max(1, Math.min(500, Number(goalInput.value) || 20)); saveRecords(); renderRecords(); };
+    examInput.onchange = function () { records.examDate = /^\d{4}-\d{2}-\d{2}$/.test(examInput.value || '') ? examInput.value : ''; saveRecords(); renderRecords(); };
+    resetButton.onclick = function () {
+      if (window.confirm('현재 기기에 저장된 한자혁명 학습 기록을 모두 초기화할까요?')) {
+        records = blankRecords();
+        records.expansionMarksImported = true;
+        saveRecords();
+        renderRecords();
+      }
+    };
+  }
+
+  function closeSettings() {
+    panelOpen = false;
+    persistPanelState();
+    renderSettings();
+  }
+
+  function openRecords() {
+    if (!modal) return;
+    previousFocus = document.activeElement;
+    renderRecords();
+    modal.setAttribute('aria-hidden', 'false');
+    
+    var close = q('.kr-record-close', modal);
+    if (close) close.focus();
+  }
+
+  function closeRecords() {
+    if (!modal) return;
+    modal.setAttribute('aria-hidden', 'true');
+    if (document.body) document.body.classList.remove('kr-record-body-lock');
+    if (previousFocus && previousFocus.focus) try { previousFocus.focus(); } catch (_) {}
+  }
+
+  function setupRecords() {
+    var stale = document.querySelector('[data-kr-record-modal="1"]');
+    if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
+    modal = document.createElement('div');
+    modal.className = 'kr-record-modal';
+    modal.setAttribute('data-kr-record-modal', '1');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = '<section class="kr-record-sheet" role="region" aria-labelledby="kr-record-title"><header class="kr-record-head"><div><span class="kr-record-eyebrow">이 기기</span><h2 id="kr-record-title">내 기록</h2><p>한자혁명 ' + (deck === 'quiz' ? '퀴즈' : '학습') + ' 덱의 기기 로컬 학습 현황</p></div><button type="button" class="kr-record-close" aria-label="내 기록 닫기">×</button></header><div class="kr-record-content"></div></section>';
+    root.insertBefore(modal, settingsPanel.nextSibling);
+    addEvent(recordButton, 'click', function (event) { event.stopPropagation(); openRecords(); });
+    addEvent(q('.kr-record-close', modal), 'click', function(event){event.stopPropagation();closeRecords();});
+    addEvent(modal, 'click', function(event){event.stopPropagation();});
+    addEvent(modal, 'click', function (event) { if (event.target === modal) closeRecords(); });
+  }
+
+  applyPrefs();
+  renderSettings();
+  setupRecords();
+
+  addEvent(settingsButton, 'click', function (event) {
+    event.stopPropagation();
+    panelOpen = !panelOpen;
+    persistPanelState();
+    renderSettings();
+  });
+
+  addEvent(document, 'click', function (event) {
+    if (!panelOpen || !settingsPanel || !settingsButton || prefs.panel==='keep') return;
+    if (settingsPanel.contains(event.target) || settingsButton.contains(event.target)) return;
+    closeSettings();
+  });
+
+  addEvent(document, 'keydown', function (event) {
+    if (event.key !== 'Escape') return;
+    if (modal && modal.getAttribute('aria-hidden') === 'false') closeRecords();
+    else if (panelOpen) closeSettings();
+  });
+
+  if (window.matchMedia) {
+    try {
+      var media = window.matchMedia('(prefers-color-scheme: dark)');
+      var onThemeChange = function () { if (prefs.theme === 'auto') applyPrefs(); };
+      if (media.addEventListener) addEvent(media, 'change', onThemeChange);
+      else if (media.addListener) { media.addListener(onThemeChange); cleanup.push(function () { try { media.removeListener(onThemeChange); } catch (_) {} }); }
+    } catch (_) {}
+  }
+
+  addEvent(settingsPanel,'click',function(event){event.stopPropagation();});
+  addEvent(root,'kr-theme-preview',applyPrefs);
+  setupLearning();
+};
+
+(function () {
+  const get = id => document.getElementById(id);
+  const data = JSON.parse(get("card-bank").textContent);
+  const info = data.info;
+  let pool = [], position = 0, face = 0;
+  const number = new Intl.NumberFormat("ko-KR"), fmt = value => number.format(value);
+  get("reference-name").textContent = info.name + " · " + info.release + " · 카드 UI " + info.ui;
+  get("scope").textContent = info.sample
+    ? "이 화면은 " + fmt(data.cards.length) + "장 표본입니다. 표의 수량은 실제 배포본 기준입니다."
+    : "전체 미리보기 " + fmt(data.cards.length) + "장";
+  if (info.reference_link && info.reference_link.startsWith("https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/")) {
+    const link = get("reference-link");
+    link.href = info.reference_link;
+    link.textContent = info.name + " " + info.release + " 릴리스 · 권한 필요";
+    link.hidden = false;
+  }
+  function appendCount(target, label, add, all) {
+    const tr = document.createElement("tr");
+    [label, "+" + fmt(add), fmt(all)].forEach((value, idx) => {
+      const cell = document.createElement(idx === 0 ? "th" : "td");
+      if (!idx) cell.scope = "row";
+      cell.textContent = value;
+      tr.append(cell);
+    });
+    get(target).append(tr);
+  }
+  for (const row of info.report.rows) appendCount("counts", row.label, row.added, row.cumulative);
+  appendCount("totals", "합계", info.report.total.added, info.report.total.cumulative);
+  for (const [key, name] of Object.entries(data.parts)) get("part").append(new Option(name, key));
+  const levels = [...new Set(data.cards.map(c => c[3]).filter(Boolean))].sort();
+  for (const item of levels) get("level").append(new Option(item, item));
+  get("level-label").hidden = !levels.length;
+  get("group-label").hidden = !info.subgroups.length;
+  get("group-text").textContent = info.subgroup_label;
+  for (const item of info.subgroups) get("group").append(new Option(item, item));
+
+  function renderTemplate(tmpl, values) {
+    const token = /\{\{([#^/]?)([A-Za-z0-9_]+)\}\}/g, stack = [true];
+    let offset = 0, result = "", match;
+    while ((match = token.exec(tmpl))) {
+      const value = values[match[2]] || "";
+      if (stack.at(-1)) result += tmpl.slice(offset, match.index);
+      if (match[1] === "#") stack.push(stack.at(-1) && !!value);
+      else if (match[1] === "^") stack.push(stack.at(-1) && !value);
+      else if (match[1] === "/") stack.pop();
+      else if (stack.at(-1)) result += value;
+      offset = token.lastIndex;
+    }
+    return result + tmpl.slice(offset);
+  }
+  function draw() {
+    const card = pool[position], host = get("study");
+    get("previous").disabled = !card || position === 0;
+    get("next").disabled = !card || position >= pool.length - 1;
+    get("show-answer").disabled = !card;
+    get("show-answer").textContent = face ? "앞면 보기" : "답 보기";
+    get("show-answer").setAttribute("aria-pressed", String(!!face));
+    get("position").textContent = card ? fmt(position + 1) + " / " + fmt(pool.length) : "0문항";
+    get("index").max = pool.length;
+    get("index").value = card ? position + 1 : "";
+    if (!card) {
+      if (typeof window[info.cleanup] === "function") window[info.cleanup]();
+      host.innerHTML = '<p class="preview-empty">조건에 맞는 문항이 없습니다.</p>';
+      return;
+    }
+    const values = Object.fromEntries(data.fields[card[7]].map((field, idx) => [field, card[8][idx]]));
+    host.innerHTML = renderTemplate(data.templates[card[7]][face], values);
+    window[info.init](host.querySelector(info.root));
+  }
+  function categories() {
+    const part = get("part").value, old = get("subtype").value;
+    const types = Array.from(new Set(data.cards.filter(c => !part || c[1] === part).map(c => c[2]).filter(Boolean)));
+    get("subtype").replaceChildren(new Option("전체", ""), ...types.map(v => new Option(v,v)));
+    if (types.includes(old)) get("subtype").value = old;
+  }
+  function filter() {
+    const stage = get("stage").value, part = get("part").value, type = get("subtype").value;
+    const level = get("level").value, group = get("group").value;
+    const query = get("query").value.trim().normalize("NFKC").toLowerCase();
+    pool = data.cards.filter(c => (
+      (stage === "all" || (stage === "more" ? c[4] : !c[4]))
+      && (!part || c[1] === part) && (!type || c[2] === type) && (!level || c[3] === level)
+      && (!group || c[6] === group)
+      && (!query || [c[0],c[5],c[2]].join(" ").normalize("NFKC").toLowerCase().includes(query))
+    ));
+    position = 0;
+    face = 0;
+    draw();
+  }
+  const move = i => {position = Math.max(0, Math.min(pool.length - 1, i)); face = 0; draw();};
+  get("part").addEventListener("change", () => {categories(); filter();});
+  for (const id of ["stage","subtype","level","group"]) get(id).addEventListener("change", filter);
+  get("query").addEventListener("input", filter);
+  get("index").addEventListener("change", e => {if (e.target.valueAsNumber) move(e.target.valueAsNumber - 1);});
+  get("previous").addEventListener("click", () => move(position - 1));
+  get("next").addEventListener("click", () => move(position + 1));
+  get("show-answer").addEventListener("click", () => {face = 1 - face; draw();});
+  get("preview-theme").addEventListener("click", e => {
+    const dark = document.body.classList.toggle("nightMode");
+    e.target.textContent = dark ? "어두운 화면 미리보기 해제" : "어두운 화면 미리보기";
+    e.target.setAttribute("aria-pressed", String(dark));
+    const root = get("study").querySelector(info.root);
+    if (root) root.dispatchEvent(new Event("kr-theme-preview"));
+  });
+  categories();
+  filter();
+})();
+</script>
+</body>
+</html>
