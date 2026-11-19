@@ -84,3 +84,32 @@ test('legacy Japanese records validate unchanged and foreign subject records are
   assert.throws(() => core.validateEvents([old], toeic), /문항 버전/);
   assert.throws(() => core.validateEvents([old], electrical), /문항 버전/);
 });
+
+test('home and practice read the same legacy session and keep the course records separate', () => {
+  assert.equal(core.storageKey(japanese.id), 'anki-design-lab-v1');
+  assert.equal(core.storageKey(toeic.id), 'anki-design-lab-v1-toeic');
+  assert.equal(core.storageKey(electrical.id), 'anki-design-lab-v1-electrical');
+  assert.equal(core.readRecord(null, japanese), null);
+
+  const [first, second] = japanese.questions;
+  const raw = {
+    schemaVersion: 1,
+    bankVersion: japanese.version,
+    events: [attempt(japanese, first, 'graded', {confidence: 'unsure'})],
+    theme: 'dark',
+    session: {
+      queue: [first.id, second.id], index: 0, mode: 'practice',
+      eventIds: ['graded'], selected: first.answer, confidence: 'unsure', hint: true, answered: 'graded',
+    },
+  };
+  const saved = core.readRecord(JSON.stringify(raw), japanese);
+  assert.deepEqual(saved.session, raw.session);
+  assert.equal(saved.theme, 'dark');
+  assert.equal(core.reviewTargets(saved.events, japanese).length, 1);
+  assert.throws(() => core.readRecord(JSON.stringify(raw), toeic), /버전/);
+
+  raw.session.index = 1;
+  raw.session.selected = second.answer;
+  assert.equal(core.readRecord(JSON.stringify(raw), japanese).session.answered, null);
+  assert.equal(core.readRecord(JSON.stringify(raw), japanese).session.selected, second.answer);
+});

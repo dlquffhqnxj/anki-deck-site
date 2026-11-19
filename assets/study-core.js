@@ -1,4 +1,4 @@
-/* Pure event validation and measures shared by the UI and regression checks. */
+/* Shared study record validation and measures. */
 (function(root){
   'use strict';
   const day = timestamp => new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(timestamp));
@@ -7,6 +7,7 @@
     reading: '문장을 잘못 읽음', slip: '입력·선택 실수'
   };
   const allQuestions = bank => [...bank.questions, ...(bank.followups || [])];
+  const storageKey = subject => subject === 'japanese' ? 'anki-design-lab-v1' : 'anki-design-lab-v1-' + subject;
   function validateEvents(events,bank) {
     if(!Array.isArray(events)||events.length>20000)throw Error('기록 개수 형식이 올바르지 않습니다.');
     const ids=new Set(),questions=new Map(allQuestions(bank).map(q=>[q.id,q]));
@@ -17,6 +18,38 @@
       ids.add(e.id);
       return {id:e.id,bankVersion:bank.version,questionId:q.id,concept:q.concept,selected:e.selected,correct:e.selected===q.answer,confidence:e.confidence,hint:e.hint,mode:e.mode,at:e.at,activeMs:e.activeMs,reason:e.reason||'unknown'};
     }).sort((a,b)=>a.at-b.at||a.id.localeCompare(b.id));
+  }
+  function validSession(saved, bank, events) {
+    const questions = new Map(allQuestions(bank).map(q => [q.id, q]));
+    if (!saved || !Array.isArray(saved.queue) || !saved.queue.length || saved.queue.length > questions.size ||
+        new Set(saved.queue).size !== saved.queue.length || !saved.queue.every(id => questions.has(id)) ||
+        !Number.isInteger(saved.index) || saved.index < 0 || saved.index > saved.queue.length ||
+        !['practice', 'retry'].includes(saved.mode) || !Array.isArray(saved.eventIds)) return null;
+
+    const questionId = saved.queue[saved.index];
+    const question = questions.get(questionId);
+    const attempts = new Map(events.map(event => [event.id, event]));
+    return {
+      queue: saved.queue,
+      index: saved.index,
+      mode: saved.mode,
+      eventIds: saved.eventIds.filter(id => attempts.has(id)),
+      selected: question?.options.some(option => option[0] === saved.selected) ? saved.selected : null,
+      confidence: ['sure', 'unsure', 'guess'].includes(saved.confidence) ? saved.confidence : null,
+      hint: Boolean(saved.hint),
+      answered: question && attempts.get(saved.answered)?.questionId === questionId ? saved.answered : null,
+    };
+  }
+  function readRecord(raw, bank) {
+    if (raw === null) return null;
+    const saved = JSON.parse(raw);
+    if (saved?.schemaVersion !== 1 || saved.bankVersion !== bank.version) throw Error('저장된 학습 기록의 버전과 맞지 않습니다.');
+    const events = validateEvents(saved.events, bank);
+    return {
+      events,
+      session: validSession(saved.session, bank, events),
+      theme: saved.theme === 'light' ? 'light' : 'dark',
+    };
   }
   function firsts(events) {const seen=new Set();return events.filter(e=>{const key=day(e.at)+'|'+e.questionId;if(seen.has(key))return false;seen.add(key);return true;});}
   function recovery(events,qid,now=Date.now()) {
@@ -54,5 +87,5 @@
       return (matches.find(q => !selected.has(q.id)) || matches[0]).id;
     });
   }
-  const api={day,validateEvents,firsts,recovery,stats,defaultReasons,allQuestions,reviewTargets,followupQueue};root.StudyCore=api;if(typeof module!=='undefined')module.exports=api;
+  const api={day,storageKey,readRecord,validateEvents,firsts,recovery,stats,defaultReasons,allQuestions,reviewTargets,followupQueue};root.StudyCore=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

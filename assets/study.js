@@ -1,11 +1,12 @@
 (() => {
   'use strict';
   const courses = window.STUDY_COURSES;
-  const subject = new URLSearchParams(location.search).get('subject');
+  const params = new URLSearchParams(location.search);
+  const subject = params.get('subject');
   const bank = courses.find(course => course.id === subject) || courses[0];
   const core = window.StudyCore;
   const main = document.querySelector('#main');
-  const KEY = bank.id === 'japanese' ? 'anki-design-lab-v1' : 'anki-design-lab-v1-' + bank.id;
+  const KEY = core.storageKey(bank.id);
   const questions = new Map(core.allQuestions(bank).map(q => [q.id, q]));
   const questionNumbers = new Map(bank.questions.map((q, index) => [q.id, index + 1]));
   const concepts = new Map(bank.concepts.map(concept => [concept.id, concept]));
@@ -14,27 +15,55 @@
   document.title = bank.name + ' 학습 체험 · Anki LAB';
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
-  let events=[],session=null,theme='light',view='practice',period='all',storageOK=true,notice='',clock=performance.now(),activeMs=0;
+  let view = params.get('view') === 'review' ? 'progress' : 'practice';
+  let events=[],session=null,theme='light',period='all',storageOK=true,notice='',clock=performance.now(),activeMs=0;
   function load() {
-    try{const raw=localStorage.getItem(KEY);if(!raw)return;const x=JSON.parse(raw);if(x.schemaVersion!==1||x.bankVersion!==bank.version)throw Error();events=core.validateEvents(x.events,bank);theme=x.theme==='light'?'light':'dark';session=validSession(x.session);}catch{storageOK=false;notice='저장된 기록을 읽지 못했습니다. 기존 저장값은 덮어쓰지 않습니다. 새 체험 기록은 백업으로 보관해 주세요.';}
-  }
-  function validSession(x){
-    if(!x||!Array.isArray(x.queue)||x.queue.length>questions.size||!x.queue.length||new Set(x.queue).size!==x.queue.length||!x.queue.every(q=>questions.has(q))||!Number.isInteger(x.index)||x.index<0||x.index>x.queue.length||!['practice','retry'].includes(x.mode)||!Array.isArray(x.eventIds))return null;
-    const question = questions.get(x.queue[x.index]);
-    const selected = question?.options.some(option => option[0] === x.selected) ? x.selected : null;
-    return {queue:x.queue,index:x.index,mode:x.mode,eventIds:x.eventIds.filter(id=>events.some(e=>e.id===id)),selected,confidence:['sure','unsure','guess'].includes(x.confidence)?x.confidence:null,hint:!!x.hint,answered:events.some(e=>e.id===x.answered&&e.questionId===x.queue[x.index])?x.answered:null};
+    try {
+      const saved = core.readRecord(localStorage.getItem(KEY), bank);
+      if (saved) ({events, theme, session} = saved);
+    } catch {
+      storageOK = false;
+      notice = '저장된 기록을 읽지 못했습니다. 기존 저장값은 덮어쓰지 않습니다. 새 체험 기록은 백업으로 보관해 주세요.';
+    }
   }
   function persist(){
     if(!storageOK)return;
     try{
-      const saved=JSON.parse(localStorage.getItem(KEY)||'null');
-      if(saved){if(saved.schemaVersion!==1||saved.bankVersion!==bank.version)throw Error();const disk=core.validateEvents(saved.events,bank);const merged=new Map(disk.map(e=>[e.id,e]));events.forEach(e=>merged.set(e.id,e));events=core.validateEvents([...merged.values()],bank);}
+      const saved = core.readRecord(localStorage.getItem(KEY), bank);
+      if (saved) {
+        const merged = new Map(saved.events.map(e => [e.id, e]));
+        events.forEach(e => merged.set(e.id, e));
+        events = core.validateEvents([...merged.values()], bank);
+      }
       localStorage.setItem(KEY,JSON.stringify({schemaVersion:1,bankVersion:bank.version,events,session,theme}));
     }catch{storageOK=false;notice='브라우저에 저장하지 못했습니다. 이 창을 닫기 전에 기록 백업을 받아 주세요.';}
   }
-  function start(mode='practice',ids,focusQuestion=true){
-    const queue=ids||bank.questions.map(q=>q.id);if(!queue.length)return;
-    session={queue,index:0,mode,eventIds:[],selected:null,confidence:null,hint:false,answered:null};view='practice';activeMs=0;clock=performance.now();persist();render(focusQuestion ? 'question-title' : undefined);
+  function setView(next) {
+    view = next;
+    if (next !== 'progress') {
+      const url = new URL(location.href);
+      if (url.searchParams.get('view') === 'review') {
+        url.searchParams.delete('view');
+        history.replaceState(history.state, '', url);
+      }
+    }
+  }
+  function newSession(mode, queue = bank.questions.map(q => q.id)) {
+    return {queue, index: 0, mode, eventIds: [], selected: null, confidence: null, hint: false, answered: null};
+  }
+  function ensureSession() {
+    if (session) return;
+    session = newSession('practice');
+    persist();
+  }
+  function start(mode = 'practice', ids) {
+    if (ids?.length === 0) return;
+    session = newSession(mode, ids);
+    setView('practice');
+    activeMs = 0;
+    clock = performance.now();
+    persist();
+    render('question-title');
   }
   function current(){return session&&questions.get(session.queue[session.index]);}
   function snapshot(){return core.stats(events,bank);}
@@ -156,7 +185,7 @@
     if (!targets.length) return '';
     const wrongCount = targets.filter(target => target.kind === 'wrong').length;
     return `<form class="review-panel" aria-labelledby="review-title">
-      <h3 id="review-title">헷갈린 문제 다시 풀기</h3>
+      <h3 id="review-title" tabindex="-1">헷갈린 문제 다시 풀기</h3>
       <p class="review-counts"><span>오답 <strong>${wrongCount}개</strong></span><span>확신이 낮았던 정답 <strong>${targets.length - wrongCount}개</strong></span></p>
       <fieldset>
         <legend>다시 풀 문항 선택</legend>
@@ -284,7 +313,7 @@
     document.body.dataset.labTheme = theme;
     const content = view === 'practice' ? practice(snapshot()) : view === 'progress' ? progress() : design();
     main.innerHTML = `<div class="study-shell">${header()}${content}</div>`;
-    const target = focusId ? document.getElementById(focusId) : null;
+    const target = focusId && (document.getElementById(focusId) || document.getElementById('progress-title'));
     if (target) target.focus({preventScroll: target.tagName === 'BUTTON'});
   }
   function submit(){
@@ -300,7 +329,7 @@
   }
   main.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b||b.disabled)return;
-    if(b.dataset.view){view=b.dataset.view;notice='';render(b.closest('.completion') ? 'progress-title' : undefined);return;}
+    if(b.dataset.view){setView(b.dataset.view);notice='';render(b.closest('.completion') ? 'progress-title' : undefined);return;}
     if(b.dataset.period){period=b.dataset.period;render();return;}
     if(b.dataset.option){if(session.answered)return;session.selected=b.dataset.option;persist();render(b.id);return;}
     if(b.dataset.confidence){if(session.answered)return;session.confidence=b.dataset.confidence;persist();render(b.id);return;}
@@ -351,6 +380,14 @@
     }catch(err){notice=err.message==='Unexpected end of JSON input'?'파일 내용을 읽을 수 없습니다.':(err instanceof SyntaxError?'올바른 JSON 백업이 아닙니다.':err.message);render();}
   });
   document.addEventListener('visibilitychange',()=>{if(document.hidden)activeMs+=performance.now()-clock;else clock=performance.now();});
-  window.addEventListener('storage',e=>{if(e.key===KEY&&storageOK){load();notice='같은 브라우저의 다른 탭 기록을 반영했습니다.';if(!session)start();else render();}});
-  load();if(!session)start('practice', undefined, false);else render();
+  window.addEventListener('storage', e => {
+    if (e.key !== KEY || !storageOK) return;
+    load();
+    if (storageOK) notice = '같은 브라우저의 다른 탭 기록을 반영했습니다.';
+    ensureSession();
+    render();
+  });
+  load();
+  ensureSession();
+  render(view === 'progress' ? 'review-title' : undefined);
 })();
