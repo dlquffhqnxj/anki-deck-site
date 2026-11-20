@@ -90,7 +90,7 @@
     </nav>
     <div class="lab-notice"><p>체험 기록은 <strong>이 브라우저에 과목별로 저장</strong>됩니다. 다른 기기로 옮길 때는 백업을 이용하세요.</p></div>
     <div class="lab-tabs" role="group" aria-label="학습 체험 화면">
-      ${[['practice','문제 풀이'],['progress','성장 기록'],['design','Anki 적용 방향']].map(([key,text])=>`<button data-view="${key}" aria-pressed="${view===key}">${text}</button>`).join('')}
+      ${[['practice','문제 풀이'],['progress','성장 기록']].map(([key,text])=>`<button data-view="${key}" aria-pressed="${view===key}">${text}</button>`).join('')}
     </div>
     ${notice ? `<p class="lab-alert" role="status">${esc(notice)}</p>` : ''}`;
   }
@@ -215,6 +215,7 @@
           <button class="lab-text-button" data-action="restart">기본 ${basicCount}문제 다시 풀기</button>
         </div>
         <p class="lab-caption">세트 정답 수에는 힌트 사용이 포함됩니다.</p>
+        ${ankiReviewHelp()}
       </section>
       ${sidebar(s)}
     </div>`;
@@ -245,6 +246,7 @@
         <article class="metric"><span>24시간 후 재확인 통과</span><strong>${all.repaired}<small>문제</small></strong><p>전체 기록 · 최근 오답 후 힌트 없이 정답</p></article>
       </div>
       ${review ? `<div class="skill-card review-progress">${review}</div>` : ''}
+      ${filtered.length ? ankiReviewHelp() : ''}
       ${filtered.length ? '' : `<div class="progress-empty"><h3>풀이 기록이 없습니다</h3><p>문제를 풀면 여기에서 개념별 오답과 보완할 내용을 볼 수 있습니다.</p><button class="lab-button primary" data-view="practice">문제 풀러 가기</button></div>`}
       <div class="analysis-grid">
         <section class="skill-card">
@@ -308,10 +310,21 @@
       </div>
     </section>`;
   }
-  function design(){return `<div class="design-view"><div class="design-intro"><h2>Anki 카드와 복습 기록 개선</h2><p>풀이량과 함께 정답을 고른 근거, 오답 이유, 다시 풀었을 때의 결과를 확인하는 방향입니다.</p></div><div class="design-principles"><article><h3>질문에 집중</h3><p>앞면에는 문맥·질문·선택지만 둡니다. 긴 해설과 부가 정보는 답을 확인한 뒤 펼칩니다.</p></article><article><h3>이유가 남는 정답</h3><p>내 선택과 정답을 비교하고, 틀린 이유와 다음에 구분할 기준을 한 줄로 보여줍니다.</p></article><article><h3>회복을 보여주는 보상</h3><p>하루 목표와 오답 보완을 드러내고, 시간이 지난 뒤에도 맞힌 변화를 성장으로 보여줍니다.</p></article></div><section class="design-plan"><h3>Anki에 적용하는 순서</h3><ol><li><strong>카드 디자인 개선</strong><p>JLPT 문맥·객관식 카드 소수부터 큰 글자·넉넉한 버튼·접는 해설·다크 모드를 시험합니다. 기존 NoteID·GUID와 학습 일정을 보존한 새 후보로 검증합니다.</p></li><li><strong>기존 복습 기록 분석</strong><p>동기화된 Anki의 복습 로그를 읽기 전용으로 내보내 개념·유형별로 분석합니다. 평가 버튼과 복습 시간으로 알 수 있는 범위부터 시작합니다.</p></li><li><strong>세부 문제 풀이 기록 연결</strong><p>선택지·힌트·확신·오답 이유는 별도 학습 이벤트로 기록해야 합니다. 이 체험처럼 기록 구조를 검증한 뒤 기기 간 보관·연결 기능을 설계합니다.</p></li></ol></section><div class="design-limit"><h3>지금 체험할 수 있는 범위</h3><p>이 페이지의 문제 풀이·누적 분석·백업은 동작합니다. 실제 APKG의 디자인 변경과 Anki 기록 자동 수집·기기 간 자동 동기화는 아직 적용하지 않았습니다.</p><p>Anki 템플릿의 JavaScript만으로 모든 기기의 누적 기록 저장을 보장할 수 없습니다. 카드 화면과 기록 저장을 나누고 각 기기에서 검증할 계획입니다.</p></div><section class="design-plan"><h3>Anki에서 바로 찾아볼 수 있는 기록</h3><p>탐색 창에서 아래 검색어로 복습할 대상을 확인할 수 있습니다.</p><div class="anki-searches"><div><code>rated:7:1</code><span>최근 7일 동안 ‘다시’를 누른 카드</span></div><div><code>prop:lapses&gt;3</code><span>복습 중 망각 횟수가 3회를 넘은 카드</span></div></div><p>‘어려움’은 맞혔지만 어려웠을 때 사용합니다. 틀렸다면 ‘다시’를 선택해야 기억 상태에 맞는 기록이 남습니다.</p></section><p class="design-sources">공식 근거: <a href="https://docs.ankiweb.net/stats.html" target="_blank" rel="noopener noreferrer">복습 기록·통계</a> · <a href="https://docs.ankiweb.net/templates/styling.html#javascript" target="_blank" rel="noopener noreferrer">카드 JavaScript</a> · <a href="https://docs.ankiweb.net/searching.html" target="_blank" rel="noopener noreferrer">검색</a> · <a href="https://docs.ankiweb.net/studying.html#answer-buttons" target="_blank" rel="noopener noreferrer">평가 버튼</a> · 확인 2026.10.02</p></div>`;}
+  function ankiReviewHelp() {
+    return `<details class="anki-review-help">
+      <summary>Anki에서 복습할 카드 찾기</summary>
+      <p>PC Anki의 탐색 창에서 덱을 선택한 뒤, 기존 검색 조건에 아래 검색어 중 하나를 공백으로 이어 붙이세요.</p>
+      <dl class="anki-searches">
+        <div><dt><code>rated:7:1</code></dt><dd>최근 7일 동안 ‘다시’를 누른 카드</dd></div>
+        <div><dt><code>prop:lapses&gt;3</code></dt><dd>복습 중 4회 이상 잊은 카드</dd></div>
+      </dl>
+      <p>틀리거나 떠올리지 못했다면 ‘다시’, 맞혔지만 망설였다면 ‘어려움’을 누르세요.</p>
+      <p><a href="https://docs.ankiweb.net/manual/searching" target="_blank" rel="noopener noreferrer">Anki 검색 도움말</a></p>
+    </details>`;
+  }
   function render(focusId) {
     document.body.dataset.labTheme = theme;
-    const content = view === 'practice' ? practice(snapshot()) : view === 'progress' ? progress() : design();
+    const content = view === 'practice' ? practice(snapshot()) : progress();
     main.innerHTML = `<div class="study-shell">${header()}${content}</div>`;
     const target = focusId && (document.getElementById(focusId) || document.getElementById('progress-title'));
     if (target) target.focus({preventScroll: target.tagName === 'BUTTON'});
