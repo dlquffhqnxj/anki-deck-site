@@ -11,7 +11,7 @@
   conceptDialog.className = 'concept-review-dialog';
   conceptDialog.setAttribute('aria-labelledby', 'concept-review-title');
   main.after(conceptDialog);
-  const KEY = core.storageKey(bank.id);
+  const KEY = core.storageKey(bank.id, window.StudyProfiles.current.id);
   const questions = new Map(core.allQuestions(bank).map(q => [q.id, q]));
   const questionNumbers = new Map(bank.questions.map((q, index) => [q.id, index + 1]));
   const concepts = new Map(bank.concepts.map(concept => [concept.id, concept]));
@@ -20,7 +20,8 @@
   document.title = bank.name + ' 학습 체험 · Anki LAB';
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
-  let view = params.get('view') === 'review' ? 'progress' : 'practice';
+  const entryView = params.get('view');
+  let view = ['review', 'retest'].includes(entryView) ? 'progress' : 'practice';
   let events=[],session=null,theme='light',period='all',storageOK=true,notice='',clock=performance.now(),activeMs=0;
   let conceptAttempt = null;
   function load() {
@@ -52,7 +53,7 @@
     view = next;
     if (next !== 'progress') {
       const url = new URL(location.href);
-      if (url.searchParams.get('view') === 'review') {
+      if (url.searchParams.has('view')) {
         url.searchParams.delete('view');
         history.replaceState(history.state, '', url);
       }
@@ -81,6 +82,7 @@
   function formatRate(rows){return rows.length?Math.round(rows.filter(e=>e.correct).length/rows.length*100)+'%':'—';}
   const label={sure:'확신해요',unsure:'헷갈려요',guess:'추측이에요'};
   function questionLabel(q) {
+    if (bank.retests?.includes(q)) return '변형 문제';
     return questionNumbers.has(q.id) ? '문제 ' + questionNumbers.get(q.id) : '추가 문제';
   }
   function relatedDeckLink(deck = bank.relatedDeck) {
@@ -94,18 +96,73 @@
     if (!concepts.get(q.concept).review) return '';
     return `<button type="button" class="lab-button secondary" data-concept-review="${esc(q.id)}" aria-haspopup="dialog" aria-controls="concept-review"${description ? ` aria-describedby="${esc(description)}"` : ''}>개념 카드 보기</button>`;
   }
+  function evidencePicker(q, selected, hidden) {
+    if (!q.evidence) return '';
+    return `<details class="evidence-picker"${hidden ? ' hidden' : ''}${selected ? ' open' : ''}>
+      <summary>풀이 근거 선택 <span>선택 사항</span></summary>
+      <label><span>${esc(q.evidence.prompt)}</span><select name="evidence">
+        <option value="">선택 안 함</option>
+        ${q.evidence.options.map(([id, text]) => `<option value="${id}"${selected === id ? ' selected' : ''}>${esc(text)}</option>`).join('')}
+      </select></label>
+    </details>`;
+  }
+  function evidenceFeedback(q, attempt) {
+    if (!attempt.evidence) return '';
+    const choice = q.evidence.options.find(([id]) => id === attempt.evidence)[1];
+    const expected = q.evidence.options.find(([id]) => id === q.evidence.answer)[1];
+    const matched = attempt.evidence === q.evidence.answer;
+    return `<div class="evidence-result">
+      <p><strong>${matched ? '풀이 근거 일치' : '풀이 근거 다시 확인'}</strong></p>
+      ${matched ? '' : `<p>내가 고른 근거 · ${esc(choice)}</p>`}
+      <p>판단 기준 · ${esc(expected)}</p>
+    </div>`;
+  }
+  function reasonPicker(id, selected) {
+    return `<label class="error-label">어디서 막혔나요? <span>선택 사항 · 직접 판단</span><select id="${id}">
+      ${Object.entries(reasons).map(([value, text]) => `<option value="${value}" ${selected === value ? 'selected' : ''}>${esc(text)}</option>`).join('')}
+    </select></label>`;
+  }
+  function showPracticeDialog(heading, eyebrow, contents) {
+    conceptDialog.innerHTML = `
+      <header class="concept-review-header">
+        <div><p class="concept-label">${eyebrow}</p><h2 id="concept-review-title" tabindex="-1">${esc(heading)}</h2></div>
+        <button class="lab-button secondary" type="button" data-dialog-close>닫기</button>
+      </header>${contents}`;
+    conceptDialog.showModal();
+    conceptDialog.scrollTop = 0;
+    conceptDialog.querySelector('#concept-review-title').focus({preventScroll: true});
+  }
+  function practiceDialogForm(q, fromCard = false) {
+    return `<form class="concept-practice"${fromCard ? ' hidden' : ''}>
+        ${fromCard ? '<h3 tabindex="-1">다른 문제로 확인</h3>' : ''}
+        <p class="concept-question">${esc(q.prompt)}</p>
+        <p class="lab-question-text" lang="${bank.language}">${questionSentence(q)}</p>
+        <fieldset>
+          <legend>답 선택</legend>
+          <div class="answer-options">${q.options.map(([id, text]) => `
+            <label class="answer-option"><input type="radio" name="answer" value="${id}" required><span lang="${bank.language}">${esc(text)}</span></label>
+          `).join('')}</div>
+        </fieldset>
+        ${evidencePicker(q, '', true)}
+        <fieldset>
+          <legend>확신 정도</legend>
+          <div class="concept-confidence">${Object.entries(label).map(([id, text]) => `
+            <label><input type="radio" name="confidence" value="${id}" required>${text}</label>
+          `).join('')}</div>
+        </fieldset>
+        <button class="lab-button primary full" type="submit">${fromCard ? '추가 문제 정답 확인' : '정답 확인'}</button>
+        <p class="concept-error" role="alert"></p>
+      </form>
+      <section class="answer-feedback concept-result" hidden></section>`;
+  }
   function openConceptReview(questionId) {
     const source = questions.get(questionId);
     const concept = source && concepts.get(source.concept);
     if (!concept?.review || conceptDialog.open) return;
     const card = concept.review;
     const next = core.conceptPracticeQuestion?.(source, bank);
-    conceptAttempt = {questionId, next, startedAt: null, recorded: false};
-    conceptDialog.innerHTML = `
-      <header class="concept-review-header">
-        <div><p class="concept-label">웹 개념 복습 카드</p><h2 id="concept-review-title" tabindex="-1">${esc(concept.label)}</h2></div>
-        <button class="lab-button secondary" type="button" data-dialog-close>닫기</button>
-      </header>
+    conceptAttempt = {next, startedAt: null, mode: 'retry', returnTo: `[data-concept-review="${CSS.escape(questionId)}"]`};
+    showPracticeDialog(concept.label, '웹 개념 복습 카드', `
       <section data-concept-card>
         <p class="concept-prompt">${esc(card.prompt)}</p>
         <details class="concept-answer">
@@ -123,29 +180,15 @@
           ${relatedDeckLink(card.deck)}
         </div>
       </section>
-      ${next ? `<form class="concept-practice" hidden>
-        <h3 tabindex="-1">다른 문제로 확인</h3>
-        <p class="concept-question">${esc(next.prompt)}</p>
-        <p class="lab-question-text" lang="${bank.language}">${questionSentence(next)}</p>
-        <fieldset>
-          <legend>답 선택</legend>
-          <div class="answer-options">${next.options.map(([id, text]) => `
-            <label class="answer-option"><input type="radio" name="answer" value="${id}" required><span lang="${bank.language}">${esc(text)}</span></label>
-          `).join('')}</div>
-        </fieldset>
-        <fieldset>
-          <legend>확신 정도</legend>
-          <div class="concept-confidence">${Object.entries(label).map(([id, text]) => `
-            <label><input type="radio" name="confidence" value="${id}" required>${text}</label>
-          `).join('')}</div>
-        </fieldset>
-        <button class="lab-button primary full" type="submit">추가 문제 정답 확인</button>
-        <p class="concept-error" role="alert"></p>
-      </form>
-      <section class="answer-feedback concept-result" hidden></section>` : ''}`;
-    conceptDialog.showModal();
-    conceptDialog.scrollTop = 0;
-    conceptDialog.querySelector('#concept-review-title').focus({preventScroll: true});
+      ${next ? practiceDialogForm(next, true) : ''}`);
+  }
+  function openPracticeDialog(question, anchorId) {
+    if (conceptDialog.open) return;
+    const mode = anchorId ? 'retest' : 'retry';
+    conceptAttempt = {next: question, mode, anchorId, startedAt: performance.now(),
+      returnTo: anchorId ? '#retest-title' : '#reason-practice-title'};
+    showPracticeDialog(concepts.get(question.concept).label,
+      anchorId ? '7일 변형 재시험' : '오답 이유별 연습', practiceDialogForm(question));
   }
   function header() {
     return `<div class="lab-heading">
@@ -158,7 +201,6 @@
         return `<a href="${url}"${course.id === bank.id ? ' aria-current="page"' : ''}>${esc(course.name)}</a>`;
       }).join('')}
     </nav>
-    <div class="lab-notice"><p>체험 기록은 <strong>이 브라우저에 과목별로 저장</strong>됩니다. 다른 기기로 옮길 때는 백업을 이용하세요.</p></div>
     <div class="lab-tabs" role="group" aria-label="학습 체험 화면">
       ${[['practice','문제 풀이'],['progress','성장 기록']].map(([key,text])=>`<button data-view="${key}" aria-pressed="${view===key}">${text}</button>`).join('')}
     </div>
@@ -185,7 +227,7 @@
       </section>
       <div class="lab-save"><div>
         <strong>${storageOK ? '기기 안에 기록 중' : '이 창에서 임시 기록 중'}</strong>
-        <p>백업 파일은 다른 기기의 같은 과목에서 불러올 수 있습니다.</p>
+        <p>선택한 프로필의 과목별 기록을 백업하고 다른 기기의 같은 과목에서 불러올 수 있습니다.</p>
         <button class="lab-text-button" data-action="export">기록 백업</button> ·
         <label class="lab-text-button file-label">백업 불러오기<input type="file" id="restore-file" accept="application/json,.json"></label>
       </div></div>
@@ -217,6 +259,7 @@
           }).join('')}
         </div>
         ${answer ? feedback(q, c, answer) : `
+          ${evidencePicker(q, session.evidence, !session.selected)}
           <div class="confidence"><p>답에 얼마나 확신이 있나요?</p><div role="group" aria-label="확신 정도">
             ${Object.entries(label).map(([id, text]) => `<button id="confidence-${id}" data-confidence="${id}" aria-pressed="${session.confidence === id}">${text}</button>`).join('')}
           </div></div>
@@ -238,14 +281,13 @@
       ${q.reading ? `<p class="lab-caption" lang="ja">${esc(q.reading)}</p>` : ''}
       ${!q.solution ? `<p class="translation">${esc(correctOption[2])}</p>` : ''}
       ${e.correct ? '' : `<p class="chosen-explanation"><strong>내가 고른 답 · <span lang="${bank.language}">${e.selected.toUpperCase()}. ${esc(chosenOption[1])}</span></strong><br>${esc(chosenOption[2])}</p>`}
+      ${evidenceFeedback(q, e)}
       <div class="rule-box"><span>기억할 기준</span><strong>${esc(c.rule)}</strong></div>
       ${!e.correct || e.confidence !== 'sure' ? conceptButton(q) : ''}
       <details class="option-reasons"><summary>선택지별 이유 보기</summary>
         ${q.options.map(([id, text, why]) => `<p><strong lang="${bank.language}">${id.toUpperCase()}. ${esc(text)}</strong><br>${esc(why)}</p>`).join('')}
       </details>
-      ${!e.correct ? `<label class="error-label">어디서 막혔나요? <span>선택 사항 · 직접 판단</span><select id="error-reason">
-        ${Object.entries(reasons).map(([id, text]) => `<option value="${id}" ${e.reason === id ? 'selected' : ''}>${text}</option>`).join('')}
-      </select></label>` : ''}
+      ${!e.correct ? reasonPicker('error-reason', e.reason) : ''}
       <p class="feedback-record">${e.mode === 'delayed' ? '24시간 이후 재확인' : e.mode === 'retry' ? '재도전' : '풀이'} 기록됨 · ${esc(label[e.confidence])}${e.hint ? ' · 힌트 사용' : ''}</p>
     </div>
     <button class="lab-button primary full" data-action="next">${session.index === session.queue.length - 1 ? '세트 마치기' : '다음 문제'}</button>`;
@@ -295,6 +337,19 @@
       ${sidebar(s)}
     </div>`;
   }
+  function retestPanel(plan) {
+    const dateFormat = new Intl.DateTimeFormat('ko-KR', {timeZone: 'Asia/Seoul', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
+    const entries = plan.map(item => `<li class="retest-entry">
+      <span>${esc(concepts.get(item.concept).label)}</span>
+      ${item.due ? `<button type="button" class="lab-button primary" data-retest="${esc(item.anchorId)}" aria-haspopup="dialog" aria-label="${esc(concepts.get(item.concept).label)} 재시험 풀기">재시험 풀기</button>`
+        : `<time datetime="${new Date(item.dueAt).toISOString()}">${esc(dateFormat.format(item.dueAt))}부터</time>`}
+    </li>`).join('');
+    return `<section class="skill-card retest-panel" aria-labelledby="retest-title">
+      <h3 id="retest-title" tabindex="-1">7일 변형 재시험</h3>
+      <p class="lab-caption">틀리거나 확신이 낮았던 개념을 7일 뒤 새로운 문제로 확인해요.</p>
+      ${entries ? `<ul>${entries}</ul>` : '<p class="retest-empty">예정된 재시험이 없어요.</p>'}
+    </section>`;
+  }
   function progress() {
     const weekStart = core.day(Date.now() - 6 * 86400000);
     const filtered = events.filter(e => period === 'all' || core.day(e.at) >= weekStart);
@@ -306,6 +361,7 @@
     const recent = filtered.slice(-20).reverse();
     const review = reviewPanel(filtered);
     const recoveryRows = all.reviewed.filter(row => row.status !== 'none');
+    const recommended = core.reasonPractice(events, bank);
 
     return `<section class="progress-view">
       <div class="lab-section-title">
@@ -320,6 +376,7 @@
         <article class="metric"><span>맞혔지만 불확실</span><strong>${uncertain}<small>회</small></strong><p>기본 문항의 첫 풀이에서 ‘헷갈림·추측’ 정답</p></article>
         <article class="metric"><span>24시간 후 재확인 통과</span><strong>${all.repaired}<small>문제</small></strong><p>전체 기록 · 최근 오답 후 힌트 없이 정답</p></article>
       </div>
+      ${retestPanel(core.retestPlan(events, bank))}
       ${review ? `<div class="skill-card review-progress">${review}</div>` : ''}
       ${filtered.length ? ankiReviewHelp() : ''}
       ${filtered.length ? '' : `<div class="progress-empty"><h3>풀이 기록이 없습니다</h3><p>문제를 풀면 여기에서 개념별 오답과 보완할 내용을 볼 수 있습니다.</p><button class="lab-button primary" data-view="practice">문제 풀러 가기</button></div>`}
@@ -337,9 +394,13 @@
           }).join('')}
         </section>
         <section class="recommendation">
-          <h3>${top ? esc(top.label) + '부터 다시' : '한 번에 한 개념씩'}</h3>
-          <p>${top ? esc(top.action) : '첫 풀이 결과가 쌓이면 오답이 많거나 확신이 낮은 개념부터 제안합니다.'}</p>
-          ${top ? `<button class="lab-button primary" data-concept="${esc(top.id)}">이 개념 집중 연습</button>` : ''}
+          <h3 id="reason-practice-title" tabindex="-1">오답 이유별 추천</h3>
+          ${recommended ? `
+            <p><strong>${esc(reasons[recommended.reason])}</strong> · 최근 7일 ${recommended.count}회</p>
+            <p>${esc(recommended.action)}</p>
+            <button class="lab-button primary" data-reason-practice aria-haspopup="dialog">${esc(recommended.concept.label)} 연습</button>` : `
+            <p>오답 이유를 고르면 그 이유에 맞는 연습이 여기에 나옵니다.</p>
+            ${top ? `<p>${esc(top.action)}</p><button class="lab-button primary" data-concept="${esc(top.id)}">${esc(top.label)} 집중 연습</button>` : ''}`}
           <div class="recovery-list">
             <h4>오답 보완 상태 · 전체 기록</h4>
             ${recoveryRows.map(row => {
@@ -363,6 +424,8 @@
           <li>도움 없이 푼 정답률을 구할 때는 힌트를 본 제출을 분모와 분자에서 제외합니다. 확신 정도는 별도로 기록합니다.</li>
           <li>헷갈린 문제는 조회 기간의 최근 풀이가 오답이거나 ‘헷갈려요·추측이에요’를 고른 정답입니다.</li>
           <li>24시간 후 재확인은 마지막 오답으로부터 24시간 이상 지난 후 힌트 없이 맞힌 문항입니다.</li>
+          <li>7일 재시험은 정답에 확신이 있고, 풀이 근거를 골랐다면 그 근거도 일치할 때 통과합니다.</li>
+          <li>오답 이유별 추천은 최근 7일간 직접 고른 이유 중 가장 많이 나온 것을 반영합니다. 같은 한국 날짜의 같은 문제는 한 번만 셉니다.</li>
           <li>개념당 도움 없는 첫 풀이 8회 미만은 ‘관찰 중’으로 표시합니다. 8회는 이 체험의 표시 기준입니다.</li>
         </ul>
       </details>
@@ -372,14 +435,17 @@
           <thead><tr><th>한국 시간</th><th>문제·개념</th><th>결과</th><th>풀이 방식</th><th>확신</th></tr></thead>
           <tbody>${recent.map(e => {
             const date = new Date(e.at).toLocaleString('ko-KR', {timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-            const mode = e.mode === 'practice' ? '기본 훈련' : e.mode === 'delayed' ? '24시간 후 재확인' : '재도전';
-            return `<tr><td>${esc(date)}</td><td>${questionLabel(questions.get(e.questionId))} · ${esc(concepts.get(e.concept).label)}</td><td>${e.correct ? '정답' : '오답'}${e.hint ? ' · 힌트' : ''}</td><td>${mode}</td><td>${esc(label[e.confidence])}</td></tr>`;
+            const q = questions.get(e.questionId);
+            const mode = {practice: '기본 훈련', delayed: '24시간 후 재확인', retry: '재도전',
+              retest: core.retestPassed(e, q) ? '7일 재시험 통과' : '7일 재시험'}[e.mode];
+            const evidence = e.evidence ? (e.evidence === q.evidence.answer ? ' · 근거 일치' : ' · 근거 다시 확인') : '';
+            return `<tr><td>${esc(date)}</td><td>${questionLabel(q)} · ${esc(concepts.get(e.concept).label)}</td><td>${e.correct ? '정답' : '오답'}${e.hint ? ' · 힌트' : ''}</td><td>${mode}</td><td>${esc(label[e.confidence])}${evidence}</td></tr>`;
           }).join('') || '<tr><td colspan="5">풀이 기록이 없습니다.</td></tr>'}</tbody>
         </table></div>
         <p class="lab-caption">최근 20회 표시 · 이 과목의 전체 기록은 백업 파일에 포함됩니다.</p>
       </section>
       <div class="backup-bar">
-        <div><h3>기록을 이어가세요</h3><p>브라우저 데이터를 지우면 기록이 사라집니다. 백업은 다른 기기의 같은 과목에서 불러올 수 있습니다.</p></div>
+        <div><h3>기록을 이어가세요</h3><p>선택한 프로필의 과목별 기록을 백업하고 다른 기기의 같은 과목에서 불러올 수 있습니다.</p></div>
         <button class="lab-button secondary" data-action="export">기록 백업</button>
         <label class="lab-button secondary file-label">백업 불러오기<input type="file" id="restore-file" accept="application/json,.json"></label>
       </div>
@@ -404,7 +470,7 @@
     const target = focusId && (document.getElementById(focusId) || document.getElementById('progress-title'));
     if (target) target.focus({preventScroll: target.tagName === 'BUTTON'});
   }
-  function recordAttempt(q, {selected, confidence, hint = false, mode = 'retry'}, elapsedMs) {
+  function recordAttempt(q, {selected, confidence, hint = false, mode = 'retry', evidence}, elapsedMs) {
     if (events.length >= 20000) {
       notice = '체험 기록 한도에 도달했습니다. 전체 기록을 백업해 주세요.';
       return null;
@@ -414,8 +480,8 @@
     const attempt = {
       id: uid(), bankVersion: bank.version, questionId: q.id, concept: q.concept,
       selected, correct: selected === q.answer, confidence, hint,
-      mode: wrong && at - wrong.at >= 86400000 ? 'delayed' : mode,
-      at, activeMs: Math.min(120000, Math.max(0, Math.round(elapsedMs))), reason: 'unknown',
+      mode: mode !== 'retest' && wrong && at - wrong.at >= 86400000 ? 'delayed' : mode,
+      at, activeMs: Math.min(120000, Math.max(0, Math.round(elapsedMs))), reason: 'unknown', ...(evidence ? {evidence} : {}),
     };
     events.push(attempt);
     return attempt;
@@ -438,6 +504,18 @@
   main.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b||b.disabled)return;
     if(b.dataset.conceptReview){openConceptReview(b.dataset.conceptReview);return;}
+    if (b.dataset.retest) {
+      const target = core.retestPlan(events, bank).find(item => item.due && item.anchorId === b.dataset.retest);
+      if (target) openPracticeDialog(target.question, target.anchorId);
+      else render('retest-title');
+      return;
+    }
+    if (b.hasAttribute('data-reason-practice')) {
+      const target = core.reasonPractice(events, bank);
+      if (target) openPracticeDialog(target.question);
+      else render('reason-practice-title');
+      return;
+    }
     if(b.dataset.view){setView(b.dataset.view);notice='';render(b.closest('.completion') ? 'progress-title' : undefined);return;}
     if(b.dataset.period){period=b.dataset.period;render();return;}
     if(b.dataset.option){if(session.answered)return;session.selected=b.dataset.option;persist();render(b.id);return;}
@@ -454,6 +532,7 @@
         session.confidence = null;
         session.hint = false;
         session.answered = null;
+        delete session.evidence;
         activeMs = 0;
         clock = performance.now();
         persist();
@@ -478,23 +557,46 @@
       form.querySelector('h3').focus({preventScroll: true});
     }
   });
+  conceptDialog.addEventListener('change', event => {
+    const field = event.target;
+    if (field.name === 'answer') {
+      const picker = field.form.querySelector('.evidence-picker');
+      if (picker) picker.hidden = false;
+    }
+    if (field.id === 'extra-error-reason') {
+      const attempt = events.find(row => row.id === conceptAttempt?.eventId);
+      if (attempt) { attempt.reason = field.value; persist({preserveStoredSession: true}); }
+    }
+  });
   conceptDialog.addEventListener('submit', event => {
     const form = event.target;
     if (!form.matches('.concept-practice')) return;
     event.preventDefault();
     const q = conceptAttempt?.next;
-    if (!q || conceptAttempt.recorded || conceptAttempt.startedAt === null) return;
+    if (!q || conceptAttempt.eventId || conceptAttempt.startedAt === null) return;
     const input = new FormData(form);
     const selected = input.get('answer');
     const confidence = input.get('confidence');
+    const evidence = input.get('evidence');
     const chosen = q.options.find(option => option[0] === selected);
-    if (!chosen || !Object.hasOwn(label, confidence)) return;
-    const attempt = recordAttempt(q, {selected, confidence}, performance.now() - conceptAttempt.startedAt);
+    if (!chosen || !Object.hasOwn(label, confidence) ||
+        (evidence && !q.evidence?.options.some(([id]) => id === evidence))) return;
+    if (conceptAttempt.mode === 'retest') {
+      if (storageOK) load();
+      const pending = core.retestPlan(events, bank).some(item =>
+        item.due && item.anchorId === conceptAttempt.anchorId && item.question.id === q.id);
+      if (!pending) {
+        conceptAttempt.refresh = true;
+        form.querySelector('.concept-error').textContent = '재시험 일정이 바뀌었어요. 창을 닫고 다시 확인해 주세요.';
+        return;
+      }
+    }
+    const attempt = recordAttempt(q, {selected, confidence, evidence, mode: conceptAttempt.mode}, performance.now() - conceptAttempt.startedAt);
     if (!attempt) {
       form.querySelector('.concept-error').textContent = notice;
       return;
     }
-    conceptAttempt.recorded = true;
+    conceptAttempt.eventId = attempt.id;
     persist({preserveStoredSession: true});
 
     const correct = q.options.find(option => option[0] === q.answer);
@@ -507,7 +609,11 @@
       ${q.reading ? `<p class="lab-caption" lang="ja">${esc(q.reading)}</p>` : ''}
       ${q.solution ? '' : `<p>${esc(correct[2])}</p>`}
       ${attempt.correct ? '' : `<p><strong>내가 고른 답</strong> <span lang="${bank.language}">${esc(chosen[1])}</span><br>${esc(chosen[2])}</p>`}
-      <p class="lab-caption">${storageOK ? '추가 풀이를 기록했어요.' : '이 창에 임시로 기록했어요.'}</p>
+      ${evidenceFeedback(q, attempt)}
+      ${attempt.correct ? '' : reasonPicker('extra-error-reason', attempt.reason)}
+      <p class="lab-caption">${!storageOK ? '이 창에 임시로 기록했어요.' : attempt.mode === 'retest'
+        ? (core.retestPassed(attempt, q) ? '7일 재시험을 통과했어요.' : '7일 뒤 다른 문제로 다시 확인해요.')
+        : '추가 풀이를 기록했어요.'}</p>
       <button class="lab-button primary" type="button" data-dialog-close>학습으로 돌아가기</button>`;
     form.hidden = true;
     result.hidden = false;
@@ -517,7 +623,7 @@
   conceptDialog.addEventListener('close', () => {
     const attempt = conceptAttempt;
     conceptAttempt = null;
-    if (attempt?.recorded) {
+    if (attempt?.eventId || attempt?.refresh) {
       const unchecked = new Set([...main.querySelectorAll('.review-panel input[name="question"]:not(:checked)')].map(input => input.value));
       render();
       const reviewForm = main.querySelector('.review-panel');
@@ -525,7 +631,7 @@
         reviewForm.querySelectorAll('input[name="question"]').forEach(input => { input.checked = !unchecked.has(input.value); });
         syncReviewButtons(reviewForm);
       }
-      main.querySelector(`[data-concept-review="${CSS.escape(attempt.questionId)}"]`)?.focus({preventScroll: true});
+      main.querySelector(attempt.returnTo)?.focus({preventScroll: true});
     }
   });
   function syncReviewButtons(form) {
@@ -544,13 +650,19 @@
       syncReviewButtons(e.target.form);
       return;
     }
+    if (e.target.name === 'evidence' && current() && !session.answered) {
+      if (e.target.value) session.evidence = e.target.value;
+      else delete session.evidence;
+      persist();
+      return;
+    }
     if(e.target.id==='error-reason'){const row=events.find(x=>x.id===session.answered);if(row){row.reason=e.target.value;persist();}return;}
     if(e.target.id!=='restore-file'||!e.target.files[0])return;
     try{
       const f=e.target.files[0];if(f.size>8*1024*1024)throw Error('8 MB 이하의 체험 백업만 불러올 수 있습니다.');
       const x=JSON.parse(await f.text());if(x?.schemaVersion!==1||x.bankVersion!==bank.version||x.scope!=='design-trial-only')throw Error(bank.name+' 학습 체험 백업 파일을 골라 주세요.');
       const incoming=core.validateEvents(x.events,bank),merged=new Map(events.map(row=>[row.id,row]));let added=0;
-      for(const row of incoming){if(merged.has(row.id)){const existing=merged.get(row.id);const fields=['questionId','selected','at','confidence','hint','mode','activeMs'];if(fields.some(k=>existing[k]!==row[k]))throw Error('같은 기록 ID의 내용이 달라 불러오기를 중단했습니다.');}else{merged.set(row.id,row);added++;}}
+      for(const row of incoming){if(merged.has(row.id)){const existing=merged.get(row.id);const fields=['questionId','selected','at','confidence','hint','mode','activeMs','evidence'];if(fields.some(k=>existing[k]!==row[k]))throw Error('같은 기록 ID의 내용이 달라 불러오기를 중단했습니다.');}else{merged.set(row.id,row);added++;}}
       const next=core.validateEvents([...merged.values()],bank);events=next;persist();notice=`기록 ${added}회를 추가했습니다. 중복 기록은 다시 넣지 않았습니다.`;view='progress';render();
     }catch(err){notice=err.message==='Unexpected end of JSON input'?'파일 내용을 읽을 수 없습니다.':(err instanceof SyntaxError?'올바른 JSON 백업이 아닙니다.':err.message);render();}
   });
@@ -562,7 +674,13 @@
     ensureSession();
     render();
   });
+  window.addEventListener('pageshow', event => {
+    if (!event.persisted || !storageOK) return;
+    load();
+    ensureSession();
+    render();
+  });
   load();
   ensureSession();
-  render(view === 'progress' ? 'review-title' : undefined);
+  render(entryView === 'retest' ? 'retest-title' : view === 'progress' ? 'review-title' : undefined);
 })();

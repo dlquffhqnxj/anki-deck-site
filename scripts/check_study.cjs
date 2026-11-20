@@ -7,7 +7,7 @@ const core = require('../assets/study-core.js');
 
 const root = path.resolve(__dirname, '..');
 const browser = {window: {}};
-for (const asset of ['study-data.js', 'study-courses.js']) {
+for (const asset of ['study-data.js', 'study-courses.js', 'study-retention-data.js']) {
   vm.runInNewContext(fs.readFileSync(path.join(root, 'assets', asset), 'utf8'), browser, {filename: asset});
 }
 const [japanese, toeic, electrical] = browser.window.STUDY_COURSES;
@@ -112,6 +112,9 @@ test('home and practice read the same legacy session and keep the course records
   assert.equal(core.storageKey(japanese.id), 'anki-design-lab-v1');
   assert.equal(core.storageKey(toeic.id), 'anki-design-lab-v1-toeic');
   assert.equal(core.storageKey(electrical.id), 'anki-design-lab-v1-electrical');
+  const personalKeys = [japanese, toeic, electrical].flatMap(bank =>
+    ['default', 'profile-a', 'profile-b'].map(profile => core.storageKey(bank.id, profile)));
+  assert.equal(new Set(personalKeys).size, 9);
   assert.equal(core.readRecord(null, japanese), null);
 
   const [first, second] = japanese.questions;
@@ -135,4 +138,72 @@ test('home and practice read the same legacy session and keep the course records
   raw.session.selected = second.answer;
   assert.equal(core.readRecord(JSON.stringify(raw), japanese).session.answered, null);
   assert.equal(core.readRecord(JSON.stringify(raw), japanese).session.selected, second.answer);
+});
+
+test('each concept has two reserved retest questions and each question has an optional reasoning check', () => {
+  for (const bank of [japanese, toeic, electrical]) {
+    const all = core.allQuestions(bank);
+    assert.equal(new Set(all.map(q => q.sentence)).size, all.length);
+    for (const concept of bank.concepts) {
+      assert.equal(bank.retests.filter(q => q.concept === concept.id).length, 2);
+    }
+    for (const q of all) {
+      const {prompt, answer, options} = q.evidence;
+      assert.ok(prompt && options.every(option => option[1]));
+      assert.ok(options.some(([id]) => id === answer));
+    }
+    const retest = bank.retests[0];
+    assert.throws(() => core.validateEvents([attempt(bank, retest, 'wrong-mode')], bank), /재시험/);
+    assert.throws(() => core.validateEvents([attempt(bank, bank.questions[0], 'invalid-evidence', {evidence: 'missing'})], bank), /풀이 근거/);
+    const rows = core.validateEvents([attempt(bank, retest, 'retest', {mode: 'retest', evidence: retest.evidence.answer})], bank);
+    assert.ok(core.retestPassed(rows[0], retest));
+    assert.equal(core.stats(rows, bank, now).today.length, 0);
+    assert.equal(core.reviewTargets(rows, bank).length, 0);
+  }
+});
+
+test('retest waits seven days, retries with a fresh variant, and closes only after a confident pass', () => {
+  const bank = electrical;
+  const [base] = bank.questions;
+  const [extra] = bank.followups;
+  const [first, second] = bank.retests;
+  const interval = core.RETEST_INTERVAL;
+  const dueAt = now - 2 * interval - 60_000;
+  const entries = [
+    attempt(bank, base, 'initial', {at: dueAt - interval, confidence: 'guess'}),
+    attempt(bank, extra, 'immediate', {at: dueAt - interval + 1000, mode: 'retry'}),
+  ];
+  const plan = (at) => core.retestPlan(core.validateEvents(entries, bank), bank, at);
+  assert.equal(plan(dueAt - 1)[0].due, false);
+  assert.equal(plan(dueAt)[0].due, true);
+  assert.equal(plan(dueAt)[0].question.id, first.id);
+  entries.push(attempt(bank, first, 'chosen-wrong-evidence', {at: dueAt, mode:'retest', evidence:'same'}));
+  assert.equal(plan(dueAt)[0].dueAt, dueAt + interval);
+  assert.equal(plan(dueAt)[0].question.id, second.id);
+  entries.push(attempt(bank, second, 'low-confidence', {at:dueAt + interval, mode:'retest', confidence:'unsure'}));
+  assert.equal(plan(now)[0].question.id, first.id);
+  entries.push(attempt(bank, first, 'pass', {at: dueAt + 2 * interval, mode:'retest'}));
+  assert.equal(plan(now).length, 0);
+  entries.push(attempt(bank, base, 'new-cycle', {at:now, selected:'a'}));
+  assert.equal(plan(now)[0].anchorId, 'new-cycle');
+});
+
+test('recommendations use recent reported reasons, count each question once per day, and target the skill', () => {
+  const bank = electrical;
+  const source = bank.questions.find(q => q.id === 'demo-elec-04');
+  const wrong = source.options.find(option => option[0] !== source.answer)[0];
+  const sameDay = Math.floor((now + 9 * 3_600_000) / 86_400_000) * 86_400_000 - 9 * 3_600_000;
+  const recent = sameDay - 3_600_000;
+  const rows = core.validateEvents([
+    attempt(bank, source, 'unclassified', {selected:wrong}),
+    attempt(bank, source, 'old-reason', {selected:wrong, reason:'formula', at:now - core.RETEST_INTERVAL - 1000}),
+    attempt(bank, source, 'same-day-1', {selected:wrong, reason:'unit', at:recent}),
+    attempt(bank, source, 'same-day-2', {selected:wrong, reason:'unit', at:recent + 1000}),
+  ], bank);
+  assert.equal(core.reasonPractice([], bank, now), null);
+  const recommendation = core.reasonPractice(rows, bank, now);
+  assert.equal(recommendation.reason, 'unit');
+  assert.equal(recommendation.count, 1);
+  assert.equal(recommendation.question.concept, 'unit-conversion');
+  assert.ok(bank.followups.includes(recommendation.question));
 });
