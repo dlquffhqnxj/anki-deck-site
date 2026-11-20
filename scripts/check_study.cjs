@@ -23,20 +23,24 @@ function attempt(bank, question, id, changes = {}) {
   };
 }
 
-test('each subject has six base questions, valid options and an existing deck link', () => {
+test('each subject has its expected question counts, valid options and an existing deck link', () => {
   const ids = new Set();
+  const baseCount = {japanese: 8, toeic: 6, electrical: 7};
   for (const course of [japanese, toeic, electrical]) {
-    assert.equal(course.questions.length, 6);
+    assert.equal(course.questions.length, baseCount[course.id]);
+    assert.equal(course.followups.length, 8);
+    assert.equal(course.retests.length, 8);
     assert.ok(catalog.decks.some(deck => deck.id === course.relatedDeck.id && deck.current));
     for (const q of core.allQuestions(course)) {
       assert.ok(!ids.has(q.id));
       ids.add(q.id);
       assert.ok(course.concepts.some(concept => concept.id === q.concept));
-      assert.equal(q.options.length, 4);
-      assert.equal(new Set(q.options.map(option => option[0])).size, 4);
+      assert.equal(q.options.length, q.concept === 'kanji-shape' ? 2 : 4);
+      assert.equal(new Set(q.options.map(option => option[0])).size, q.options.length);
       assert.ok(q.options.every(option => option[1] && option[2]));
       assert.ok(q.options.some(option => option[0] === q.answer));
       assert.ok(q.translation || q.solution);
+      if (q.concept === 'kanji-shape') assert.ok(q.reading && q.translation);
     }
   }
 });
@@ -77,9 +81,12 @@ test('two selected unit-conversion questions give one different question on the 
 test('each missed concept opens a sourced card and a different supplemental question', () => {
   for (const course of [japanese, toeic, electrical]) {
     for (const concept of course.concepts) {
-      const {prompt, answer, example, source, deck = course.relatedDeck} = concept.review;
-      assert.ok(prompt && answer && example && source[0]);
-      assert.equal(new URL(source[1]).protocol, 'https:');
+      const {prompt, answer, example, source, sources = [source], deck = course.relatedDeck} = concept.review;
+      assert.ok(prompt && answer && example && sources.length);
+      for (const [title, url] of sources) {
+        assert.ok(title);
+        assert.equal(new URL(url).protocol, 'https:');
+      }
       assert.ok(catalog.decks.some(d => d.id === deck.id && d.current));
       if (course.language !== 'ko') assert.ok(concept.review.translation);
       if (course.language === 'ja') assert.ok(concept.review.reading);
@@ -140,12 +147,12 @@ test('home and practice read the same legacy session and keep the course records
   assert.equal(core.readRecord(JSON.stringify(raw), japanese).session.selected, second.answer);
 });
 
-test('each concept has two reserved retest questions and each question has an optional reasoning check', () => {
+test('each concept has at least two reserved retest questions and every question has a reasoning check', () => {
   for (const bank of [japanese, toeic, electrical]) {
     const all = core.allQuestions(bank);
     assert.equal(new Set(all.map(q => q.sentence)).size, all.length);
     for (const concept of bank.concepts) {
-      assert.equal(bank.retests.filter(q => q.concept === concept.id).length, 2);
+      assert.ok(bank.retests.filter(q => q.concept === concept.id).length >= 2);
     }
     for (const q of all) {
       const {prompt, answer, options} = q.evidence;
@@ -206,4 +213,36 @@ test('recommendations use recent reported reasons, count each question once per 
   assert.equal(recommendation.count, 1);
   assert.equal(recommendation.question.concept, 'unit-conversion');
   assert.ok(bank.followups.includes(recommendation.question));
+});
+
+test('additional practice rotates and preserves the connector skill across new work situations', () => {
+  const [source] = toeic.questions.filter(q => q.id === 'demo-toeic-03');
+  const wrong = attempt(toeic, source, 'needs-connector', {selected: 'b', reason: 'rule'});
+  const first = core.reasonPractice(core.validateEvents([wrong], toeic), toeic, now).question;
+  assert.equal(first.id, 'review-toeic-connector-clause');
+  const completed = attempt(toeic, first, 'connector-drill', {mode: 'retry', at: now - 5000});
+  const rows = core.validateEvents([wrong, completed], toeic);
+  const next = core.reasonPractice(rows, toeic, now).question;
+  assert.equal(next.id, 'review-toeic-connector-demo');
+  assert.equal(next.evidence.answer, source.evidence.answer);
+  const plan = core.retestPlan(rows, toeic, wrong.at + core.RETEST_INTERVAL);
+  assert.equal(plan[0].question.id, 'retest-toeic-connector-shipping');
+});
+
+test('kanji and electrical voltage questions reach different followups and retests from a base attempt', () => {
+  const cases = [
+    [japanese, 'demo-jp-kanji-weekend', 'review-jp-kanji-month-end', 'retest-jp-kanji-book-end'],
+    [electrical, 'demo-elec-ohm-voltage', 'review-elec-ohm-voltage', 'retest-elec-ohm-voltage'],
+  ];
+  for (const [bank, baseId, followupId, retestId] of cases) {
+    const base = bank.questions.find(q => q.id === baseId);
+    const first = core.conceptPracticeQuestion(base, bank);
+    assert.equal(first.id, followupId);
+    const at = now - core.RETEST_INTERVAL;
+    const rows = core.validateEvents([attempt(bank, base, 'old-uncertain', {at, confidence: 'unsure'})], bank);
+    const [retest] = core.retestPlan(rows, bank, now);
+    assert.equal(retest.question.id, retestId);
+    assert.equal(retest.dueAt, now);
+    assert.notEqual(first.id, retest.question.id);
+  }
 });

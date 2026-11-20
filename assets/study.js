@@ -21,7 +21,7 @@
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
   const entryView = params.get('view');
-  let view = ['review', 'retest'].includes(entryView) ? 'progress' : 'practice';
+  let view = ['review', 'retest', 'reason'].includes(entryView) ? 'progress' : 'practice';
   let events=[],session=null,theme='light',period='all',storageOK=true,notice='',clock=performance.now(),activeMs=0;
   let conceptAttempt = null;
   function load() {
@@ -63,7 +63,7 @@
     return {queue, index: 0, mode, eventIds: [], selected: null, confidence: null, hint: false, answered: null};
   }
   function ensureSession() {
-    if (session) return;
+    if (session && (session.queue.length === basicCount || core.hasSessionProgress(session))) return;
     session = newSession('practice');
     persist();
   }
@@ -160,7 +160,9 @@
     const concept = source && concepts.get(source.concept);
     if (!concept?.review || conceptDialog.open) return;
     const card = concept.review;
-    const next = core.conceptPracticeQuestion?.(source, bank);
+    const sources = card.sources || [card.source];
+    const lastSeen = new Map(events.map(attempt => [attempt.questionId, attempt.at]));
+    const next = core.conceptPracticeQuestion(source, bank, lastSeen);
     conceptAttempt = {next, startedAt: null, mode: 'retry', returnTo: `[data-concept-review="${CSS.escape(questionId)}"]`};
     showPracticeDialog(concept.label, '웹 개념 복습 카드', `
       <section data-concept-card>
@@ -172,7 +174,7 @@
             <p class="concept-example" lang="${bank.language}">${esc(card.example)}</p>
             ${card.reading ? `<p class="lab-caption" lang="ja">${esc(card.reading)}</p>` : ''}
             ${card.translation ? `<p class="lab-caption">${esc(card.translation)}</p>` : ''}
-            <p class="lab-caption"><a href="${esc(card.source[1])}" target="_blank" rel="noopener noreferrer">${esc(card.source[0])}</a></p>
+            <p class="lab-caption">${sources.map(([title, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a>`).join(' · ')}</p>
           </div>
         </details>
         <div class="concept-actions">
@@ -682,5 +684,13 @@
   });
   load();
   ensureSession();
-  render(entryView === 'retest' ? 'retest-title' : view === 'progress' ? 'review-title' : undefined);
+  if (entryView === 'reason') {
+    params.set('view', 'review');
+    history.replaceState(history.state, '', `?${params}${location.hash}`);
+    render('reason-practice-title');
+    const target = core.reasonPractice(events, bank);
+    if (target) openPracticeDialog(target.question);
+  } else {
+    render(entryView === 'retest' ? 'retest-title' : view === 'progress' ? 'review-title' : undefined);
+  }
 })();
