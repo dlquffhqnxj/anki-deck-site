@@ -19,6 +19,23 @@
   const isApkg = asset => asset.name.toLowerCase().endsWith('.apkg');
   const apkgFiles = d => d.assets.filter(asset => isApkg(asset) && !asset.blocked);
   const kanjiProducts = ['jlpt-kanji-lab', 'kanji-revolution'];
+  const subjectStudyRoutes = [
+    {
+      subject: 'japanese', name: '일본어', practice: 'study.html',
+      method: '단어와 문법을 문장 속에서 떠올려 보세요. 한자는 뜻·읽기를 익히고, 닮은 글자는 구별되는 획과 예문을 확인하세요.',
+      products: ['jlpt-vocabulary-grammar-lab', ...kanjiProducts],
+    },
+    {
+      subject: 'english', name: '영어·TOEIC', practice: 'study.html?subject=toeic',
+      method: '빈칸 앞뒤를 보고 필요한 품사와 뒤에 오는 절·명사구를 판단하세요. 답을 고른 뒤 해설에서 정답 근거와 함께 쓰이는 표현을 확인하세요.',
+      products: ['toeic-lab', 'toeic-rc'],
+    },
+    {
+      subject: 'electrical-engineer', name: '전기기사', practice: 'study.html?subject=electrical',
+      method: '구할 값과 단위를 적고, 문제 조건에 맞는 공식을 고르세요. 틀렸다면 풀이에서 놓친 단계를 확인한 뒤 수치가 다른 문제를 풀어 보세요.',
+      products: ['electrical-engineer-summary', 'electrical-engineer-cbt'],
+    },
+  ];
   const learningGuides = {
     'jlpt-kanji-lab': {
       goal: '한자의 뜻과 읽기를 익히고 싶어요',
@@ -101,21 +118,21 @@
     if (!d.related?.length) return '';
     return `<nav class="related-versions" aria-label="관련 버전">${d.related.map(([id, label]) => `<a class="text-link" href="${detailUrl({id})}">${esc(label)}</a>`).join('')}</nav>`;
   }
-  function kanjiGuide(current) {
-    const choices = kanjiProducts.map(product => current.find(d => d.product_id === product)).filter(Boolean);
-    if (choices.length < 2) return '';
-    return `<details class="kanji-guide" id="kanji-guide"${location.hash === '#kanji-guide' ? ' open' : ''}>
-      <summary>어떤 한자 덱부터?</summary>
-      <div class="kanji-guide-options">${choices.map(d => {
-        const path = learningGuides[d.product_id];
-        return `<article>
-          <h3>${esc(path.goal)}</h3>
-          <p><a class="text-link" href="${detailUrl(d)}">${esc(d.title)}</a></p>
-          <p>${esc(path.start)}</p>
-          ${d.trial ? `<a class="button" href="${trialUrl(d)}">3문항 풀기</a>` : hasInteractivePreview(d) ? `<a class="button" href="${previewUrl(d)}">카드 미리보기</a>` : ''}
+  function subjectStudyGuide(current) {
+    const open = ['#study-guide', '#kanji-guide'].includes(location.hash);
+    const currentByProduct = new Map(current.map(deck => [deck.product_id, deck]));
+    return `<div id="kanji-guide"><details class="subject-study-guide" id="study-guide"${open ? ' open' : ''}>
+      <summary>어떻게 공부하면 좋을까요?</summary>
+      <div class="subject-study-options">${subjectStudyRoutes.map(route => {
+        const decks = route.products.map(product => currentByProduct.get(product)).filter(Boolean);
+        return `<article data-study-subject="${esc(route.subject)}">
+          <h3>${esc(route.name)}</h3>
+          <p>${esc(route.method)}</p>
+          <ul aria-label="${esc(route.name)} 관련 덱">${decks.map(deck => `<li><a class="text-link" href="${detailUrl(deck)}#learning">${esc(deck.title)}</a></li>`).join('')}</ul>
+          <a class="button" href="${esc(route.practice)}">${esc(route.name)} 학습 체험</a>
         </article>`;
       }).join('')}</div>
-    </details>`;
+    </details></div>`;
   }
   function catalog() {
     const current = data.decks.filter(d => d.current);
@@ -145,20 +162,22 @@
             <button class="button" type="reset">초기화</button>
           </div>
         </form>
-        ${kanjiGuide(current)}
+        ${subjectStudyGuide(current)}
         <div class="deck-grid">${current.map(deckCard).join('')}</div>
         <p class="empty panel" id="no-decks" hidden>조건에 맞는 덱이 없습니다. 검색어나 필터를 바꿔 보세요.</p>
       </section>
       <aside class="section panel preview-launch"><div><h2>이전 버전이 필요하신가요?</h2><p>이전 릴리스의 미리보기와 배포 파일을 확인하세요.</p></div><a class="button" href="releases.html">릴리스 기록 보기</a></aside>`;
     const form = main.querySelector('form');
-    const comparison = main.querySelector('#kanji-guide');
+    const guide = main.querySelector('#study-guide');
+    const guideSubjects = [...guide.querySelectorAll('[data-study-subject]')];
     const cards = [...main.querySelectorAll('.deck-card')];
     const params = new URLSearchParams(location.search);
     for (const field of form.querySelectorAll('input[type="search"], select')) {
       if (params.has(field.name)) field.value = params.get(field.name).slice(0, 100);
       if (field.tagName === 'SELECT' && field.selectedIndex < 0) field.selectedIndex = 0;
     }
-    const currentSubject = [...form.elements.subject].find(input => input.value === params.get('subject'));
+    const requestedSubject = params.get('subject') || (location.hash === '#kanji-guide' ? 'japanese' : '');
+    const currentSubject = [...form.elements.subject].find(input => input.value === requestedSubject);
     if (currentSubject) currentSubject.checked = true;
     const aliases = {english:'영어 토익', japanese:'일본어 JLPT', 'electrical-engineer':'전기기사 자격증'};
     const searchable = current.map(d => [
@@ -167,7 +186,8 @@
     ].join(' ').toLowerCase());
     function applyFilters() {
       const {q, subject, level, topic} = Object.fromEntries(new FormData(form));
-      if (comparison) comparison.hidden = Boolean(subject && subject !== 'japanese');
+      guideSubjects.forEach(card => { card.hidden = Boolean(subject && card.dataset.studySubject !== subject); });
+      guide.hidden = guideSubjects.every(card => card.hidden);
       const tokens = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
       let shown = 0;
       cards.forEach((card, index) => {
@@ -293,7 +313,7 @@
         ${nextDeck ? `<div><dt>이어서 학습</dt><dd>${esc(guide.next.when)}<br><a href="${detailUrl(nextDeck)}#learning">${esc(nextDeck.title)} 보기</a></dd></div>` : ''}
       </dl>
       <details id="study-path"${location.hash === '#study-path' ? ' open' : ''}><summary>학습 순서와 수록 구성</summary>${instructions}</details>
-      ${kanjiProducts.includes(d.product_id) ? '<p class="scope"><a href="index.html?subject=japanese#kanji-guide">한자 덱 비교 보기</a></p>' : ''}` : `<div id="study-path">${instructions}</div>`}</article>`;
+      ${kanjiProducts.includes(d.product_id) ? '<p class="scope"><a href="index.html?subject=japanese#study-guide">일본어 학습 안내 보기</a></p>' : ''}` : `<div id="study-path">${instructions}</div>`}</article>`;
     main.innerHTML = `
       <a class="back" href="${d.current ? 'index.html' : 'releases.html'}">${d.current ? '덱 라이브러리' : '릴리스 기록'}로 돌아가기</a>
       <header class="detail-header" data-subject="${esc(d.subject)}">

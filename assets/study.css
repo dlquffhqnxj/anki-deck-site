@@ -221,22 +221,52 @@
 .review-panel legend { margin-bottom: 5px; color: var(--muted); font-size: .875rem; }
 .review-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
   gap: 8px 10px;
   padding: 11px;
   border: 1px solid var(--line);
   border-radius: 9px;
   background: var(--soft);
-  cursor: pointer;
 }
 .review-row + .review-row { margin-top: 7px; }
+.review-choice { display: flex; gap: 10px; align-items: flex-start; min-width: 0; cursor: pointer; }
+.review-row-actions { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
 .review-row input { width: 1rem; height: 1rem; margin: 4px 0 0; accent-color: var(--accent); }
 .review-question { overflow-wrap: anywhere; }
 .review-question span { display: block; color: var(--muted); font-size: .9rem; }
 .review-status { padding: 3px 8px; border-radius: 6px; background: var(--accent-bg); color: var(--accent-dark); font-size: .8rem; font-weight: 700; }
 .review-status.wrong { background: var(--red-bg); color: var(--red); }
 .review-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.answer-feedback > [data-concept-review] { margin-top: 9px; }
+.concept-review-dialog {
+  width: min(42rem, calc(100% - 28px));
+  max-height: calc(100vh - 28px);
+  max-height: calc(100dvh - 28px);
+  padding: clamp(14px, 3vw, 26px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.concept-review-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.concept-review-header button { flex-shrink: 0; }
+.concept-prompt { font-size: 1.05rem; font-weight: 700; word-break: keep-all; }
+.concept-answer { margin: 10px 0 14px; }
+.concept-answer summary { padding-block: 10px; }
+.concept-answer p + p { margin-top: 6px; }
+.concept-answer a { color: var(--accent); text-decoration: underline; }
+.concept-example { white-space: pre-line; overflow-wrap: anywhere; }
+.concept-actions, .concept-confidence { display: flex; flex-wrap: wrap; gap: 8px; }
+.concept-practice fieldset { min-width: 0; margin: 12px 0; padding: 0; border: 0; }
+.concept-practice legend { font-size: .875rem; color: var(--muted); }
+.concept-practice .answer-options { margin: 6px 0 0; }
+.concept-practice .answer-option { cursor: pointer; }
+.concept-practice input { flex-shrink: 0; accent-color: var(--accent); }
+.concept-practice .answer-option:has(input:checked) { border-color: var(--accent); background: var(--accent-bg); }
+.concept-confidence label { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+.concept-question { margin-top: 8px; }
+.concept-error { margin-top: 5px; color: var(--red); }
+.concept-error:empty { display: none; }
+.concept-result .lab-button { margin-top: 10px; }
 .metrics-grid, .analysis-grid { display: grid; gap: 12px; margin-block: 12px; }
 .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .analysis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -282,7 +312,6 @@
   .lab-heading { gap: 7px; }
   .lab-tabs button { padding-inline: 7px; }
   .confidence button { padding-inline: 8px; }
-  .review-row { grid-template-columns: auto minmax(0, 1fr); }
-  .review-status { grid-column: 2; justify-self: start; }
+  .review-row { grid-template-columns: 1fr; }
   .review-actions > * { flex: 1 1 100%; }
 }

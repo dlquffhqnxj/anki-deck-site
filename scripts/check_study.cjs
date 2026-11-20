@@ -74,6 +74,29 @@ test('two selected unit-conversion questions give one different question on the 
   assert.equal(rows[0].reason, 'unit');
 });
 
+test('each missed concept opens a sourced card and a different supplemental question', () => {
+  for (const course of [japanese, toeic, electrical]) {
+    for (const concept of course.concepts) {
+      const {prompt, answer, example, source, deck = course.relatedDeck} = concept.review;
+      assert.ok(prompt && answer && example && source[0]);
+      assert.equal(new URL(source[1]).protocol, 'https:');
+      assert.ok(catalog.decks.some(d => d.id === deck.id && d.current));
+      if (course.language !== 'ko') assert.ok(concept.review.translation);
+      if (course.language === 'ja') assert.ok(concept.review.reading);
+    }
+    for (const source of core.allQuestions(course)) {
+      const alternate = core.conceptPracticeQuestion(source, course);
+      assert.ok(course.followups.includes(alternate));
+      assert.equal(alternate.concept, source.concept);
+      assert.notEqual(alternate.id, source.id);
+      assert.notEqual(alternate.sentence, source.sentence);
+    }
+  }
+  for (const q of electrical.questions) {
+    assert.equal(core.conceptPracticeQuestion(q, electrical).type, q.type);
+  }
+});
+
 test('legacy Japanese records validate unchanged and foreign subject records are rejected', () => {
   assert.equal(japanese.version, 'design-jp-1');
   assert.equal(japanese.questions[0].id, 'demo-jp-01');
