@@ -62,6 +62,10 @@
       theme: saved.theme === 'light' ? 'light' : 'dark',
     };
   }
+  function hasSessionProgress(session) {
+    return session.mode === 'retry' || Boolean(session.index || session.eventIds.length || session.selected ||
+      session.answered || session.confidence || session.hint);
+  }
   function firsts(events) {const seen=new Set();return events.filter(e=>{const key=day(e.at)+'|'+e.questionId;if(seen.has(key))return false;seen.add(key);return true;});}
   function recovery(events,qid,now=Date.now()) {
     const list=events.filter(e=>e.questionId===qid),wrong=list.filter(e=>!e.correct).at(-1);
@@ -98,9 +102,16 @@
       return (matches.find(q => !selected.has(q.id)) || matches[0]).id;
     });
   }
-  function conceptPracticeQuestion(source, bank) {
+  function chooseVariant(variants, source, lastSeen) {
+    const matchesType = question => Number(question.type === source.type);
+    const matchesEvidence = question => Number(Boolean(source.evidence) && question.evidence?.answer === source.evidence.answer);
+    return variants.sort((first, second) =>
+      (lastSeen?.get(first.id) || 0) - (lastSeen?.get(second.id) || 0) ||
+      matchesType(second) - matchesType(first) || matchesEvidence(second) - matchesEvidence(first))[0];
+  }
+  function conceptPracticeQuestion(source, bank, lastSeen) {
     const variants = (bank.followups || []).filter(q => q.concept === source.concept && q.id !== source.id);
-    return variants.find(q => q.type === source.type) || variants[0];
+    return chooseVariant(variants, source, lastSeen);
   }
   function retestPassed(attempt, question) {
     return attempt.correct && attempt.confidence === 'sure' && !attempt.hint &&
@@ -124,10 +135,8 @@
       }
     }
     return [...pending.values()].flatMap(anchor => {
-      const type = byId.get(anchor.questionId)?.type;
-      const [question] = variants.filter(q => q.concept === anchor.concept)
-        .sort((a, b) => (lastSeen.get(a.id) || 0) - (lastSeen.get(b.id) || 0) ||
-          Number(b.type === type) - Number(a.type === type));
+      const source = byId.get(anchor.questionId);
+      const question = chooseVariant(variants.filter(q => q.concept === anchor.concept), source, lastSeen);
       if (!question) return [];
       const dueAt = anchor.at + RETEST_INTERVAL;
       return [{concept: anchor.concept, anchorId: anchor.id, dueAt, due: now >= dueAt, question}];
@@ -135,8 +144,11 @@
   }
   function reasonPractice(events, bank, now = Date.now()) {
     const recent = new Map();
+    const lastSeen = new Map();
     for (const e of events) {
-      if (!e.correct && e.reason && e.reason !== 'unknown' && e.at >= now - RETEST_INTERVAL && e.at <= now) {
+      if (e.at > now) continue;
+      lastSeen.set(e.questionId, e.at);
+      if (!e.correct && e.reason && e.reason !== 'unknown' && e.at >= now - RETEST_INTERVAL) {
         recent.set(day(e.at) + '|' + e.questionId, e);
       }
     }
@@ -157,10 +169,10 @@
       const focus = bank.reasonFocus?.[group.reason];
       const concept = bank.concepts.find(c => c.id === (focus?.concept || source.concept));
       if (!concept) continue;
-      const question = conceptPracticeQuestion({id: source.id, concept: concept.id, type: source.type}, bank);
+      const question = conceptPracticeQuestion({...source, concept: concept.id}, bank, lastSeen);
       if (question) return {reason:group.reason, count:group.count, concept, question, action:focus?.action || concept.action};
     }
     return null;
   }
-  const api={day,storageKey,readRecord,validateEvents,firsts,recovery,stats,defaultReasons,allQuestions,reviewTargets,followupQueue,conceptPracticeQuestion,retestPassed,retestPlan,reasonPractice,RETEST_INTERVAL};root.StudyCore=api;if(typeof module!=='undefined')module.exports=api;
+  const api={day,storageKey,readRecord,hasSessionProgress,validateEvents,firsts,recovery,stats,defaultReasons,allQuestions,reviewTargets,followupQueue,conceptPracticeQuestion,retestPassed,retestPlan,reasonPractice,RETEST_INTERVAL};root.StudyCore=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

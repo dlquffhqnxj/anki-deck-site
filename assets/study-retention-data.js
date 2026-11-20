@@ -82,6 +82,28 @@
           ['d', 'します', '어떤 행동을 한다는 뜻입니다.'],
         ],
       },
+      {
+        id: 'retest-jp-kanji-unread', concept: 'kanji-shape', type: '한자 선택',
+        prompt: '읽지 않은 메일이 두 통 있다는 뜻을 완성하세요.',
+        sentence: '（　）読のメールが二通あります。',
+        reading: 'みどくのメールがにつうあります。',
+        translation: '아직 읽지 않은 메일이 두 통 있습니다.', answer: 'a',
+        options: [
+          ['a', '未', '未読（みどく）는 아직 읽지 않았다는 뜻입니다.'],
+          ['b', '末', '末은 무언가의 끝에 쓰입니다. 여기서는 읽었는지를 말하고 있어요.'],
+        ],
+      },
+      {
+        id: 'retest-jp-kanji-book-end', concept: 'kanji-shape', type: '한자 선택',
+        prompt: '용어 목록이 책 맨 뒤에 있다는 뜻을 완성하세요.',
+        sentence: '用語の一覧は巻（　）にあります。',
+        reading: 'ようごのいちらんはかんまつにあります。',
+        translation: '용어 목록은 책 맨 뒤에 있습니다.', answer: 'b',
+        options: [
+          ['a', '未', '未는 아직 이루어지지 않았음을 뜻합니다. 여기서는 책 속 위치를 말하고 있어요.'],
+          ['b', '末', '巻末（かんまつ）는 책 한 권의 맨 뒤를 가리킵니다.'],
+        ],
+      },
     ],
     toeic: [
       {
@@ -106,6 +128,30 @@
           ['b', 'security', '‘보안’이나 ‘안전’을 뜻하는 명사입니다.'],
           ['c', 'secures', '동사의 3인칭 단수 현재형입니다.'],
           ['d', 'securely', '부사 securely가 포장하는 방식인 ‘단단히’를 나타냅니다.'],
+        ],
+      },
+      {
+        id: 'retest-toeic-connector-shipping', concept: 'connector', type: '문장 연결',
+        prompt: '부품 발송은 늦었지만 팀은 출고 기한을 지켰다는 뜻을 완성하세요.',
+        sentence: 'The team met the shipping deadline _____ the supplier sent the parts two days late.',
+        translation: '공급업체가 부품을 이틀 늦게 보냈지만 팀은 출고 기한을 지켰습니다.', answer: 'a',
+        options: [
+          ['a', 'although', 'the supplier가 주어, sent가 동사인 절을 이어 두 상황을 대비합니다.'],
+          ['b', 'because of', '명사구를 이어 이유를 나타냅니다. 여기서는 sent가 있는 절입니다.'],
+          ['c', 'despite', '양보를 나타냅니다. 이 문장에 필요한 절은 although로 이을 수 있어요.'],
+          ['d', 'unless', '조건을 나타냅니다. 여기서는 실제로 두 일이 일어났어요.'],
+        ],
+      },
+      {
+        id: 'retest-toeic-connector-approval', concept: 'connector', type: '문장 연결',
+        prompt: '문서 승인 지연이 지급일 변경의 이유였다는 뜻을 완성하세요.',
+        sentence: '_____ a delay in document approval, the accounting team rescheduled the payment for Friday.',
+        translation: '문서 승인이 지연되어 회계팀은 지급 일정을 금요일로 변경했습니다.', answer: 'c',
+        options: [
+          ['a', 'Although', '주어와 동사가 있는 절을 이어 양보를 나타냅니다.'],
+          ['b', 'Because', '이유를 나타냅니다. Because 뒤에는 주어와 동사가 있는 절이 옵니다.'],
+          ['c', 'Because of', 'a delay in document approval이라는 명사구를 이어 일정 변경의 이유를 나타냅니다.'],
+          ['d', 'Whereas', '두 상황을 대비하는 데 쓰며 뒤에 절이 옵니다.'],
         ],
       },
       {
@@ -183,6 +229,30 @@
         ],
       },
       {
+        id: 'retest-elec-ohm-voltage', concept: 'ohm-law', type: '전압 계산',
+        prompt: '직류 저항 양단의 전압을 V 단위로 구하세요.',
+        sentence: '저항 2.2 kΩ · 흐르는 전류 3 mA',
+        solution: '2.2 kΩ = 2,200 Ω이고 3 mA = 0.003 A입니다. V = IR = 0.003 A × 2,200 Ω = 6.6 V입니다.', answer: 'b',
+        options: [
+          ['a', '0.0066 V', '전류는 A로 바꿨지만 저항을 Ω으로 바꾸지 않았습니다.'],
+          ['b', '6.6 V', '전류를 A로, 저항을 Ω으로 맞춰 두 값을 곱했습니다.'],
+          ['c', '6,600 V', '저항은 Ω으로 바꿨지만 전류를 A로 바꾸지 않았습니다.'],
+          ['d', '0.66 V', '3 mA를 0.0003 A로 잘못 환산한 경우의 값입니다.'],
+        ],
+      },
+      {
+        id: 'retest-elec-ohm-resistance-kohm', concept: 'ohm-law', type: '저항 계산',
+        prompt: '직류 저항의 저항값을 kΩ 단위로 구하세요.',
+        sentence: '저항 양단의 전압 12.6 V · 흐르는 전류 4.2 mA',
+        solution: '4.2 mA = 0.0042 A입니다. R = 12.6 V / 0.0042 A = 3,000 Ω = 3 kΩ입니다.', answer: 'c',
+        options: [
+          ['a', '0.003 kΩ', '4.2 mA를 A로 바꾸지 않고 수치 4.2로 나눈 후 Ω에서 kΩ으로 바꾼 값입니다.'],
+          ['b', '3,000 kΩ', '3,000의 단위는 Ω입니다. kΩ으로 바꾸려면 1,000으로 나눕니다.'],
+          ['c', '3 kΩ', '전류를 A로 맞춰 저항을 구하고, 3,000 Ω을 kΩ으로 바꿨습니다.'],
+          ['d', '0.3 kΩ', '4.2 mA를 0.042 A로 잘못 환산한 경우의 값입니다.'],
+        ],
+      },
+      {
         id: 'retest-elec-ohm-current', concept: 'ohm-law', type: '전류 계산',
         prompt: '직류 회로의 저항에 흐르는 전류를 구하세요.',
         sentence: '저항 양단의 전압 20 V · 저항 8 Ω',
@@ -243,6 +313,9 @@
     existence: {prompt: '문장에서 존재하는 대상은 무엇인가요?', options: [
       ['living', '사람이나 동물'], ['thing', '물건과 같은 사물'],
     ]},
+    'kanji-shape': {prompt: '문장에서 빈칸이 들어간 단어는 어떤 뜻인가요?', options: [
+      ['unfinished', '아직 ~하지 않았거나 아직 안 된 상태'], ['end', '기간이나 물건의 끝부분'],
+    ]},
     'word-form': {prompt: '빈칸의 말은 무엇을 설명하나요?', options: [
       ['state', '주어의 상태나 성격'], ['manner', '어떤 방식으로 동작했는지'], ['quantity', '대상의 수량'],
     ]},
@@ -263,24 +336,32 @@
   const keys = {
     'demo-jp-01': 'activity', 'demo-jp-02': 'change', 'demo-jp-03': 'thing',
     'demo-jp-04': 'destination', 'demo-jp-05': 'action', 'demo-jp-06': 'living',
+    'demo-jp-kanji-undecided': 'unfinished', 'demo-jp-kanji-weekend': 'end',
     'review-jp-location-action': 'activity', 'review-jp-location-goal': 'destination',
     'review-jp-agency-transitive': 'action', 'review-jp-agency-intransitive': 'change',
     'review-jp-existence-person': 'living', 'review-jp-existence-object': 'thing',
+    'review-jp-kanji-incomplete': 'unfinished', 'review-jp-kanji-month-end': 'end',
     'retest-jp-location-action': 'activity', 'retest-jp-location-destination': 'destination',
     'retest-jp-agency-action': 'action', 'retest-jp-agency-change': 'change',
     'retest-jp-existence-animal': 'living', 'retest-jp-existence-thing': 'thing',
+    'retest-jp-kanji-unread': 'unfinished', 'retest-jp-kanji-book-end': 'end',
     'demo-toeic-01': 'state', 'demo-toeic-02': 'manner', 'demo-toeic-03': 'clause', 'demo-toeic-04': 'phrase',
     'review-toeic-word-form': 'manner', 'review-toeic-word-form-state': 'state',
     'review-toeic-connector': 'phrase', 'review-toeic-connector-clause': 'clause',
+    'review-toeic-connector-staffing': 'phrase', 'review-toeic-connector-demo': 'clause',
     'retest-toeic-word-form-state': 'state', 'retest-toeic-word-form-action': 'manner',
     'retest-toeic-connector-phrase': 'phrase', 'retest-toeic-connector-clause': 'clause',
+    'retest-toeic-connector-shipping': 'clause', 'retest-toeic-connector-approval': 'phrase',
     'demo-elec-01': 'multiply', 'demo-elec-02': 'multiply', 'demo-elec-03': 'current',
     'demo-elec-04': 'resistance', 'demo-elec-05': 'both', 'demo-elec-06': 'current',
+    'demo-elec-ohm-voltage': 'voltage',
     'review-elec-unit': 'multiply', 'review-elec-unit-resistance': 'multiply',
     'review-elec-ohm': 'current', 'review-elec-ohm-resistance': 'resistance',
+    'review-elec-ohm-voltage': 'voltage', 'review-elec-ohm-current-ma': 'current',
     'review-elec-power': 'both', 'review-elec-power-resistance': 'current',
     'retest-elec-unit-current': 'divide', 'retest-elec-unit-resistance': 'divide',
     'retest-elec-ohm-current': 'current', 'retest-elec-ohm-resistance': 'resistance',
+    'retest-elec-ohm-voltage': 'voltage', 'retest-elec-ohm-resistance-kohm': 'resistance',
     'retest-elec-power-current': 'both', 'retest-elec-power-voltage': 'voltage',
   };
 
@@ -295,9 +376,9 @@
 
   const focus = {
     japanese: {
-      meaning: {action: '핵심 동사의 뜻을 먼저 떠올린 뒤 앞의 조사와 연결해 문장을 해석하세요.'},
-      rule: {action: '조사 앞의 말과 뒤의 동사를 찾아서 어떤 관계인지 확인하세요.'},
-      reading: {action: '누가, 어디서, 무엇을 했는지 나눠 읽어 보세요.'},
+      meaning: {action: '보기의 뜻을 먼저 떠올린 뒤, 완성한 단어나 문장이 문맥에 맞는지 확인하세요.'},
+      rule: {action: '빈칸이 들어간 단어나 표현이 문장에서 어떤 역할을 하는지 확인하세요.'},
+      reading: {action: '빈칸 주변의 단어를 뜻이 이어지는 덩어리로 나눠 읽어 보세요.'},
       slip: {action: '고른 표현을 빈칸에 넣고, 문장 전체의 뜻을 확인한 뒤 제출하세요.'},
     },
     toeic: {
