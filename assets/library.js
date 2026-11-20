@@ -18,14 +18,55 @@
   const hasInteractivePreview = d => Boolean(d.preview || d.sample);
   const isApkg = asset => asset.name.toLowerCase().endsWith('.apkg');
   const apkgFiles = d => d.assets.filter(asset => isApkg(asset) && !asset.blocked);
-  const kanjiPaths = {
+  const kanjiProducts = ['jlpt-kanji-lab', 'kanji-revolution'];
+  const learningGuides = {
     'jlpt-kanji-lab': {
       goal: '한자의 뜻과 읽기를 익히고 싶어요',
-      start: '공부 중인 급수의 한자 인식 카드부터 풀고, 획순과 대표어를 확인하세요.'
+      start: '공부 중인 급수의 한자 인식 카드부터 풀고, 획순과 대표어를 확인하세요.',
+      next: {product: 'kanji-revolution', when: '뜻·읽기를 익힌 뒤 닮은 한자나 문장 속 쓰임이 헷갈릴 때'}
     },
     'kanji-revolution': {
       goal: '비슷한 한자와 문장 속 쓰임이 헷갈려요',
-      start: '3문항을 풀어 보고, 헷갈린 유형의 학습 카드를 확인하세요.'
+      start: '3문항 체험에서 읽기·모양·활용 중 헷갈린 유형을 찾아 그 유형부터 연습하세요.',
+      next: {product: 'jlpt-kanji-lab', when: '한 글자의 뜻·읽기나 획순부터 익히고 싶을 때'}
+    },
+    'jlpt-vocabulary-grammar-lab': {
+      goal: 'JLPT 단어와 문법을 문장 속에서 떠올리고 싶어요',
+      start: '공부 중인 급수의 01 기본 카드부터 보고, 02 문맥·회상으로 넘어가세요.',
+      next: {product: 'jlpt-confusion-context-lab', when: '비슷한 표현의 의미나 접속을 반복해서 헷갈릴 때'}
+    },
+    'jlpt-confusion-context-lab': {
+      goal: '뜻이나 접속이 비슷한 일본어 표현을 구별하고 싶어요',
+      start: '혼동비교 카드에서 두 표현의 차이를 말하고, 문맥적용 문제로 확인하세요.',
+      next: {product: 'jlpt-vocabulary-grammar-lab', when: '비교하는 표현의 기본 뜻이나 쓰임부터 익혀야 할 때'}
+    },
+    'business-japanese': {
+      goal: '메일·회의·보고에 쓸 일본어 표현을 직접 말하고 싶어요',
+      start: '업무 상황 하나를 골라 핵심 표현을 떠올린 뒤, 같은 표현을 다른 문맥에서 사용해 보세요.'
+    },
+    'toeic-lab': {
+      goal: 'TOEIC 어휘의 뜻과 함께 쓰이는 표현을 익히고 싶어요',
+      start: '뜻을 먼저 떠올리고, 예문에서 그 단어와 함께 쓰인 표현까지 말해 보세요.',
+      next: {product: 'toeic-rc', when: '어휘를 익힌 뒤 문장이나 지문에서 정답 근거를 연습할 때'}
+    },
+    'toeic-rc': {
+      goal: 'TOEIC Part 5·6·7에서 답을 고르는 근거를 연습하고 싶어요',
+      start: '한 파트를 골라 풀고, 지문이나 문법에서 찾은 근거를 오답 해설과 대조하세요.',
+      next: {product: 'toeic-lab', when: '단어·숙어의 뜻이나 결합을 몰라 자주 틀릴 때'}
+    },
+    'electrical-engineer-summary': {
+      goal: '전기기사 공식을 단위·조건과 함께 떠올리고 싶어요',
+      start: '공부 중인 과목에서 공식 하나를 고르고, 단위와 언제 쓸 수 있는지까지 말해 보세요.',
+      next: {product: 'electrical-engineer-cbt', when: '공식과 조건을 설명할 수 있어 문제에 적용해 보고 싶을 때'}
+    },
+    'electrical-engineer-cbt': {
+      goal: '전기기사 문제에서 어떤 공식이나 판단 근거를 쓸지 연습하고 싶어요',
+      start: '한 과목을 골라 풀이 근거를 적고, 해설을 본 뒤 답을 가리고 다시 풀어 보세요.',
+      next: {product: 'electrical-engineer-summary', when: '틀린 원인이 공식·단위·성립 조건의 혼동일 때'}
+    },
+    'epd-auditor': {
+      goal: '환경성적표지 심사에서 확인할 순서와 판정 근거를 익히고 싶어요',
+      start: '핵심 용어와 심사 순서를 떠올린 뒤, 상황 카드에서 확인할 근거를 말해 보세요.'
     }
   };
   const badge = d => {
@@ -61,12 +102,12 @@
     return `<nav class="related-versions" aria-label="관련 버전">${d.related.map(([id, label]) => `<a class="text-link" href="${detailUrl({id})}">${esc(label)}</a>`).join('')}</nav>`;
   }
   function kanjiGuide(current) {
-    const choices = Object.keys(kanjiPaths).map(product => current.find(d => d.product_id === product)).filter(Boolean);
+    const choices = kanjiProducts.map(product => current.find(d => d.product_id === product)).filter(Boolean);
     if (choices.length < 2) return '';
     return `<details class="kanji-guide" id="kanji-guide"${location.hash === '#kanji-guide' ? ' open' : ''}>
       <summary>어떤 한자 덱부터?</summary>
       <div class="kanji-guide-options">${choices.map(d => {
-        const path = kanjiPaths[d.product_id];
+        const path = learningGuides[d.product_id];
         return `<article>
           <h3>${esc(path.goal)}</h3>
           <p><a class="text-link" href="${detailUrl(d)}">${esc(d.title)}</a></p>
@@ -121,7 +162,7 @@
     if (currentSubject) currentSubject.checked = true;
     const aliases = {english:'영어 토익', japanese:'일본어 JLPT', 'electrical-engineer':'전기기사 자격증'};
     const searchable = current.map(d => [
-      d.title, d.version, d.subject_label, d.purpose, aliases[d.subject], ...d.structure,
+      d.title, d.version, d.subject_label, d.purpose, aliases[d.subject], learningGuides[d.product_id]?.goal, ...d.structure,
       ...Object.entries(d.tracks || {}).flatMap(([topic, grades]) => [topics[topic], ...grades])
     ].join(' ').toLowerCase());
     function applyFilters() {
@@ -146,16 +187,18 @@
     applyFilters();
   }
   function deckCard(d) {
+    const guide = learningGuides[d.product_id];
     const action = d.trial ? `<a class="button primary" href="${trialUrl(d)}">3문항 풀기</a>`
       : hasInteractivePreview(d) ? `<a class="button" href="${previewUrl(d)}">미리보기</a>` : '';
     return `<article class="deck-card" data-subject="${esc(d.subject)}">
       <div class="card-head">
         <div class="card-top"><span class="subject">${esc(d.subject_label)}</span><span class="version">${esc(d.version)}</span></div>
         <h3 class="card-title"><a href="${detailUrl(d)}">${esc(d.title)}</a></h3>
-        <p class="card-description">${esc(d.purpose)}</p>
+        <p class="card-description">${esc(guide?.goal || d.purpose)}</p>
+        ${guide ? `<p class="card-start"><strong>첫 학습</strong> ${esc(guide.start)}</p>` : ''}
       </div>
       ${previewPair(d)}
-      <div class="card-bottom">${badge(d)}<div class="card-links"><a class="card-action" href="${detailUrl(d)}">상세·파일</a>${action}</div></div>
+      <div class="card-bottom">${badge(d)}<div class="card-links"><a class="card-action" href="${detailUrl(d)}">${guide ? '학습 방법·파일' : '상세·파일'}</a>${action}</div></div>
     </article>`;
   }
   const statusClass = v => v === 'PASS' || v === 'STATIC_PASS' ? 'pass' : v === 'FAIL' ? 'fail' : 'pending';
@@ -238,12 +281,19 @@
   }
   function detail(d) {
     document.title = `${d.title} ${d.version} · Anki 덱 라이브러리`;
-    const kanjiPath = d.current && kanjiPaths[d.product_id];
+    const guide = d.current && learningGuides[d.product_id];
+    const nextDeck = guide?.next && data.decks.find(deck => deck.current && deck.product_id === guide.next.product);
+    const steps = d.learner?.steps || [];
     const structure = `<p>${esc(d.study)}</p>${d.structure.length ? `<ul>${d.structure.map(v => `<li>${esc(v)}</li>`).join('')}</ul>` : ''}`;
-    const learning = `<article class="panel body-copy"><h2>학습 방법</h2>${kanjiPath ? `
-      <p><strong>${esc(kanjiPath.goal)}</strong></p><p>${esc(kanjiPath.start)}</p>
-      <details><summary>수록 구성과 학습 순서</summary>${structure}</details>
-      <p class="scope"><a href="index.html?subject=japanese#kanji-guide">한자 덱 비교 보기</a></p>` : structure}</article>`;
+    const instructions = `${steps.length ? `<ol>${steps.map(step => `<li><strong>${esc(step.title)}</strong> · ${esc(step.text)}</li>`).join('')}</ol>` : ''}${structure}`;
+    const learning = `<article class="panel body-copy"><h2>학습 방법</h2>${guide ? `
+      <dl class="learning-summary">
+        <div><dt>이럴 때</dt><dd>${esc(guide.goal)}</dd></div>
+        <div><dt>첫 학습</dt><dd>${esc(guide.start)}</dd></div>
+        ${nextDeck ? `<div><dt>이어서 학습</dt><dd>${esc(guide.next.when)}<br><a href="${detailUrl(nextDeck)}#learning">${esc(nextDeck.title)} 보기</a></dd></div>` : ''}
+      </dl>
+      <details id="study-path"${location.hash === '#study-path' ? ' open' : ''}><summary>학습 순서와 수록 구성</summary>${instructions}</details>
+      ${kanjiProducts.includes(d.product_id) ? '<p class="scope"><a href="index.html?subject=japanese#kanji-guide">한자 덱 비교 보기</a></p>' : ''}` : `<div id="study-path">${instructions}</div>`}</article>`;
     main.innerHTML = `
       <a class="back" href="${d.current ? 'index.html' : 'releases.html'}">${d.current ? '덱 라이브러리' : '릴리스 기록'}로 돌아가기</a>
       <header class="detail-header" data-subject="${esc(d.subject)}">
@@ -257,8 +307,8 @@
         </div>
       </header>
       ${relatedVersions(d)}
-      <nav class="section-jumps" aria-label="덱 상세 항목">${kanjiPath ? '<a href="#learning">학습 방법</a>' : ''}<a href="#screens">대표 화면</a><a href="#downloads">다운로드</a><a href="#verification">검증 상태</a>${kanjiPath ? '' : '<a href="#learning">학습 방법</a>'}${d.classification === 'platform' ? '<a href="#development">제작 계획</a>' : ''}</nav>
-      ${kanjiPath ? `<section class="section" id="learning">${learning}</section>` : ''}
+      <nav class="section-jumps" aria-label="덱 상세 항목">${guide ? '<a href="#learning">학습 방법</a>' : ''}<a href="#screens">대표 화면</a><a href="#downloads">다운로드</a><a href="#verification">검증 상태</a>${guide ? '' : '<a href="#learning">학습 방법</a>'}${d.classification === 'platform' ? '<a href="#development">제작 계획</a>' : ''}</nav>
+      ${guide ? `<section class="section" id="learning">${learning}</section>` : ''}
       <section class="section" id="screens">
         <div class="section-heading"><h2>${d.shots.length && d.shot_kind !== 'example' ? '대표 카드 화면' : '앞·뒷면 학습 예시'}</h2>${d.shots.length ? '<span class="section-note">이미지를 눌러 확대</span>' : ''}</div>
         <div class="screen-stage">${previewPair(d, true)}</div>
@@ -278,8 +328,8 @@
         <p class="scope">GitHub에 기록된 Anki 검증 결과입니다.</p>
       </section>
       ${support.deck(d)}
-      <section class="section${kanjiPath ? '' : ' guide-grid'}" id="${kanjiPath ? 'update' : 'learning'}">
-        ${kanjiPath ? '' : learning}
+      <section class="section${guide ? '' : ' guide-grid'}" id="${guide ? 'update' : 'learning'}">
+        ${guide ? '' : learning}
         <article class="panel body-copy"><h2>업데이트</h2><p>${esc(d.update)}</p><p><a href="${esc(guideUrl(d, 'update'))}">단계별 설치·업데이트 안내</a></p></article>
       </section>
       ${d.classification === 'platform' ? `<section class="section panel body-copy" id="development">
