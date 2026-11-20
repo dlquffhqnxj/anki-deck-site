@@ -3,17 +3,20 @@
   const courses = window.STUDY_COURSES;
   const core = window.StudyCore;
   const grid = document.getElementById('study-home-courses');
-  const keys = new Set(courses.map(course => core.storageKey(course.id)));
+  const profileId = window.StudyProfiles.current.id;
+  const keys = new Set(courses.map(course => core.storageKey(course.id, profileId)));
   const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[char]));
 
   function courseCard(course) {
     let summary = `기본 ${course.questions.length}문제`;
     let action = '학습 시작';
     let reviewCount = 0;
+    let retestCount = 0;
     try {
-      const record = core.readRecord(localStorage.getItem(core.storageKey(course.id)), course);
+      const record = core.readRecord(localStorage.getItem(core.storageKey(course.id, profileId)), course);
       if (record) {
         reviewCount = core.reviewTargets(record.events, course).length;
+        retestCount = core.retestPlan(record.events, course).filter(item => item.due).length;
         const session = record.session;
         if (session) {
           const total = session.queue.length;
@@ -38,12 +41,15 @@
     const practiceUrl = query ? `study.html?${query}` : 'study.html';
     params.set('view', 'review');
     const reviewUrl = `study.html?${params}`;
+    params.set('view', 'retest');
+    const retestUrl = `study.html?${params}`;
     const name = escape(course.name);
     const reviewText = `복습할 문제 ${reviewCount}개`;
     return `<article class="study-home-card">
       <div><h2>${name}</h2><p>${summary}</p></div>
       <div class="study-home-actions">
         <a class="button primary" href="${escape(practiceUrl)}" aria-label="${name} ${action}">${action}</a>
+        ${retestCount ? `<a class="button" href="${escape(retestUrl)}" aria-label="${name} 7일 재시험 ${retestCount}개">7일 재시험 ${retestCount}개</a>` : ''}
         ${reviewCount ? `<a class="button" href="${escape(reviewUrl)}" aria-label="${name} ${reviewText}">${reviewText}</a>` : ''}
       </div>
     </article>`;
@@ -59,5 +65,6 @@
   window.addEventListener('pageshow', event => {
     if (event.persisted) render();
   });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) render(); });
   render();
 })();
