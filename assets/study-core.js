@@ -87,5 +87,9 @@
       return (matches.find(q => !selected.has(q.id)) || matches[0]).id;
     });
   }
-  const api={day,storageKey,readRecord,validateEvents,firsts,recovery,stats,defaultReasons,allQuestions,reviewTargets,followupQueue};root.StudyCore=api;if(typeof module!=='undefined')module.exports=api;
+  function conceptPracticeQuestion(source, bank) {
+    const variants = (bank.followups || []).filter(q => q.concept === source.concept && q.id !== source.id);
+    return variants.find(q => q.type === source.type) || variants[0];
+  }
+  const api={day,storageKey,readRecord,validateEvents,firsts,recovery,stats,defaultReasons,allQuestions,reviewTargets,followupQueue,conceptPracticeQuestion};root.StudyCore=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

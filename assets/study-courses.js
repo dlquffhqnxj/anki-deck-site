@@ -1,4 +1,6 @@
 /* Original questions for the browser-based study experience. */
+const toeicReadingDeck = {id: 'toeic-rc-vol3-ai-interactive-v2.0.0', name: 'TOEIC RC Vol.3'};
+
 window.STUDY_COURSES = [
   {
     id: 'japanese',
@@ -22,9 +24,44 @@ window.STUDY_COURSES = [
       slip: '입력·선택 실수',
     },
     concepts: [
-      {id: 'word-form', label: '품사 구분', rule: '빈칸이 주어의 상태를 설명하는지, 동작의 방식을 설명하는지 확인하세요.', action: '빈칸 앞뒤에서 설명하는 대상부터 찾고, 그 자리에 맞는 품사를 고르세요.'},
-      {id: 'connector', label: '접속사·전치사', rule: '빈칸 뒤에 주어와 동사가 있는 절이 오는지, 명사구가 오는지 먼저 확인하세요.', action: '빈칸 뒤를 절과 명사구로 나눠 보고, 이유나 양보에 맞는 표현을 고르세요.'},
-      {id: 'collocation', label: '어휘 결합', rule: '동사와 목적어가 자주 함께 쓰이는 형태로 기억하세요.', action: '명사만 보지 말고 그 앞에 자연스럽게 붙는 동사까지 떠올리세요.'},
+      {
+        id: 'word-form', label: '품사 구분',
+        rule: '빈칸이 주어의 상태를 설명하는지, 동작의 방식을 설명하는지 확인하세요.',
+        action: '빈칸 앞뒤에서 설명하는 대상부터 찾고, 그 자리에 맞는 품사를 고르세요.',
+        review: {
+          prompt: '주어의 상태를 설명하는 자리와 동작의 방식을 설명하는 자리에는 각각 어떤 품사가 오나요?',
+          answer: '이 유형에서는 be·look 뒤에서 주어의 상태를 설명하는 말은 형용사, 동작을 어떻게 했는지 설명하는 말은 부사예요.',
+          example: 'The instructions are clear. / Please explain them clearly.',
+          translation: '안내문이 명확합니다. / 명확하게 설명해 주세요.',
+          source: ['Cambridge Grammar · 형용사 위치', 'https://dictionary.cambridge.org/grammar/british-grammar/adjective-phrases-position'],
+          deck: toeicReadingDeck,
+        },
+      },
+      {
+        id: 'connector', label: '접속사·전치사',
+        rule: '빈칸 뒤에 주어와 동사가 있는 절이 오는지, 명사구가 오는지 먼저 확인하세요.',
+        action: '빈칸 뒤를 절과 명사구로 나눠 보고, 이유나 양보에 맞는 표현을 고르세요.',
+        review: {
+          prompt: '같은 이유를 말할 때 because와 because of 뒤에 오는 말은 어떻게 다른가요?',
+          answer: 'because 뒤에는 주어와 동사가 있는 절이 오고, because of 뒤에는 명사구가 와요.',
+          example: 'The meeting started late because the room was locked. / The meeting started late because of a locked door.',
+          translation: '회의실이 잠겨 회의가 늦게 시작됐습니다. / 문이 잠겨 회의가 늦게 시작됐습니다.',
+          source: ['Cambridge Grammar · because와 because of', 'https://dictionary.cambridge.org/grammar/british-grammar/because-because-of'],
+          deck: toeicReadingDeck,
+        },
+      },
+      {
+        id: 'collocation', label: '어휘 결합',
+        rule: '동사와 목적어가 자주 함께 쓰이는 형태로 기억하세요.',
+        action: '명사만 보지 말고 그 앞에 자연스럽게 붙는 동사까지 떠올리세요.',
+        review: {
+          prompt: '‘방문 일정을 잡다’로 표현하려면 an appointment 앞에 어떤 동사를 쓰나요?',
+          answer: 'make an appointment를 써요. 명사와 함께 쓰이는 동사를 문장째 기억해 보세요.',
+          example: 'Could you make an appointment with the technician for Friday?',
+          translation: '금요일에 기술자를 만날 일정을 잡아 주시겠어요?',
+          source: ['Cambridge Dictionary · appointment', 'https://dictionary.cambridge.org/dictionary/english/appointment?q=appointments'],
+        },
+      },
     ],
     questions: [
       {
@@ -146,6 +183,45 @@ window.STUDY_COURSES = [
           ['d', 'make', 'make attention to는 이 문맥에 맞지 않습니다.'],
         ],
       },
+      {
+        id: 'review-toeic-word-form-state', concept: 'word-form', type: '품사 빈칸', answer: 'c',
+        prompt: '빈칸에서 안내문의 성격을 설명할 단어를 고르세요.',
+        sentence: 'The revised instructions are _____ to new staff.',
+        translation: '수정된 안내문은 신규 직원들에게 도움이 됩니다.',
+        hint: 'are 뒤에서 instructions의 성격을 설명합니다.',
+        options: [
+          ['a', 'help', '동사나 명사로 쓰입니다. 이 자리에는 안내문의 성격을 설명하는 형용사가 필요합니다.'],
+          ['b', 'helpfully', '부사이며 도움을 주는 방식을 설명합니다.'],
+          ['c', 'helpful', '형용사 helpful이 주어인 안내문의 성격을 설명합니다.'],
+          ['d', 'helpfulness', '‘도움이 되는 성격’을 뜻하는 명사입니다.'],
+        ],
+      },
+      {
+        id: 'review-toeic-connector-clause', concept: 'connector', type: '문장 연결', answer: 'd',
+        prompt: '팀이 배송 일정을 바꾼 이유를 나타내세요.',
+        sentence: 'The team rescheduled the delivery _____ the warehouse was closed.',
+        translation: '창고가 닫혀서 팀이 배송 일정을 변경했습니다.',
+        hint: 'the warehouse was closed는 주어와 동사가 있는 절입니다.',
+        options: [
+          ['a', 'although', '뒤에 절이 오며 ‘~이지만’이라는 양보를 나타냅니다.'],
+          ['b', 'because of', '이유를 나타내지만 뒤에 the closure 같은 명사구가 옵니다.'],
+          ['c', 'despite', '뒤에 명사구가 오며 양보의 뜻을 나타냅니다.'],
+          ['d', 'because', 'the warehouse was closed라는 절을 이어 배송 일정 변경의 이유를 나타냅니다.'],
+        ],
+      },
+      {
+        id: 'review-toeic-collocation-deadline', concept: 'collocation', type: '어휘 결합', answer: 'a',
+        prompt: '마감 기한을 지킨다는 뜻에 맞는 동사를 고르세요.',
+        sentence: 'We can _____ the deadline if the final check is finished today.',
+        translation: '오늘 최종 검사를 마치면 마감 기한을 지킬 수 있습니다.',
+        hint: '정해진 기한 내에 완료한다는 동사와 명사의 결합을 떠올리세요.',
+        options: [
+          ['a', 'meet', 'meet the deadline은 ‘마감 기한을 지키다’를 뜻합니다.'],
+          ['b', 'miss', 'miss the deadline은 마감 기한을 놓친다는 뜻입니다.'],
+          ['c', 'extend', 'extend the deadline은 마감 기한을 연장한다는 뜻입니다.'],
+          ['d', 'set', 'set the deadline은 마감 기한을 정한다는 뜻입니다.'],
+        ],
+      },
     ],
   },
   {
@@ -163,9 +239,39 @@ window.STUDY_COURSES = [
       slip: '입력·선택 실수',
     },
     concepts: [
-      {id: 'unit-conversion', label: '단위 환산', rule: '1 A = 1,000 mA, 1 kΩ = 1,000 Ω입니다.', action: '시작 단위와 목표 단위를 먼저 적고, 환산할 때 곱할지 나눌지 확인하세요.'},
-      {id: 'ohm-law', label: '옴의 법칙', rule: '저항의 전압·전류 관계는 V = IR입니다. 계산할 때 V, A, Ω 단위를 맞추세요.', action: '구하는 값이 전류인지 저항인지 먼저 판단한 뒤 식을 정리하세요.'},
-      {id: 'dc-power', label: '직류 전력', rule: '직류에서 전력 P = VI입니다. 저항 부하에서는 V = IR을 대입해 P = I²R로 계산할 수 있습니다.', action: '주어진 값이 전압·전류인지 전류·저항인지 보고 전력식을 고르세요.'},
+      {
+        id: 'unit-conversion', label: '단위 환산',
+        rule: '1 A = 1,000 mA, 1 kΩ = 1,000 Ω입니다.',
+        action: '시작 단위와 목표 단위를 먼저 적고, 환산할 때 곱할지 나눌지 확인하세요.',
+        review: {
+          prompt: 'A→mA 또는 kΩ→Ω처럼 더 작은 단위로 쓰면 수치는 어떻게 바뀌나요?',
+          answer: '두 경우 모두 수치에 1,000을 곱해요. 반대 방향은 1,000으로 나눠요.',
+          example: '0.12 A = 120 mA\n3.3 kΩ = 3,300 Ω',
+          source: ['BIPM · SI 접두어', 'https://www.bipm.org/en/measurement-units/si-prefixes'],
+        },
+      },
+      {
+        id: 'ohm-law', label: '옴의 법칙',
+        rule: '저항의 전압·전류 관계는 V = IR입니다. 계산할 때 V, A, Ω 단위를 맞추세요.',
+        action: '구하는 값이 전류인지 저항인지 먼저 판단한 뒤 식을 정리하세요.',
+        review: {
+          prompt: '저항 양단 전압과 흐르는 전류를 알 때 저항은 어떤 식으로 구하나요?',
+          answer: '옴의 법칙을 따르는 저항에서 V = IR을 정리하면 R = V / I예요. 전압은 V, 전류는 A로 맞추면 저항은 Ω로 나와요.',
+          example: '12 V, 200 mA = 0.20 A → R = 12 V / 0.20 A = 60 Ω',
+          source: ['OpenStax · 옴의 법칙', 'https://openstax.org/books/physics/pages/19-1-ohms-law'],
+        },
+      },
+      {
+        id: 'dc-power', label: '직류 전력',
+        rule: '직류에서 전력 P = VI입니다. 저항 부하에서는 V = IR을 대입해 P = I²R로 계산할 수 있습니다.',
+        action: '주어진 값이 전압·전류인지 전류·저항인지 보고 전력식을 고르세요.',
+        review: {
+          prompt: '직류 저항 부하에서 전류 I와 저항 R을 알 때 소비 전력을 어떻게 구하나요?',
+          answer: 'P = VI의 V를 IR로 바꾸면 P = I²R이에요. 전류를 A, 저항을 Ω로 넣으면 전력은 W예요.',
+          example: 'I = 0.50 A, R = 12 Ω → P = (0.50 A)² × 12 Ω = 3 W',
+          source: ['OpenStax · 전기 에너지와 전력', 'https://openstax.org/books/university-physics-volume-2/pages/9-5-electrical-energy-and-power'],
+        },
+      },
     ],
     questions: [
       {
@@ -285,6 +391,45 @@ window.STUDY_COURSES = [
           ['b', '45 W', '전압을 전류로 나눈 값입니다. V / I의 단위는 Ω입니다.'],
           ['c', '1.8 W', '9 V에 0.20 A를 곱하면 1.8 W입니다.'],
           ['d', '18 W', '9에 2를 곱한 값입니다. 전류는 0.20 A입니다.'],
+        ],
+      },
+      {
+        id: 'review-elec-unit-resistance', concept: 'unit-conversion', type: '저항 단위 환산', answer: 'b',
+        prompt: '저항을 Ω 단위로 바꾸세요.',
+        sentence: '2.4 kΩ = ? Ω',
+        solution: '1 kΩ = 1,000 Ω이므로 2.4 kΩ은 2.4 × 1,000 = 2,400 Ω입니다.',
+        hint: 'k는 1,000배를 뜻합니다.',
+        options: [
+          ['a', '240 Ω', '2.4에 100을 곱한 값입니다.'],
+          ['b', '2,400 Ω', 'k를 1,000으로 바꾸고 2.4에 곱합니다.'],
+          ['c', '24 Ω', '2.4에 10을 곱한 값입니다.'],
+          ['d', '24,000 Ω', '2.4에 10,000을 곱한 값입니다.'],
+        ],
+      },
+      {
+        id: 'review-elec-ohm-resistance', concept: 'ohm-law', type: '저항 계산', answer: 'd',
+        prompt: '직류 회로의 저항값을 구하세요.',
+        sentence: '저항 양단의 전압 18 V · 전류 150 mA',
+        solution: '150 mA = 0.150 A입니다. R = V / I = 18 V / 0.150 A = 120 Ω입니다.',
+        hint: '전류를 A로 맞춘 뒤 전압을 전류로 나누세요.',
+        options: [
+          ['a', '0.12 Ω', '18을 mA 수치인 150으로 바로 나눈 값입니다.'],
+          ['b', '12 Ω', '150 mA를 1.5 A로 잘못 환산하면 나오는 값입니다.'],
+          ['c', '2.7 Ω', '18 V와 0.150 A를 곱한 2.7의 단위는 W입니다.'],
+          ['d', '120 Ω', '18 V를 0.150 A로 나누면 120 Ω입니다.'],
+        ],
+      },
+      {
+        id: 'review-elec-power-resistance', concept: 'dc-power', type: '저항 부하의 전력', answer: 'a',
+        prompt: '다음 저항 부하가 소비하는 전력을 구하세요.',
+        sentence: '직류 전류 1.5 A · 저항 8 Ω',
+        solution: 'P = I²R = (1.5 A)² × 8 Ω = 18 W입니다.',
+        hint: '전류를 제곱한 뒤 저항을 곱하세요.',
+        options: [
+          ['a', '18 W', '1.5² = 2.25에 8을 곱하면 18 W입니다.'],
+          ['b', '12 W', '1.5 A × 8 Ω은 저항에 걸리는 전압인 12 V입니다.'],
+          ['c', '2.25 W', '전류의 제곱에 저항을 곱하는 단계가 빠졌습니다.'],
+          ['d', '96 W', '1.5 A × (8 Ω)²처럼 저항을 제곱했습니다.'],
         ],
       },
     ],
