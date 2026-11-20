@@ -77,8 +77,11 @@
         : '';
       return `<p><strong>${esc(deck.title)} ${esc(deck.version)}</strong>${deck.prerelease ? ' · 배포 후보' : ''}</p>
         ${versionHelp}
-        <div class="guide-file-list">${packages.map(asset => `<div class="guide-file"><div><strong>${esc(asset.name)}</strong><p>${(asset.size / 1048576).toLocaleString('ko-KR', {maximumFractionDigits: 1})} MiB</p></div>
-          ${outbound(asset.url, isApkg(asset) ? (deck.install?.asset === asset.name ? '통합 APKG 받기' : 'APKG 받기') : '배포 ZIP 받기', 'guide-button guide-button-primary')}</div>`).join('')}</div>
+        <div class="guide-file-list">${packages.map(asset => {
+          const label = asset.name === deck.install?.asset ? '통합 APKG 받기' : isApkg(asset) ? 'APKG 받기' : '배포 ZIP 받기';
+          return `<div class="guide-file"><div><strong>${esc(asset.name)}</strong><p>${(asset.size / 1048576).toLocaleString('ko-KR', {maximumFractionDigits: 1})} MiB</p></div>
+            ${outbound(asset.url, `${label} · 저장소 접근 권한 필요`, 'guide-button guide-button-primary')}</div>`;
+        }).join('')}</div>
         ${packages.some(asset => !isApkg(asset)) ? '<p>ZIP을 압축 해제한 뒤 내부 안내에서 가져올 APKG를 확인하세요.</p>' : ''}
         <p class="guide-caption">다운로드할 때는 제작 저장소에 접근할 수 있는 GitHub 계정으로 로그인하세요.</p>
         <a class="guide-text-link" href="${deckUrl(deck)}">덱 상세·미리보기 및 전체 배포 파일 보기</a>`;

@@ -16,7 +16,18 @@
     return `guide.html?${query}`;
   };
   const hasInteractivePreview = d => Boolean(d.preview || d.sample);
-  const hasPackage = d => d.assets.some(a => a.name.endsWith('.apkg') && !a.blocked);
+  const isApkg = asset => asset.name.toLowerCase().endsWith('.apkg');
+  const apkgFiles = d => d.assets.filter(asset => isApkg(asset) && !asset.blocked);
+  const kanjiPaths = {
+    'jlpt-kanji-lab': {
+      goal: '한자의 뜻과 읽기를 익히고 싶어요',
+      start: '공부 중인 급수의 한자 인식 카드부터 풀고, 획순과 대표어를 확인하세요.'
+    },
+    'kanji-revolution': {
+      goal: '비슷한 한자와 문장 속 쓰임이 헷갈려요',
+      start: '3문항을 풀어 보고, 헷갈린 유형의 학습 카드를 확인하세요.'
+    }
+  };
   const badge = d => {
     const [style, label] = d.blocked ? ['fail', '설치 보류']
       : d.classification === 'pilot' ? ['pilot', '제작 표본']
@@ -24,12 +35,12 @@
       : d.prerelease ? ['candidate', '배포 후보'] : ['stable', '정식 릴리스'];
     return `<span class="badge badge-${style}">${label}</span>`;
   };
-  const accessNote = `<div class="access-note"><strong>다운로드 안내</strong><p>GitHub 저장소는 비공개입니다. 파일을 받으려면 저장소 접근 권한이 있는 계정으로 로그인해 주세요.</p></div>`;
+  const accessNote = webPreview => `<div class="access-note"><strong>다운로드 안내</strong><p>${webPreview ? '웹 미리보기는 로그인 없이 열 수 있습니다. ' : ''}배포 파일을 받으려면 비공개 GitHub 저장소 접근 권한이 필요합니다.</p></div>`;
   const title = (heading, copy) => `<header class="page-title"><h1>${esc(heading)}</h1>${copy ? `<p class="intro">${esc(copy)}</p>` : ''}</header>`;
   function shots(d, large = false) {
     const controls = `<div class="shot-switch" role="group" aria-label="${esc(d.title)} 대표 화면"><button type="button" data-shot-side="0" aria-pressed="true">화면 1</button><button type="button" data-shot-side="1" aria-pressed="false">화면 2</button></div>`;
     const figures = d.shots.map((s, i) => `<figure class="shot" data-shot-panel="${i}"><button class="shot-button" type="button" data-image="${esc(s.path)}" data-caption="${esc(d.title + ' · ' + s.caption)}" aria-label="${esc(d.title + ' · ' + s.caption + ' 크게 보기')}"><img src="${esc(s.path)}" alt="${esc(d.title + ' ' + d.version + ' · ' + s.caption)}" loading="${large ? 'eager' : 'lazy'}" decoding="async" width="750" height="550"></button><figcaption class="shot-caption">${esc(s.caption)}</figcaption></figure>`).join('');
-    return `<div class="shot-gallery" data-active-shot="0">${d.shots.length === 2 ? controls : ''}<div class="shot-pair ${large ? 'detail-pair' : ''}">${figures}</div></div>`;
+    return `<div class="shot-gallery" data-active-shot="0">${large && d.shots.length === 2 ? controls : ''}<div class="shot-pair ${large ? 'detail-pair' : ''}">${figures}</div></div>`;
   }
   function samplePair(d, large) {
     const sample = d.sample;
@@ -49,10 +60,24 @@
     if (!d.related?.length) return '';
     return `<nav class="related-versions" aria-label="관련 버전">${d.related.map(([id, label]) => `<a class="text-link" href="${detailUrl({id})}">${esc(label)}</a>`).join('')}</nav>`;
   }
+  function kanjiGuide(current) {
+    const choices = Object.keys(kanjiPaths).map(product => current.find(d => d.product_id === product)).filter(Boolean);
+    if (choices.length < 2) return '';
+    return `<details class="kanji-guide" id="kanji-guide"${location.hash === '#kanji-guide' ? ' open' : ''}>
+      <summary>어떤 한자 덱부터?</summary>
+      <div class="kanji-guide-options">${choices.map(d => {
+        const path = kanjiPaths[d.product_id];
+        return `<article>
+          <h3>${esc(path.goal)}</h3>
+          <p><a class="text-link" href="${detailUrl(d)}">${esc(d.title)}</a></p>
+          <p>${esc(path.start)}</p>
+          ${d.trial ? `<a class="button" href="${trialUrl(d)}">3문항 풀기</a>` : hasInteractivePreview(d) ? `<a class="button" href="${previewUrl(d)}">카드 미리보기</a>` : ''}
+        </article>`;
+      }).join('')}</div>
+    </details>`;
+  }
   function catalog() {
     const current = data.decks.filter(d => d.current);
-    const featured = current.find(d => d.product_id === 'kanji-revolution' && d.shots.length === 2)
-      || current.find(d => d.shots.length === 2);
     const subjects = [...new Map(current.map(d => [d.subject, d.subject_label]))];
     const levels = ['N5', 'N4', 'N3', 'N2', 'N1'];
     const topics = {kanji:'한자 읽기·쓰기', language:'어휘·문법', practice:'실전문제', work:'실무', summary:'핵심 정리', production:'덱 제작'};
@@ -64,21 +89,6 @@
           <p>이 브라우저에 저장된 풀이를 이어서 볼 수 있어요.</p>
         </header>
         <div class="study-home-grid" id="study-home-courses"></div>
-      </section>
-      <section class="library-hero" aria-labelledby="library-title">
-        <div class="hero-copy">
-          <h2 id="library-title">공부에 맞는<br><span>Anki 덱을 찾으세요</span></h2>
-          <p>일본어, TOEIC, 전기기사, 환경성적표지. 실제 카드 화면을 보고 학습할 버전을 골라보세요.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#decks">덱 둘러보기</a>
-            <a class="button" href="guide.html">설치 방법</a>
-          </div>
-        </div>
-        ${featured ? `<div class="hero-preview">
-          <div class="hero-preview-heading"><span>대표 카드 미리보기</span><a class="version" href="${detailUrl(featured)}">${esc(featured.version)}</a></div>
-          ${shots(featured, true)}
-          <a class="hero-preview-link" href="${hasInteractivePreview(featured) ? previewUrl(featured) : detailUrl(featured)}">${esc(featured.title)}${hasInteractivePreview(featured) ? ' 미리보기' : ''}</a>
-        </div>` : ''}
       </section>
       <section class="catalog-section" id="decks" aria-labelledby="deck-list-title">
         <div class="section-heading"><h2 id="deck-list-title">덱 둘러보기</h2><p class="result-count" id="results" role="status"></p></div>
@@ -94,11 +104,13 @@
             <button class="button" type="reset">초기화</button>
           </div>
         </form>
+        ${kanjiGuide(current)}
         <div class="deck-grid">${current.map(deckCard).join('')}</div>
         <p class="empty panel" id="no-decks" hidden>조건에 맞는 덱이 없습니다. 검색어나 필터를 바꿔 보세요.</p>
       </section>
       <aside class="section panel preview-launch"><div><h2>이전 버전이 필요하신가요?</h2><p>이전 릴리스의 미리보기와 배포 파일을 확인하세요.</p></div><a class="button" href="releases.html">릴리스 기록 보기</a></aside>`;
     const form = main.querySelector('form');
+    const comparison = main.querySelector('#kanji-guide');
     const cards = [...main.querySelectorAll('.deck-card')];
     const params = new URLSearchParams(location.search);
     for (const field of form.querySelectorAll('input[type="search"], select')) {
@@ -114,6 +126,7 @@
     ].join(' ').toLowerCase());
     function applyFilters() {
       const {q, subject, level, topic} = Object.fromEntries(new FormData(form));
+      if (comparison) comparison.hidden = Boolean(subject && subject !== 'japanese');
       const tokens = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
       let shown = 0;
       cards.forEach((card, index) => {
@@ -157,16 +170,36 @@
     if (!devices.length) return '';
     return `<div class="panel body-copy"><h3>기기별 기본 실행 확인</h3><p>${devices.map(([device, status]) => `${esc(device)} <strong class="${statusClass(status)}">${esc(status === 'PASS' ? 'PASS · 사용자 확인' : 'NOT_TESTED · 미확인')}</strong>`).join(' / ')}</p><p class="scope">${esc(d.runtime_scope)}. 기기별 실행 PASS와 전체 DEVICE QA는 확인 범위가 다릅니다.</p></div>`;
   }
+  function packageDownload(d, asset) {
+    const label = asset.name === d.install?.asset ? '통합 APKG 받기'
+      : isApkg(asset) ? 'APKG 받기' : '배포 ZIP 받기';
+    return external(asset.url, `${label} · 저장소 접근 권한 필요`, 'button primary');
+  }
   function downloads(d) {
-    return `<div class="table-wrap"><table class="downloads-table"><thead><tr><th scope="col">배포 파일</th><th scope="col">용량</th><th scope="col">다운로드</th></tr></thead><tbody>${d.assets.map(a => `<tr><td><span class="file-name">${esc(a.name)}</span><span class="hash">SHA-256 ${esc(a.sha256 || '등록된 해시 없음')}</span></td><td>${size(a.size)}</td><td>${a.blocked ? '<span class="download-unavailable">손상 기록 · 보류</span>' : external(a.url, a.kind, 'download-link')}</td></tr>`).join('')}</tbody></table></div>`;
+    const packages = apkgFiles(d);
+    const installFiles = packages.length ? packages : d.assets.filter(asset => asset.kind === '배포 ZIP' && !asset.blocked);
+    return `${installFiles.length ? `<ul class="package-files" aria-label="설치 파일">${installFiles.map(asset => `<li>
+      <div><span class="file-name">${esc(asset.name)}</span><span class="section-note">${size(asset.size)}</span></div>
+      ${packageDownload(d, asset)}
+    </li>`).join('')}</ul>` : ''}
+    <details class="file-details">
+      <summary>파일 상세</summary>
+      <div class="table-wrap" role="region" aria-label="배포 파일과 SHA-256" tabindex="0">
+        <table class="downloads-table">
+          <thead><tr><th scope="col">배포 파일</th><th scope="col">용량</th><th scope="col">다운로드</th></tr></thead>
+          <tbody>${d.assets.map(a => `<tr><td><span class="file-name">${esc(a.name)}</span><span class="hash">SHA-256 ${esc(a.sha256 || '등록된 해시 없음')}</span></td><td>${size(a.size)}</td><td>${a.blocked ? '<span class="download-unavailable">손상 기록 · 보류</span>' : external(a.url, a.kind, 'download-link')}</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </details>`;
   }
   function countLine(d) {
     const parts = [['notes','노트'],['cards','카드'],['media','미디어']].filter(([k]) => Number.isInteger(d.counts?.[k])).map(([k,label]) => `${label} ${d.counts[k].toLocaleString('ko-KR')}${k==='notes'?'개':k==='media'?'개':'장'}`);
     return parts.length ? `<p class="scope">등록 수량 · ${parts.join(' · ')}</p>` : '';
   }
   function installPanel(d) {
-    if (!hasPackage(d)) return '';
-    const apkg = d.assets.find(a => a.name === d.install?.asset && !a.blocked);
+    const packages = apkgFiles(d);
+    if (!packages.length) return '';
+    const apkg = packages.find(a => a.name === d.install?.asset) || (packages.length === 1 ? packages[0] : null);
     const paths = d.install?.paths || [
       {id:'fresh', label:'처음 설치', copy:'APKG를 받고 Anki의 파일 → 가져오기에서 엽니다.'},
       {id:'update', label:'기존 덱 업데이트', copy:d.update}
@@ -178,7 +211,7 @@
       <div class="install-modes" role="group" aria-label="설치 상황"><button class="button" type="button" data-install-mode="fresh" aria-pressed="true">처음 설치</button><button class="button" type="button" data-install-mode="update" aria-pressed="false">기존 덱 업데이트</button></div>
       <label class="install-version" hidden>지금 쓰는 버전<select id="install-from" aria-label="지금 쓰는 버전">${existing.map(p => `<option value="${esc(p.id)}">${esc(p.label)}</option>`).join('')}</select></label>
       <div id="install-instructions" aria-live="polite"></div>
-      <div class="install-download">${apkg ? external(apkg.url, '통합 APKG 받기', 'button primary') : '<a class="button primary" href="#downloads">APKG 목록 보기</a>'}<p>다운로드하려면 GitHub에 로그인하세요.</p></div>
+      <div class="install-download">${apkg ? packageDownload(d, apkg) : '<a class="button primary" href="#downloads">APKG 파일 고르기</a>'}</div>
       <p class="scope"><a class="text-link" id="install-guide" href="${esc(guideUrl(d, 'install'))}">단계별 안내 열기</a></p>
     </section>`;
   }
@@ -205,6 +238,12 @@
   }
   function detail(d) {
     document.title = `${d.title} ${d.version} · Anki 덱 라이브러리`;
+    const kanjiPath = d.current && kanjiPaths[d.product_id];
+    const structure = `<p>${esc(d.study)}</p>${d.structure.length ? `<ul>${d.structure.map(v => `<li>${esc(v)}</li>`).join('')}</ul>` : ''}`;
+    const learning = `<article class="panel body-copy"><h2>학습 방법</h2>${kanjiPath ? `
+      <p><strong>${esc(kanjiPath.goal)}</strong></p><p>${esc(kanjiPath.start)}</p>
+      <details><summary>수록 구성과 학습 순서</summary>${structure}</details>
+      <p class="scope"><a href="index.html?subject=japanese#kanji-guide">한자 덱 비교 보기</a></p>` : structure}</article>`;
     main.innerHTML = `
       <a class="back" href="${d.current ? 'index.html' : 'releases.html'}">${d.current ? '덱 라이브러리' : '릴리스 기록'}로 돌아가기</a>
       <header class="detail-header" data-subject="${esc(d.subject)}">
@@ -213,12 +252,13 @@
         <div class="detail-actions">
           ${d.trial ? `<a class="button primary" href="${trialUrl(d)}">3문항 풀기</a>` : ''}
           ${hasInteractivePreview(d) ? `<a class="button ${d.trial ? '' : 'primary'}" href="${previewUrl(d)}">${d.classification === 'platform' ? '동작 체험' : '카드 미리보기'}</a>` : ''}
-          ${hasPackage(d) ? '<a class="button" href="#install">설치·업데이트</a>' : ''}
+          ${apkgFiles(d).length ? '<a class="button" href="#install">설치·업데이트</a>' : ''}
           <a class="button" href="#downloads">배포 파일</a>
         </div>
       </header>
       ${relatedVersions(d)}
-      <nav class="section-jumps" aria-label="덱 상세 항목"><a href="#screens">대표 화면</a><a href="#downloads">다운로드</a><a href="#verification">검증 상태</a><a href="#learning">학습 방법</a></nav>
+      <nav class="section-jumps" aria-label="덱 상세 항목">${kanjiPath ? '<a href="#learning">학습 방법</a>' : ''}<a href="#screens">대표 화면</a><a href="#downloads">다운로드</a><a href="#verification">검증 상태</a>${kanjiPath ? '' : '<a href="#learning">학습 방법</a>'}${d.classification === 'platform' ? '<a href="#development">제작 계획</a>' : ''}</nav>
+      ${kanjiPath ? `<section class="section" id="learning">${learning}</section>` : ''}
       <section class="section" id="screens">
         <div class="section-heading"><h2>${d.shots.length && d.shot_kind !== 'example' ? '대표 카드 화면' : '앞·뒷면 학습 예시'}</h2>${d.shots.length ? '<span class="section-note">이미지를 눌러 확대</span>' : ''}</div>
         <div class="screen-stage">${previewPair(d, true)}</div>
@@ -228,10 +268,9 @@
       ${d.blocked ? '<div class="section access-note hold-note"><strong>설치 보류</strong><p>기존 배포 ZIP에 손상 기록이 있습니다. 복구한 내부 카드의 미리보기는 확인할 수 있지만, 정상 배포 패키지가 확인되기 전에는 새 설치에 사용하지 마세요.</p></div>' : ''}
       <section class="section" id="downloads">
         <div class="section-heading"><h2>다운로드</h2>${external(d.release_url, 'GitHub 릴리스', 'text-link')}</div>
-        ${accessNote}
+        ${accessNote(hasInteractivePreview(d))}
         ${d.download_note ? `<p class="device-note">${esc(d.download_note)}</p>` : ''}
         ${downloads(d)}
-        ${d.preview_asset ? `<div class="file-actions">${originalPreviewLink(d)}</div>` : ''}
       </section>
       <section class="section" id="verification">
         <div class="section-heading"><h2>기록된 검증 상태</h2><a class="text-link" href="qa.html">검사 기준 보기</a></div>
@@ -239,10 +278,20 @@
         <p class="scope">GitHub에 기록된 Anki 검증 결과입니다.</p>
       </section>
       ${support.deck(d)}
-      <section class="section guide-grid" id="learning">
-        <article class="panel body-copy"><h2>학습 방법</h2><p>${esc(d.study)}</p>${d.structure.length ? `<ul>${d.structure.map(v => `<li>${esc(v)}</li>`).join('')}</ul>` : ''}</article>
+      <section class="section${kanjiPath ? '' : ' guide-grid'}" id="${kanjiPath ? 'update' : 'learning'}">
+        ${kanjiPath ? '' : learning}
         <article class="panel body-copy"><h2>업데이트</h2><p>${esc(d.update)}</p><p><a href="${esc(guideUrl(d, 'update'))}">단계별 설치·업데이트 안내</a></p></article>
-      </section>`;
+      </section>
+      ${d.classification === 'platform' ? `<section class="section panel body-copy" id="development">
+        <h2>카드 디자인과 복습 기록 개선 계획</h2>
+        <ol>
+          <li><strong>카드 디자인 개선</strong> · JLPT 문맥·객관식 카드에 큰 글자, 넉넉한 버튼, 접는 해설, 다크 모드를 시험합니다. 기존 노트 ID·GUID와 학습 일정을 보존한 후보로 검증합니다.</li>
+          <li><strong>복습 로그 분석</strong> · 내보낸 Anki 복습 로그의 평가 버튼과 복습 시간을 기준으로 개념·유형별 풀이를 분석합니다.</li>
+          <li><strong>세부 풀이 기록</strong> · 선택지, 힌트, 확신과 오답 이유를 기록할 수 있도록 기기별 저장과 이관을 검증합니다.</li>
+        </ol>
+        <p class="scope">웹 학습 체험 기록은 브라우저에 저장됩니다. Anki 기록 자동 수집과 기기 간 자동 동기화는 검토 단계입니다.</p>
+        <p>${external('https://docs.ankiweb.net/stats.html', 'Anki 복습 기록·통계')} · ${external('https://docs.ankiweb.net/templates/styling.html#javascript', '카드 JavaScript')}</p>
+      </section>` : ''}`;
   }
   function releases() {
     const current = data.decks.filter(d => d.current);
@@ -251,7 +300,7 @@
       <nav class="section-jumps" aria-label="릴리스 구분"><a href="#current">현재판 ${current.length}건</a><a href="#previous">이전판 ${previous.length}건</a></nav>
       <section class="section" id="current"><div class="section-heading"><h2>현재판</h2></div><div class="release-list">${current.map(releaseRow).join('')}</div></section>
       <section class="section" id="previous"><div class="section-heading"><h2>이전판</h2></div><div class="release-list">${previous.map(releaseRow).join('')}</div></section>
-      ${accessNote}`;
+      ${accessNote()}`;
   }
   function releaseRow(d) {
     return `<article class="release-row" data-subject="${esc(d.subject)}">

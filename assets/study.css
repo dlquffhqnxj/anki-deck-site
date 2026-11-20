@@ -100,7 +100,7 @@
 
 .lab-workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(230px, .43fr); align-items: start; gap: 17px; }
 .question-panel, .skill-card, .mission-card, .metric, .recommendation, .history-panel, .backup-bar,
-.design-intro, .design-plan, .design-limit, .design-principles article, .progress-empty, .metric-rules {
+.anki-review-help, .progress-empty, .metric-rules {
   min-width: 0;
   padding: clamp(15px, 2.2vw, 25px);
   border: 1px solid var(--line);
@@ -237,13 +237,13 @@
 .review-status { padding: 3px 8px; border-radius: 6px; background: var(--accent-bg); color: var(--accent-dark); font-size: .8rem; font-weight: 700; }
 .review-status.wrong { background: var(--red-bg); color: var(--red); }
 .review-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-.metrics-grid, .analysis-grid, .design-principles { display: grid; gap: 12px; margin-block: 12px; }
-.metrics-grid, .design-principles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.metrics-grid, .analysis-grid { display: grid; gap: 12px; margin-block: 12px; }
+.metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .analysis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .metric > span { color: var(--muted); font-weight: 700; }
 .metric > strong { display: block; color: var(--accent); font-size: 2rem; line-height: 1.45; }
 .metric small { margin-left: 4px; font-size: 1rem; }
-.metric p, .weakness-row p, .backup-bar p, .design-intro p, .design-principles p { color: var(--muted); font-size: .9rem; }
+.metric p, .weakness-row p, .backup-bar p, .anki-review-help p { color: var(--muted); font-size: .9rem; }
 .weakness-row, .recovery-list { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
 .weakness-row span, .sample-note { color: var(--muted); font-size: .875rem; }
 .recommendation { background: var(--accent-bg); }
@@ -257,21 +257,19 @@
 .metric-rules li + li { margin-top: 5px; }
 .progress-empty { margin-top: 12px; }
 .progress-empty p { margin: 7px 0 10px; color: var(--muted); }
-.history-panel, .backup-bar, .design-plan, .design-limit { margin-top: 12px; }
+.history-panel, .backup-bar { margin-top: 12px; }
 .lab-table-wrap { margin: 10px 0; overflow-x: auto; }
 .lab-table-wrap table { min-width: 560px; }
 .backup-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .backup-bar > div { flex: 1 1 345px; }
 
-.design-intro { background: var(--accent-bg); }
-.design-intro h2, .design-principles h3, .design-plan h3, .design-limit h3 { margin-bottom: 8px; }
-.design-plan ol { margin: 10px 0 0; padding-left: 1.5em; }
-.design-plan li + li, .design-limit p + p { margin-top: 9px; }
+.anki-review-help { padding-block: 12px; }
+.anki-review-help summary { width: 100%; padding-block: 5px; }
+.anki-review-help p + p { margin-top: 6px; }
+.anki-review-help a { color: var(--accent); text-decoration: underline; }
 .anki-searches { display: grid; gap: 6px; margin-block: 10px; }
 .anki-searches > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding: 7px 10px; border-radius: 8px; background: var(--soft); }
 .anki-searches code { color: var(--accent); font-weight: 700; }
-.design-sources { margin-top: 12px; color: var(--muted); font-size: .875rem; }
-.design-sources a { color: var(--accent); text-decoration: underline; }
 
 @media (max-width: 860px) {
   .lab-workspace { grid-template-columns: minmax(0, 1fr); }
@@ -279,7 +277,7 @@
   .lab-save { grid-column: 1 / -1; }
 }
 @media (max-width: 620px) {
-  .answer-options, .lab-aside, .metrics-grid, .analysis-grid, .design-principles { grid-template-columns: 1fr; gap: 7px; }
+  .answer-options, .lab-aside, .metrics-grid, .analysis-grid { grid-template-columns: 1fr; gap: 7px; }
   .lab-heading h1 { font-size: 1.95rem; }
   .lab-heading { gap: 7px; }
   .lab-tabs button { padding-inline: 7px; }
