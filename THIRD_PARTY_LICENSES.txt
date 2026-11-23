@@ -24,3 +24,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+
+HTS Voice Mei
+Audio samples in Kanji Revolution and the common platform previews.
+Copyright (c) 2009–2013 Nagoya Institute of Technology, Department of Computer Science.
+Source: https://www.mmdagent.jp/
+License: https://creativecommons.org/licenses/by/3.0/
