@@ -1,14 +1,213 @@
 {
   "schema_version": 1,
-  "site_version": "1.3.0",
-  "updated_at": "2026-11-19",
+  "site_version": "1.3.1",
+  "updated_at": "2026-11-23",
   "source_repository": "dlquffhqnxj/anki-deck-project",
-  "source_commit": "51098886cacce8b0050c70d707092c3366974d96",
+  "source_commit": "493ef9cca49bb110ce5b11587407de39a1db364e",
   "decks": [
     {
       "subject": "japanese",
       "subject_label": "일본어",
       "current": true,
+      "blocked": false,
+      "counts": {
+        "notes": 28475,
+        "cards": 30790,
+        "media": 12994
+      },
+      "shots": [
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.10.0-rc1-front.jpg",
+          "caption": "앞면 · 문장 속 표기 문제"
+        },
+        {
+          "path": "assets/release-screenshots/kanji-revolution-v1.10.0-rc1-back.jpg",
+          "caption": "뒷면 · 정답과 비교 해설"
+        }
+      ],
+      "shot_scope": "이 버전의 공개 HTML 미리보기에서 캡처한 대표 화면입니다.",
+      "id": "kanji-revolution-v1.10.0-rc1",
+      "product_id": "kanji-revolution",
+      "title": "한자혁명 · Kanji Revolution",
+      "version": "v1.10.0-RC1",
+      "purpose": "한자 학습 14,290장과 5파트 실전 16,500문항을 한 APKG로 가져오는 통합 후보입니다.",
+      "structure": [
+        "학습 14,290장 · 한자 읽기·쓰기와 대표 단어 읽기",
+        "실전 16,500문항 · 유사 한자, 기본 뜻·읽기, 어휘·문맥, 동사 활용, 종합 실전",
+        "단어 읽기 1,000장과 실전문제 6,500문항 추가"
+      ],
+      "study": "한자·대표어를 익힌 뒤 실전문제를 풀고 해설에서 구별 근거를 확인하세요. 내 기록에서 보충·재시험과 오답 복습 도우미를 열 수 있습니다.",
+      "update": "컬렉션을 백업한 뒤 같은 프로필에서 통합 APKG를 가져옵니다. 기존 노트와 노트 유형은 더 최신인 경우에만 업데이트하고 학습 일정 가져오기는 끕니다.",
+      "download_note": "통합 APKG 한 파일에 학습과 실전이 들어 있습니다. 원본 76장 HTML과 오프라인 미리보기 ZIP도 릴리스에서 받을 수 있습니다.",
+      "related": [
+        [
+          "kanji-revolution-v1.7.1-rc1",
+          "이전 통합판 v1.7.1-RC1"
+        ],
+        [
+          "kanji-revolution-v1.7.0",
+          "이전 5파트 실전판 v1.7.0"
+        ]
+      ],
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "PASS",
+        "UPDATE": "PASS",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "Anki 엔진 25.9.2에서 새 프로필 30,790장, v1.7.1-RC1의 기존 카드 ID 23,290장과 복습 일정·평점 로그 7종 표본, 재가져오기 추가 0장을 확인했습니다. Anki Desktop 앱 화면·iPhone·iPad 실기기·AnkiWeb 동기화는 미검증입니다.",
+      "sample": {
+        "type": "유사 한자",
+        "prompt": "‘흙’을 뜻하는 한자는 무엇일까요?",
+        "answer": "土",
+        "explanation": "土는 아래 가로획이 더 길고, 士는 위 가로획이 더 깁니다. 土地（とち）는 ‘토지’, 武士（ぶし）는 ‘무사’입니다.",
+        "options": [
+          "土",
+          "士"
+        ]
+      },
+      "preview": "previews/kanji-revolution/v1.10.0-rc1/index.html",
+      "preview_label": "통합판 v1.10.0-RC1 공개 카드 8장",
+      "preview_scope": "원본 76장 중 단어 읽기·5파트 실전·보충을 포함한 공개 표본 8장입니다.",
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_Revolution_V1.10.0-RC1",
+      "assets": [
+        {
+          "name": "Kanji_Revolution_COMPLETE_v1.10.0-RC1.apkg",
+          "size": 463848620,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.10.0-RC1/Kanji_Revolution_COMPLETE_v1.10.0-RC1.apkg",
+          "sha256": "d57b572b38e6d4ec8df3bc31f758ae5df0515edad480c8053aa4cd9f013038ec",
+          "kind": "APKG",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_MASTER_v1.10.0-RC1.xlsx",
+          "size": 18229051,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.10.0-RC1/Kanji_Revolution_MASTER_v1.10.0-RC1.xlsx",
+          "sha256": "110371c4623ef71e932b2c18d462e10de9783b141213d163fa429224b1496705",
+          "kind": "Excel MASTER",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_PREVIEW_v1.10.0-RC1.html",
+          "size": 15471781,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.10.0-RC1/Kanji_Revolution_PREVIEW_v1.10.0-RC1.html",
+          "sha256": "5cde59d1f15169d6a2b07e1bc867e460c9fa986fb9b5a5296c273121c4b20029",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_PREVIEW_v1.10.0-RC1.zip",
+          "size": 7347720,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.10.0-RC1/Kanji_Revolution_PREVIEW_v1.10.0-RC1.zip",
+          "sha256": "d5b42da5094af13529e416cc52a45114166a591b23ea795da6ca839ed75fe788",
+          "kind": "미리보기 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_SHA256SUMS_v1.10.0-RC1.txt",
+          "size": 538,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.10.0-RC1/Kanji_Revolution_SHA256SUMS_v1.10.0-RC1.txt",
+          "sha256": "81b4364d3b793a80d0825799b1511c61aed65595c90fd50d49720a26181d5cc2",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        },
+        {
+          "name": "Kanji_Revolution_SUPPORT_v1.10.0-RC1.zip",
+          "size": 22754354,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/JLPT_Kanji_Revolution_V1.10.0-RC1/Kanji_Revolution_SUPPORT_v1.10.0-RC1.zip",
+          "sha256": "3972f90db539338da4ac3e8b7abef84080693e9d4e6711a15dce49fecd982c36",
+          "kind": "지원·배포 ZIP",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-20T08:58:24Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "Kanji_Revolution_PREVIEW_v1.10.0-RC1.html",
+      "tracks": {
+        "kanji": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "practice": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ]
+      },
+      "package_counts": {
+        "study": 14290,
+        "practice": 16500
+      },
+      "install": {
+        "asset": "Kanji_Revolution_COMPLETE_v1.10.0-RC1.apkg",
+        "paths": [
+          {
+            "id": "fresh",
+            "label": "처음 설치",
+            "copy": "통합 APKG 한 파일을 Anki에서 가져오면 한자 학습과 5파트 실전문제가 함께 표시됩니다."
+          },
+          {
+            "id": "v1.7.1-rc1",
+            "label": "v1.7.1-RC1 통합판 사용 중",
+            "copy": "백업 후 같은 프로필에서 통합 APKG를 가져오세요. 노트와 노트 유형은 더 최신인 경우에만 업데이트하고 학습 일정 가져오기는 끄세요.",
+            "scope": "GitHub의 v1.7.1-RC1에서 직접 업데이트해 기존 카드 23,290장과 복습 기록 표본을 확인했습니다."
+          },
+          {
+            "id": "other",
+            "label": "다른 버전이거나 잘 모르겠어요",
+            "copy": "컬렉션을 백업하고 별도 시험 프로필에서 통합본을 가져오세요. 기존 노트와 학습 일정이 유지되는지 확인한 뒤 사용 중인 프로필에 적용하세요."
+          }
+        ]
+      },
+      "trial": [
+        {
+          "id": "read-tatsu",
+          "type": "한자 읽기",
+          "prompt": "達의 대표 읽기를 떠올려 보세요.",
+          "display": "達",
+          "answer": "たつ（タツ） · 통달할 달",
+          "explanation": "配達（はいたつ）는 배달, 発達（はったつ）는 발달입니다."
+        },
+        {
+          "id": "shape-tsuchi",
+          "type": "유사 한자 구별",
+          "prompt": "빈칸에 들어갈 한자를 고르세요.",
+          "display": "〔　〕曜日って、何か予定ある？",
+          "hint": "どようび · 토요일",
+          "options": [
+            "去",
+            "土",
+            "地"
+          ],
+          "answer": "土",
+          "explanation": "土曜日（どようび）는 토요일입니다. 土는 아래 가로획이 길고, 士는 위 가로획이 깁니다."
+        },
+        {
+          "id": "form-kaku",
+          "type": "동사 활용",
+          "prompt": "書く（かく）를 て형으로 바꾸세요.",
+          "display": "書く",
+          "options": [
+            "書きて",
+            "書いた",
+            "書いて"
+          ],
+          "answer": "書いて",
+          "explanation": "5단 동사 書く의 끝 く를 いて로 바꿉니다. 書いた는 과거형을 만드는 た형입니다."
+        }
+      ],
+      "shot_kind": "card"
+    },
+    {
+      "subject": "japanese",
+      "subject_label": "일본어",
+      "current": false,
       "blocked": false,
       "counts": {
         "notes": 20975,
@@ -1470,6 +1669,105 @@
       "subject": "tools",
       "subject_label": "제작 플랫폼",
       "current": true,
+      "blocked": false,
+      "counts": {},
+      "shots": [
+        {
+          "path": "assets/release-screenshots/anki-deck-platform-v1.4.0-rc1-front.jpg",
+          "caption": "약식 진단 · 유사 한자 질문"
+        },
+        {
+          "path": "assets/release-screenshots/anki-deck-platform-v1.4.0-rc1-back.jpg",
+          "caption": "약식 진단 · 채점과 정답 근거"
+        }
+      ],
+      "shot_scope": "이 버전의 공개 HTML 미리보기에서 캡처한 대표 화면입니다.",
+      "id": "anki-deck-platform-v1.4.0-rc1",
+      "product_id": "anki-deck-platform",
+      "title": "Anki 공통 제작 플랫폼",
+      "version": "v1.4.0-RC1",
+      "classification": "platform",
+      "purpose": "약식·정밀 진단, 개념별 보충과 7일 뒤 재시험을 카드에 연결하는 공통 제작 도구입니다.",
+      "structure": [
+        "RULE-06 v1.4.0-RC1 · 공통 UI 운영 기준과 모델·모듈 레지스트리",
+        "약식 12문항·정밀 30문항, 이어 풀기, 취약 영역별 보충과 개념별 7일 재시험",
+        "단어·예문 음성, 쓰기 필기 복원, 검수 요청과 APKG·HTML 대조"
+      ],
+      "study": "카드의 ‘시작 진단’에서 약식·정밀을 선택하세요. 진단과 재시험 일정은 학습한 기기에 저장됩니다.",
+      "update": "덱 MASTER의 개념과 문제은행을 플랫폼 모듈에 연결하고 같은 설정을 APKG와 HTML에 적용한 뒤 제품별로 가져오기를 시험합니다.",
+      "related": [
+        [
+          "anki-deck-platform-v1.3.0",
+          "이전 제작 플랫폼 v1.3.0"
+        ],
+        [
+          "kanji-revolution-v1.10.0-rc1",
+          "한자혁명 v1.10.0-RC1 참조 덱"
+        ]
+      ],
+      "qa": {
+        "STATIC": "PASS",
+        "IMPORT": "NOT_APPLICABLE",
+        "UPDATE": "NOT_APPLICABLE",
+        "DEVICE": "NOT_TESTED"
+      },
+      "qa_note": "플랫폼의 기존 QA에서 Chromium과 Anki 엔진 25.9.2 시험용 노트 3장의 가져오기·업데이트를 확인했습니다. 실기기와 AnkiWeb 동기화는 미검증입니다.",
+      "download_note": "공통 제작 규칙·설정·재현 도구 지원 ZIP과 원본 23장 HTML을 제공합니다.",
+      "sample": {
+        "type": "즉시 채점 예시",
+        "prompt": "食べる（たべる）의 ない형을 고르세요.",
+        "answer": "食べない",
+        "explanation": "1단 동사는 끝의 る를 떼고 ない를 붙입니다.",
+        "options": [
+          "食べらない",
+          "食べない",
+          "食べなく",
+          "食べりない"
+        ]
+      },
+      "release_url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/Anki_Deck_Platform_v1.4.0-RC1",
+      "assets": [
+        {
+          "name": "Anki_Deck_Platform_PREVIEW_v1.4.0-RC1.html",
+          "size": 323578,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/Anki_Deck_Platform_v1.4.0-RC1/Anki_Deck_Platform_PREVIEW_v1.4.0-RC1.html",
+          "sha256": "12735f01b9a4269a2f47f825d83a87667f79b59aff15d7896f84f9a2fbdd176b",
+          "kind": "미리보기 HTML",
+          "blocked": false
+        },
+        {
+          "name": "Anki_Deck_Platform_v1.4.0-RC1_SUPPORT.zip",
+          "size": 12236418,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/Anki_Deck_Platform_v1.4.0-RC1/Anki_Deck_Platform_v1.4.0-RC1_SUPPORT.zip",
+          "sha256": "bbd5a54d48eb89a2f537fbc3e655d5f2b4f7ea492c45c2a93095eb686ba6a910",
+          "kind": "지원·배포 ZIP",
+          "blocked": false
+        },
+        {
+          "name": "SHA256SUMS.txt",
+          "size": 217,
+          "url": "https://github.com/dlquffhqnxj/anki-deck-project/releases/download/Anki_Deck_Platform_v1.4.0-RC1/SHA256SUMS.txt",
+          "sha256": "55ac7a3028995990865915afe27b5b83c46cea50dd916b23c237714a94dddd1e",
+          "kind": "SHA-256 목록",
+          "blocked": false
+        }
+      ],
+      "published_at": "2026-11-23T02:41:23Z",
+      "prerelease": true,
+      "qa_source": "릴리스 QA",
+      "preview_asset": "Anki_Deck_Platform_PREVIEW_v1.4.0-RC1.html",
+      "preview_scope": "원본 23장 중 공개 표본 8장에서 약식·정밀 진단, 보충·재시험, 음성·필기를 체험할 수 있습니다.",
+      "preview": "previews/anki-deck-platform/v1.4.0-rc1/index.html",
+      "preview_label": "진단·보충·재시험과 음성·필기 체험",
+      "tracks": {
+        "production": []
+      },
+      "shot_kind": "card"
+    },
+    {
+      "subject": "tools",
+      "subject_label": "제작 플랫폼",
+      "current": false,
       "blocked": false,
       "counts": {},
       "shots": [
