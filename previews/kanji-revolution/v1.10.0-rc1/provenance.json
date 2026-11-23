@@ -1,0 +1,21 @@
+{
+  "release": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/JLPT_Kanji_Revolution_V1.10.0-RC1",
+  "original_preview": "Kanji_Revolution_PREVIEW_v1.10.0-RC1.html",
+  "original_sha256": "5cde59d1f15169d6a2b07e1bc867e460c9fa986fb9b5a5296c273121c4b20029",
+  "original_card_count": 76,
+  "public_card_count": 8,
+  "note_ids": [
+    "KR-N-X110-WORD-8E5D03620CE7EB31",
+    "KR-N-X110-WORD-05952BF71AED461A",
+    "KR-N-X110-SIM-6477F568004530A6",
+    "KR-N-X110-BAS-3C446C6C657EEE7A",
+    "KR-N-X110-CTX-65A8B5A4229103C8",
+    "KR-N-X110-VRB-2C93D78777A74C3E",
+    "KR-N-X110-MIX-9D76369BE01E8FFA",
+    "KR-N-X-VRB-0101"
+  ],
+  "selection": "릴리스 원본 HTML의 공개용 부분집합. 교재 원문 이미지와 원본 자료 파일을 포함하지 않습니다.",
+  "audio_credit": "HTS Voice Mei © Nagoya Institute of Technology · CC BY 3.0",
+  "audio_license": "https://creativecommons.org/licenses/by/3.0/",
+  "public_preview_sha256": "dd46f9b64df5174b80f81c60956fc80adab48fdc91e19425c2a91a6d0ea82aa2"
+}

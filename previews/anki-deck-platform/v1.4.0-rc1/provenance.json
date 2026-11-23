@@ -1,0 +1,21 @@
+{
+  "release": "https://github.com/dlquffhqnxj/anki-deck-project/releases/tag/Anki_Deck_Platform_v1.4.0-RC1",
+  "original_preview": "Anki_Deck_Platform_PREVIEW_v1.4.0-RC1.html",
+  "original_sha256": "12735f01b9a4269a2f47f825d83a87667f79b59aff15d7896f84f9a2fbdd176b",
+  "original_card_count": 23,
+  "public_card_count": 8,
+  "note_ids": [
+    "KR-N-X-SIM-0026",
+    "KR-N-W-V01-0175-R01-C02",
+    "KR-N-K-V01-0081",
+    "KR-N-SIM-0001",
+    "KR-N-X-BAS-0991",
+    "KR-N-X-CTX-1291",
+    "KR-N-VERB-0001",
+    "KR-N-X-MIX-0800"
+  ],
+  "selection": "릴리스 원본 HTML의 공개용 부분집합. 교재 원문 이미지와 원본 자료 파일을 포함하지 않습니다.",
+  "audio_credit": "HTS Voice Mei © Nagoya Institute of Technology · CC BY 3.0",
+  "audio_license": "https://creativecommons.org/licenses/by/3.0/",
+  "public_preview_sha256": "35f3f266b187626636e4c28b76747c8b580d5e7c32ad468da0357db671079888"
+}
