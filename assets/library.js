@@ -10,6 +10,7 @@
   const detailUrl = d => `deck.html?id=${encodeURIComponent(d.id)}`;
   const previewUrl = d => `preview.html?id=${encodeURIComponent(d.id)}`;
   const trialUrl = d => `trial.html?id=${encodeURIComponent(d.id)}`;
+  const kanjiTrainingUrl = 'https://anki-study-hub.yyttbbpre1.chatgpt.site/#kanji/start';
   const guideUrl = (d, flow, from) => {
     const query = new URLSearchParams({id: d.id, flow});
     if (from) query.set('from', from);
@@ -322,6 +323,7 @@
         <div class="detail-actions">
           ${d.trial ? `<a class="button primary" href="${trialUrl(d)}">3문항 풀기</a>` : ''}
           ${hasInteractivePreview(d) ? `<a class="button ${d.trial ? '' : 'primary'}" href="${previewUrl(d)}">${d.classification === 'platform' ? '동작 체험' : '카드 미리보기'}</a>` : ''}
+          ${d.current && d.product_id === 'kanji-revolution' ? external(kanjiTrainingUrl, '한자 훈련 체험', 'button') : ''}
           ${apkgFiles(d).length ? '<a class="button" href="#install">설치·업데이트</a>' : ''}
           <a class="button" href="#downloads">배포 파일</a>
         </div>
