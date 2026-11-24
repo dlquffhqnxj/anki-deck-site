@@ -241,6 +241,24 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
   .workflow button{padding-left:4px;padding-right:4px}.workflow li span{width:6px;height:6px}
 }
 
+.source-actions,.author-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.source-actions{justify-content:center}
+.author-panel,.learning-panel{margin-top:14px}
+.author-body{display:grid;gap:13px}
+.author-toolbar output{font-variant-numeric:tabular-nums;font-weight:650;color:var(--muted)}
+.author-jump{margin-left:auto;display:flex!important;align-items:center;gap:6px}
+.author-jump input{width:78px}
+.author-body textarea{width:100%;min-height:65px;resize:vertical}
+.author-body summary{cursor:pointer;font-weight:650}
+.author-body details>.field-grid,.author-body details>label,.paste-panel>.button{margin-top:10px}
+.author-body details>label input[type=checkbox],.learning-features input[type=checkbox]{width:16px;height:16px;min-height:0;margin:0;accent-color:var(--accent)}
+.paste-panel{background:var(--soft,#f7f4fa);padding:12px;border-radius:10px}
+.author-body>button{justify-self:start}
+.learning-features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px;margin-top:12px}
+.learning-feature{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:5px 10px;padding:7px 0;border-top:1px solid var(--line,#e5dfec)}
+.learning-feature label{display:flex;align-items:center;gap:7px;margin:0}
+.learning-default{font-size:.8rem;color:var(--muted)}
+@media(max-width:690px){.learning-features{grid-template-columns:1fr}.author-jump{margin-left:0}}
 </style>
 </head>
 <body>
@@ -266,13 +284,13 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
     <main id="main" class="main" tabindex="-1">
       <header class="topbar">
         <div class="location"><span>워크스페이스</span><span aria-hidden="true">/</span><strong id="current-location">덱 제작</strong></div>
-        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.3.0.html">오프라인 실행본</a>
+        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.4.0.html">오프라인 실행본</a>
       </header>
       <div class="content">
         <section id="view-work" class="view">
           <div class="hero work-hero">
             <div>
-              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.3.0</span></div>
+              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.4.0</span></div>
               <p>원본을 선택하고 카드 앞뒷면을 확인한 뒤 Anki 덱을 만드세요.</p>
             </div>
             <a class="button secondary" href="#design">카드 디자인 변경</a>
@@ -323,7 +341,8 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
                     <div class="file-symbol" aria-hidden="true"><span></span></div>
                     <strong>엑셀 또는 텍스트 파일</strong>
                     <p>XLSX · TSV · CSV</p>
-                    <button type="button" id="choose-source" class="button secondary">원본 선택</button>
+                    <div class="source-actions"><button type="button" id="author-open" class="button primary">직접 작성</button>
+                    <button type="button" id="choose-source" class="button secondary">원본 선택</button></div>
                     <input type="file" id="source-file" accept=".xlsx,.tsv,.csv,.txt" hidden>
                   </div>
                   <div id="selected-file" class="selected-file" hidden>
@@ -339,6 +358,49 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
                 </div>
               </section>
             </div>
+            <section id="author-panel" class="panel author-panel" hidden aria-labelledby="author-title">
+              <div class="panel-head"><h2 id="author-title" tabindex="-1">카드 직접 작성</h2>
+                <button type="button" id="author-close" class="button text-button">작성 화면 닫기</button>
+              </div>
+              <div class="form-body author-body">
+                <div class="author-toolbar">
+                  <button type="button" id="author-new" class="button secondary">카드 추가</button>
+                  <button type="button" id="author-from-source" class="button text-button" hidden>현재 파일에서 카드 추가</button>
+                  <output id="author-count" role="status"></output>
+                  <label class="author-jump">카드 이동 <input type="number" id="author-index" min="1" value="1"></label>
+                  <button type="button" id="author-prev" class="button secondary compact">이전</button>
+                  <button type="button" id="author-next" class="button secondary compact">다음</button>
+                </div>
+                <div id="author-fields" class="field-grid"></div>
+                <details id="author-extra">
+                  <summary>추가 필드</summary>
+                  <div id="author-optional" class="field-grid"></div>
+                </details>
+                <div class="author-toolbar">
+                  <button type="button" id="author-remove" class="button secondary">현재 카드 삭제</button>
+                  <button type="button" id="author-undo" class="button text-button" hidden>삭제 취소</button>
+                </div>
+                <details class="paste-panel">
+                  <summary>엑셀 표 붙여넣기</summary>
+                  <p id="author-paste-guide" class="form-hint"></p>
+                  <label><input type="checkbox" id="author-with-header"> 첫 줄에 열 이름 포함</label>
+                  <label>복사한 셀<textarea id="author-paste" rows="4" spellcheck="false"></textarea></label>
+                  <button type="button" id="author-paste-add" class="button secondary">표에서 카드 추가</button>
+                </details>
+                <p id="author-status" class="form-hint" role="status"></p>
+                <button type="button" id="author-apply" class="button primary">작성한 카드를 원본으로 사용</button>
+              </div>
+            </section>
+            <section class="panel learning-panel" aria-labelledby="learning-title">
+              <div class="panel-head"><h2 id="learning-title">학습 기능 및 기본값</h2>
+                <span class="form-hint" id="learning-count"></span>
+              </div>
+              <div class="form-body">
+                <div id="learning-appearance" class="field-grid"></div>
+                <div id="learning-features" class="learning-features"></div>
+                <p id="learning-note" class="form-hint">이 설정으로 새 APKG를 만듭니다. 카드에서 바꾼 설정과 내 기록은 학습 기기에 저장됩니다.</p>
+              </div>
+            </section>
             <div class="action-panel">
               <div id="build-status" role="status" aria-live="polite" tabindex="-1"><b>제작 준비</b><small>원본을 확인한 뒤 검증과 파일 생성을 실행합니다.</small></div>
               <button type="submit" id="build" class="button primary">검증 및 후보 생성</button>
@@ -487,7 +549,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
           <div class="hero"><h1>운영 기준</h1><p>원본, 카드 식별자와 검사 근거를 같은 실행에 연결합니다.</p></div>
           <div class="rules-grid">
             <section class="panel rule-panel"><h2>원본과 모델</h2>
-              <p>Excel의 NOTES 시트 또는 UTF-8 TSV·CSV에 NoteID를 지정합니다. JLPT 한자 모델은 한자 인식·쓰기·대표어 읽기 카드 3장을 만들고, 객관식과 기본 회상은 노트당 1장을 만듭니다.</p>
+              <p>웹에서 카드 내용을 작성하거나 Excel 표를 붙여넣으면 NoteID를 발급합니다. 기존 NoteID가 있는 자료를 가져올 때는 그 값을 사용합니다. JLPT 한자 모델은 한자 인식·쓰기·대표어 읽기 카드 3장을 만들고, 객관식과 기본 회상은 노트당 1장을 만듭니다.</p>
               <p>기존 한자 MASTER는 핵심 필드를 읽어 신규 덱으로 제작합니다. N2·N3 일일 문항의 TSV 형식도 객관식 모델에서 읽을 수 있습니다.</p>
             </section>
             <section class="panel rule-panel"><h2>업데이트</h2>
@@ -803,7 +865,7 @@ else if (typeof exports === 'object'){
 })(globalThis, function createCardApi() {
   "use strict";
 
-  const REVISION = "studio-card-1";
+  const REVISION = "studio-card-2";
   const FIELDS = [
     "NoteID", "Level", "Category", "Prompt", "Answer", "Explanation", "Kanji",
     "Word", "Reading", "OnReading", "KunReading", "Example", "Translation",
@@ -850,13 +912,25 @@ else if (typeof exports === 'object'){
 .deck-card rt{font-size:.54em}
 .deck-card .dc-reading{margin:4px 0;color:#465060}
 .deck-card .dc-label{min-width:3em;display:inline-block;font-weight:650;font-size:.88em}
-.nightMode .deck-card,.night_mode .deck-card{background:#232632;color:#f5f1ed;border-color:#484b59}
-.nightMode .deck-card .dc-prompt,.nightMode .deck-card .dc-reading,.nightMode .deck-card .dc-detail b,
-.nightMode .deck-card .dc-meta,.nightMode .deck-card summary,
-.night_mode .deck-card .dc-prompt,.night_mode .deck-card .dc-reading,.night_mode .deck-card .dc-detail b,
-.night_mode .deck-card .dc-meta,.night_mode .deck-card summary{color:#d5d0ec}
-.nightMode .deck-card button,.night_mode .deck-card button{background:#2d3140;color:#f5f1ed}
-.nightMode .deck-card .dc-answer,.night_mode .deck-card .dc-answer{color:#28213f}
+.deck-card [hidden]{display:none}
+.deck-card[data-font="serif"]{font-family:"Noto Serif KR","Noto Serif CJK JP","Yu Mincho",serif}
+.deck-card[data-size="large"]{font-size:19px}
+.deck-card[data-size="xlarge"]{font-size:22px}
+.deck-card[data-size="large"]:not([data-mode="quiz"]):not([data-mode="recall"]) .dc-focus{font-size:clamp(2rem,7vw,3.5rem)}
+.deck-card[data-size="xlarge"]:not([data-mode="quiz"]):not([data-mode="recall"]) .dc-focus{font-size:clamp(2.25rem,8vw,4rem)}
+.deck-card .dc-tool{min-width:0}
+.deck-card .dc-tool[open]{flex-basis:100%}
+.deck-card .dc-tool small{display:block;color:inherit;margin-top:5px}
+.deck-card .dc-tool select,.deck-card input[data-filter-query]{box-sizing:border-box;max-width:100%;background:inherit;color:inherit;border:1px solid #9b95ae;border-radius:5px;min-height:32px;padding:3px 7px;margin-left:5px;font:inherit}
+.deck-card input[data-filter-query]{display:block;width:100%;margin:2px 0}
+.deck-card canvas{display:block;margin:7px 0;width:min(100%,480px);height:auto;background:#fffdf9;border:1px solid #9b95ae;border-radius:8px;touch-action:none}
+.deck-card .dc-study-menu,.deck-card .dc-study-entry{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0}
+.deck-card .dc-study-prompt{white-space:pre-wrap}
+.deck-card[data-theme="dark"],.nightMode .deck-card[data-theme="auto"],.night_mode .deck-card[data-theme="auto"]{background:#232632;color:#f5f1ed;border-color:#484b59;color-scheme:dark}
+.deck-card[data-theme="dark"] :is(.dc-top,.dc-prompt,.dc-reading,.dc-meta,.dc-detail b,summary),.nightMode .deck-card[data-theme="auto"] :is(.dc-top,.dc-prompt,.dc-reading,.dc-meta,.dc-detail b,summary),.night_mode .deck-card[data-theme="auto"] :is(.dc-top,.dc-prompt,.dc-reading,.dc-meta,.dc-detail b,summary){color:#d5d0ec}
+.deck-card[data-theme="dark"] button,.nightMode .deck-card[data-theme="auto"] button,.night_mode .deck-card[data-theme="auto"] button{background:#2d3140;color:#f5f1ed;border-color:#77718a}
+.deck-card[data-theme="dark"] .dc-answer,.nightMode .deck-card[data-theme="auto"] .dc-answer,.night_mode .deck-card[data-theme="auto"] .dc-answer{color:#28213f}
+.deck-card[data-theme="dark"] .dc-options button[data-right="yes"]{background:#255243;color:#eff9f3;border-color:#85c9ac}
 @media(max-width:480px){.deck-card{margin:6px auto;padding:15px}}
 `;
 
@@ -916,143 +990,479 @@ else if (typeof exports === 'object'){
     };
   }
 
-  function optional(field, html, token) {
-    if (token && token(field)) return html;
-    return "";
+
+  const LEARNING_FEATURES = [
+    { id:"settings", label:"학습 설정", initial:true, defaultLabel:"처음에 열기" },
+    { id:"records", label:"내 기록", initial:true, defaultLabel:"처음에 열기" },
+    { id:"ruby", label:"후리가나", initial:true, defaultLabel:"기본 표시" },
+    { id:"explanation", label:"풀이·오답 해설", initial:true, defaultLabel:"답면에서 펼치기", opened:true },
+    { id:"examples", label:"예문·전체 해석", initial:true, defaultLabel:"답면에서 펼치기", opened:true },
+    { id:"filter", label:"오답·플래그 필터 도우미", initial:true, defaultLabel:"처음에 열기" },
+    { id:"immediate", label:"선택 즉시 정오답", models:["quiz"], defaultLabel:"기본 사용", opened:true },
+    { id:"writing", label:"필기판", models:["kanji"], defaultLabel:"처음에 열기" },
+    { id:"diagnosis", label:"약식·정밀 진단", models:["quiz"], defaultLabel:"패널 처음에 열기" },
+    { id:"practice", label:"개념별 보충", models:["quiz"], defaultLabel:"패널 처음에 열기" },
+    { id:"retest", label:"7일 변형 재시험", models:["quiz"], defaultLabel:"패널 처음에 열기" },
+  ];
+  const STUDY_FEATURES = ["diagnosis","practice","retest"];
+  const APPEARANCE = [
+    { id:"theme", label:"화면 테마", values:[["auto","기기 설정"],["light","밝게 고정"],["dark","어둡게 고정"]] },
+    { id:"font", label:"글꼴", values:[["sans","고딕"],["serif","명조"]] },
+    { id:"size", label:"글자 크기", values:[["base","기본"],["large","크게"],["xlarge","더 크게"]] },
+    { id:"panel", label:"설정창 동작", values:[["close","카드 변경 시 닫기"],["keep","열린 상태 유지"]] },
+  ];
+
+  function learningProfile(model, value) {
+    const included = {}, opened = {};
+    for (const spec of LEARNING_FEATURES) {
+      const supported = !spec.models || spec.models.includes(model);
+      included[spec.id] = supported && (value?.included?.[spec.id] ?? spec.initial ?? false) === true;
+      if (spec.defaultLabel) {
+        opened[spec.id] = included[spec.id] && (value?.opened?.[spec.id] ?? spec.opened ?? false) === true;
+      }
+    }
+    if (!included.settings || !included.records) {
+      for (const id of STUDY_FEATURES) included[id] = opened[id] = false;
+    }
+    const appearance = Object.fromEntries(APPEARANCE.map(spec => [
+      spec.id, spec.values.some(([id]) => id === value?.appearance?.[spec.id])
+        ? value.appearance[spec.id] : spec.values[0][0],
+    ]));
+    if (included.ruby && typeof value?.opened?.ruby !== "boolean") opened.ruby = true;
+    return { included, opened, appearance };
   }
 
-  function markup(model, ordinal, answer, val, has) {
+  function jsonForCard(value) {
+    return JSON.stringify(value).replaceAll("<","\\u003c").replaceAll("{{","\\u007b\\u007b");
+  }
+
+  function markup(job, ordinal, answer, val, group, bank) {
+    const { model } = job;
+    const { included, opened, appearance } = learningProfile(model,job.learning);
     const kind = MODELS[model].types[ordinal];
     const field = MODELS[model].frontFields[ordinal];
-    const hints = ["한자의 뜻을 떠올려 보세요.", "뜻을 보고 한자를 써 보세요.", "단어의 일본어 읽기를 떠올려 보세요."];
-    const responseField = model === "kanji" ? ["Answer", "Kanji", "Reading"][ordinal] : "Answer";
-    const hint = model === "kanji" ? `<p class="dc-prompt">${hints[ordinal]}</p>` : "";
-    const detail = (key, label) => optional(key, `<div class="dc-detail"><b>${label}</b>${val(key)}</div>`, has);
-    let body = hint + `<div class="dc-focus" lang="${model === "kanji" && ordinal === 1 ? "ko" : "ja"}">${val(field)}</div>`;
+    const hints = ["한자의 뜻을 떠올려 보세요.","뜻을 보고 한자를 써 보세요.","단어의 일본어 읽기를 떠올려 보세요."];
+    const response = model === "kanji" ? ["Answer","Kanji","Reading"][ordinal] : "Answer";
+    const panel = (id, label, content) =>
+      `<details class="dc-tool" data-tool="${id}"${(id === "study" ? STUDY_FEATURES.some(key => opened[key]) : opened[id]) ? " open" : ""}><summary>${label}</summary>${content}</details>`;
+    const detail = (key, label, section) => group(key, section
+      ? `<details class="dc-detail"${opened[section] ? " open" : ""}><summary>${label}</summary><div>${val(key)}</div></details>`
+      : `<div class="dc-detail"><b>${label}</b>${val(key)}</div>`);
+    const explanation = included.explanation ? detail("Explanation","풀이 근거","explanation") +
+      (model === "quiz" ? detail("Distractors","오답 해설","explanation") : "") : "";
+    const { theme,font,size,panel:panelMode } = appearance;
+    const instant = model === "quiz" && included.immediate && !answer;
+    let body = model === "kanji" ? `<p class="dc-prompt">${hints[ordinal]}</p>` : "";
+    body += `<div class="dc-focus" lang="${model === "kanji" && ordinal !== 1 ? "ja" : ""}">${val(field)}</div>`;
     if (model === "quiz") {
-      const options = ["A", "B", "C", "D"].map((letter, index) =>
-        `<button type="button" data-choice="${letter}" aria-pressed="false">${index + 1}. ${val("Option" + letter)}</button>`);
-      body += `<div class="dc-options" role="group" aria-label="보기">${options.join("")}</div>`;
-      if (answer) body += `<p class="dc-result" aria-live="polite"></p>`;
+      body += `<div class="dc-options" role="group" aria-label="보기">${["A","B","C","D"].map((letter,index) =>
+        `<button type="button" data-choice="${letter}" aria-pressed="false"${answer ? ' aria-disabled="true"' : ""}>
+          ${index + 1}. ${val("Option" + letter)}</button>`).join("")}</div>`;
+      if (answer || instant) body += '<p class="dc-result" aria-live="polite"></p>';
+      if (instant) body += `<div data-instant-detail hidden><div class="dc-answer">${val("Answer")}</div>${explanation}</div>`;
     }
     if (answer) {
-      body += `<div class="dc-answer">${val(responseField)}</div>` + detail("Explanation", "풀이 근거");
+      body += `<div class="dc-answer">${val(response)}</div>` + explanation;
       if (model === "kanji") {
-        body += `<div class="dc-reading"><span class="dc-label">음독</span>${val("OnReading")}</div>
-          <div class="dc-reading"><span class="dc-label">훈독</span>${val("KunReading")}</div>`
-          + detail("Word", "대표어") + detail("Example", "문장 예시");
-      } else if (model === "quiz") {
-        body += detail("Distractors", "오답 해설");
+        body += group("OnReading",`<div class="dc-reading"><span class="dc-label">음독</span>${val("OnReading")}</div>`) +
+          group("KunReading",`<div class="dc-reading"><span class="dc-label">훈독</span>${val("KunReading")}</div>`) + detail("Word","대표어");
       }
-      body += detail("Translation", "해석");
+      if (included.examples) body += detail("Example","문장 예시","examples") + detail("Translation","해석","examples");
     }
-
+    const select = (spec) => `<label>${spec.label}<select data-card-setting="${spec.id}">` +
+      spec.values.map(([id,label]) => `<option value="${id}"${id === appearance[spec.id] ? " selected" : ""}>${label}</option>`).join("") + "</select></label>";
+    let tools = "";
+    if (included.settings) {
+      const showRuby = opened.ruby ? " checked" : "";
+      tools += panel("settings","학습 설정",APPEARANCE.map(select).join("") +
+        (included.ruby ? `<label><input type="checkbox" data-card-setting="ruby"${showRuby}> 후리가나 표시</label>` : "") +
+        (included.immediate ? `<label><input type="checkbox" data-card-setting="immediate"${opened.immediate ? " checked" : ""}> 선택 즉시 정오답</label>` : "") +
+        '<small>설정은 이 기기에 저장됩니다.</small>');
+    }
+    if (included.records) {
+      const reasons = model === "kanji" ? ["읽기","뜻","한자 모양"] : model === "quiz" ? ["문법·개념","문맥","선택지"] : ["개념","회상","표현"];
+      tools += panel("records","내 기록",`<label><input type="checkbox" data-card-mark> 헷갈림 표시</label>
+        <label>헷갈린 이유<select data-confusion-reason><option value="">선택 안 함</option>${reasons.map(reason => `<option>${reason}</option>`).join("")}</select></label>
+        <output data-card-record></output><small>이 기기의 카드 기록</small>`);
+    }
+    if (included.filter) tools += panel("filter","오답·플래그 필터",`
+      <label>검색 기준<select data-filter-kind><option value="both">다시 또는 주황 플래그</option><option value="again">다시 평가</option><option value="flag">주황 플래그</option></select></label>
+      <label>최근 다시 평가<select data-filter-days><option>1</option><option selected>7</option><option>14</option><option>30</option></select>일</label>
+      <label>이 덱의 Anki 검색식<input type="text" data-filter-query readonly></label>
+      <button type="button" data-filter-copy>검색식 복사</button><output data-filter-status></output>`);
+    if (included.writing && model === "kanji" && ordinal === 1) {
+      const canvas = '<canvas width="480" height="200" data-card-writing aria-label="한자 필기판"></canvas>';
+      body += panel("writing","필기판",canvas + (answer ? "" : '<button type="button" data-writing-clear>지우기</button>'));
+    }
+    if (bank?.questions.length) tools += panel("study","진단·보충·재시험",
+      '<div data-study-output></div><script type="application/json" data-study-bank>' + jsonForCard(bank) + '<\/script>');
     return `<article class="deck-card" data-mode="${model}" data-ordinal="${ordinal}"
       data-side="${answer ? "answer" : "front"}" data-note="${val("NoteID")}" data-product="${val("Product")}"
-      data-correct="${answer ? val("Correct") : ""}">
+      data-version="${val("Version")}" data-deck-name="${escape(job.name)}" data-correct="${answer || instant ? val("Correct") : ""}"
+      data-instant="${instant}" data-instant-default="${opened.immediate ?? false}" data-theme-default="${theme}" data-theme="${theme}" data-font="${font}" data-size="${size}"
+      data-panel-default="${panelMode}" data-ruby="${included.ruby && opened.ruby ? "on" : "off"}" data-ruby-module="${included.ruby}">
       <div class="dc-top"><span class="dc-grade">${val("Level")}</span><span>${kind}</span></div>
-      ${body}
-      <div class="dc-tools">
-        <details class="dc-tool"><summary>학습 설정</summary>
-          <label><input type="checkbox" data-card-setting="ruby" checked> 후리가나 표시</label>
-          <label><input type="checkbox" data-card-setting="large"> 글자 크게</label>
-        </details>
-        <details class="dc-tool"><summary>내 기록</summary>
-          <label><input type="checkbox" data-card-mark> 헷갈림 표시</label>
-          <output data-card-record></output>
-        </details>
-      </div>
+      ${body}${tools ? '<div class="dc-tools">' + tools + '</div>' : ""}
       <div class="dc-meta"><span>v${val("Version")}</span><span>${val("NoteID")} · ${ordinal + 1}</span></div>
     </article>`;
   }
 
-  function install(root) {
-    const memory = root.ownerDocument?.defaultView || root.defaultView || window;
-    function load(key, fallback) {
-      try { return JSON.parse(memory.localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+  function bindStudy(card, load, save) {
+    const host = card.querySelector("[data-study-output]");
+    if (!host) return () => {};
+    const bank = JSON.parse(card.querySelector("[data-study-bank]").textContent);
+    const store = "anki-ops-study:" + card.dataset.product;
+    const runKey = store + ":diagnosis:" + card.dataset.version;
+    const review = bank.questions.filter(item => item.role !== "diagnosis");
+    const own = bank.links.find(([id]) => id === card.dataset.note)?.[1];
+    let active = null;
+    const doc = card.ownerDocument;
+    function node(tag, value, css = "") {
+      const element = doc.createElement(tag);
+      element.textContent = value;
+      if (css) element.className = css;
+      return element;
     }
-    function save(key, data) {
-      try { memory.localStorage.setItem(key, JSON.stringify(data)); return true; } catch { return false; }
+    function button(label, action) {
+      const control = node("button",label);
+      control.type = "button";
+      control.addEventListener("click",action);
+      return control;
+    }
+    function later() {
+      const date = new Date();
+      date.setDate(date.getDate() + 7);
+      date.setHours(0,0,0,0);
+      return date.getTime();
+    }
+    function enqueue(concept) {
+      if (!concept || !review.some(q => q.concept === concept)) return;
+      const queue = load(store,[]);
+      if (!queue.some(record => record.concept === concept && !record.done)) {
+        save(store,[...queue.filter(record => record.concept !== concept),{ concept,due:later(),done:false }]);
+      }
+    }
+    function start(mode) {
+      const groups = new Map();
+      for (const q of bank.questions.filter(item => item.role === "diagnosis")) {
+        if (!groups.has(q.category)) groups.set(q.category,[]);
+        groups.get(q.category).push(q);
+      }
+      const list = [...groups.values()];
+      const items = Array.from({length:mode === "quick" ? 1 : 6},(_,i) =>
+        list.map(group => group[i]).filter(Boolean)).flat().slice(0,mode === "quick" ? 6 : 36);
+      if (!items.length) return;
+      const history = load(runKey,{});
+      const saved = history[mode];
+      active = { mode,items, index:saved?.index ?? 0,answers:saved?.answers ?? [] };
+      if (active.index >= items.length) active = { mode,items,index:0,answers:[] };
+      draw();
+    }
+    function draw() {
+      host.replaceChildren();
+      if (!active) {
+        const menu = node("div","","dc-study-menu");
+        if (bank.questions.some(item => item.role === "diagnosis")) {
+          menu.append(button("약식 진단",() => start("quick")),button("정밀 진단",() => start("full")));
+        }
+        host.append(menu);
+        for (const record of load(store,[]).filter(item => !item.done)) {
+          const items = review.filter(item => item.concept === record.concept);
+          if (!items.length) continue;
+          const entry = node("div","","dc-study-entry");
+          entry.append(node("b",record.concept));
+          const practice = items.find(item => item.role === "practice");
+          const retest = items.find(item => item.role === "retest");
+          if (practice) entry.append(button("보충 문제",() => attempt(practice)));
+          if (retest) {
+            if (Date.now() >= record.due) entry.append(button("변형 재시험",() => attempt(retest)));
+            else entry.append(node("small","재시험 " + new Date(record.due).toLocaleDateString("ko-KR")));
+          }
+          host.append(entry);
+        }
+        host.append(node("small","이 기기의 진단·재시험 기록"));
+        return;
+      }
+      const item = active.items[active.index];
+      if (!item) {
+        const scores = new Map();
+        active.items.forEach((q,i) => {
+          if (!scores.has(q.category)) scores.set(q.category,[0,0]);
+          const score = scores.get(q.category);
+          score[1] += 1;
+          if (active.answers[i] === q.correct) score[0] += 1;
+        });
+        for (const [category,[correct,count]] of scores) host.append(node("p",category + " " + correct + "/" + count + " 정답"));
+        host.append(button("학습 도구로",() => { active = null; draw(); }));
+        return;
+      }
+      if (active.mode === "quick" || active.mode === "full") {
+        host.append(node("small",active.index + 1 + " / " + active.items.length + "문항"));
+      }
+      host.append(node("p",item.prompt,"dc-study-prompt"));
+      const picked = active.answers[active.index];
+      const options = node("div","","dc-options");
+      item.options.forEach((label,i) => {
+        const letter = "ABCD"[i];
+        const control = button((i + 1) + ". " + label,() => {
+          if (active.answers[active.index]) return;
+          active.answers[active.index] = letter;
+          if (active.mode === "quick" || active.mode === "full") snapshot();
+          if (letter !== item.correct) enqueue(item.concept);
+          if (item.role === "retest") save(store,load(store,[]).map(r => r.concept === item.concept && !r.done
+            ? { ...r,done:letter === item.correct,due:letter === item.correct ? r.due : later() } : r));
+          draw();
+        });
+        if (picked) {
+          control.disabled = true;
+          control.dataset.right = String(letter === item.correct ? "yes" : "");
+          control.setAttribute("aria-pressed",String(letter === picked));
+        }
+        options.append(control);
+      });
+      host.append(options);
+      if (picked) {
+        host.append(node("p",picked === item.correct ? "정답입니다." : "오답입니다."));
+        if (item.explanation) host.append(node("p",item.explanation));
+        if (picked !== item.correct && item.distractors) host.append(node("p",item.distractors));
+        host.append(button(active.mode === "single" ? "학습 도구로" : "다음",() => {
+          if (active.mode === "single") active = null;
+          else { active.index += 1; snapshot(); }
+          draw();
+        }));
+      } else host.append(button("학습 도구로",() => { active = null; draw(); }));
+    }
+    function snapshot() {
+      save(runKey,{ ...load(runKey,{}), [active.mode]:{ index:active.index,answers:active.answers } });
+    }
+    function attempt(item) {
+      active = { mode:"single",items:[item],index:0,answers:[] };
+      draw();
+    }
+    draw();
+    return () => {
+      enqueue(own);
+      if (!active) draw();
+    };
+  }
+
+  function bindCards(root, study) {
+    const memory = root.ownerDocument?.defaultView || root.defaultView || window;
+    const fallback = memory.ankiOpsCardSession ??= new Map();
+    function load(key, value) {
+      if (fallback.has(key)) return fallback.get(key);
+      try { return JSON.parse(memory.localStorage.getItem(key)) ?? value; } catch { return value; }
+    }
+    function save(key, value) {
+      try { memory.localStorage.setItem(key,JSON.stringify(value)); fallback.delete(key); return true; }
+      catch { fallback.set(key,value); return false; }
     }
     for (const card of root.querySelectorAll(".deck-card:not([data-bound])")) {
-      card.setAttribute("data-bound", "");
-      const key = "anki-ops-card:" + card.dataset.product + ":" + card.dataset.note + ":" + card.dataset.ordinal;
-      const settingsKey = "anki-ops-card-settings:" + card.dataset.product;
-      const storedSettings = load(settingsKey, {});
-      const settings = { ruby: storedSettings.ruby !== false, large: storedSettings.large === true };
-      const record = load(key, {});
-      const inputRuby = card.querySelector('[data-card-setting="ruby"]');
-      const inputLarge = card.querySelector('[data-card-setting="large"]');
-      const mark = card.querySelector("[data-card-mark]");
-      const status = card.querySelector("[data-card-record]");
-      const result = card.querySelector(".dc-result");
-      const options = [...card.querySelectorAll("[data-choice]")];
-      const transientKey = "ankiDeckOpsSelections";
-      memory[transientKey] ??= {};
-      const transient = memory[transientKey];
-      if (card.dataset.side === "front") delete transient[key];
+      card.setAttribute("data-bound","");
+      const data = card.dataset;
+      const side = data.side;
+      const key = "anki-ops-card:" + data.product + ":" + data.note + ":" + data.ordinal;
+      const settingsKey = "anki-ops-card-settings:" + data.product;
+      const activeKey = "anki-ops-active:" + data.product;
+      const preferences = load(settingsKey,{});
+      const defaults = { theme:data.themeDefault,font:data.font,size:data.size,panel:data.panelDefault,
+        ruby:data.ruby === "on",immediate:data.instantDefault === "true" };
+      const settings = { ...defaults,...preferences,size:preferences.size ?? (preferences.large === true ? "large" : defaults.size) };
+      let session;
+      try { session = JSON.parse(memory.sessionStorage.getItem(activeKey)); } catch {}
+      session = fallback.get(activeKey) ?? session;
+      if (side === "front" || session?.key !== key) {
+        session = { key,attempt:Date.now() + "-" + Math.random().toString(36).slice(2),selected:"",strokes:[] };
+      }
+      function keepAttempt() {
+        fallback.set(activeKey,session);
+        try { memory.sessionStorage.setItem(activeKey,JSON.stringify(session)); } catch {}
+      }
+      keepAttempt();
+
       function applySettings() {
-        card.dataset.ruby = settings.ruby ? "on" : "off";
-        card.dataset.size = settings.large ? "large" : "normal";
-        inputRuby.checked = settings.ruby;
-        inputLarge.checked = settings.large;
+        const night = card.closest(".nightMode,.night_mode") ||
+          memory.matchMedia?.("(prefers-color-scheme: dark)").matches;
+        data.theme = settings.theme === "auto" ? night ? "dark" : "light" : settings.theme;
+        data.font = settings.font;
+        data.size = settings.size;
+        data.ruby = data.rubyModule === "true" && settings.ruby ? "on" : "off";
       }
-      function showOptions(selected) {
-        for (const option of options) {
-          option.setAttribute("aria-pressed", String(selected === option.dataset.choice));
-          if (card.dataset.correct === option.dataset.choice) option.dataset.right = "yes";
-        }
-        if (result) {
-          result.textContent = selected
-            ? selected === card.dataset.correct ? "정답입니다." : "선택한 답과 풀이를 비교해 보세요."
-            : "정답과 풀이를 확인하세요.";
-        }
+      const settingsPanel = card.querySelector('[data-tool="settings"]');
+      if (settingsPanel && settings.panel === "keep" && typeof preferences.expanded === "boolean") {
+        settingsPanel.open = preferences.expanded;
       }
-      inputRuby.addEventListener("change", () => {
-        settings.ruby = inputRuby.checked;
-        applySettings();
-        save(settingsKey, settings);
+      settingsPanel?.addEventListener("toggle",() => {
+        if (settings.panel !== "keep") return;
+        preferences.expanded = settingsPanel.open;
+        save(settingsKey,preferences);
       });
-      inputLarge.addEventListener("change", () => {
-        settings.large = inputLarge.checked;
-        applySettings();
-        save(settingsKey, settings);
-      });
-      mark.checked = record.marked === true;
-      status.textContent = mark.checked ? "다시 볼 카드로 표시됨" : "이 화면의 헷갈림 기록";
-      mark.addEventListener("change", () => {
-        record.marked = mark.checked;
-        const saved = save(key, record);
-        status.textContent = saved
-          ? mark.checked ? "다시 볼 카드로 표시됨" : "헷갈림 표시를 해제했습니다."
-          : "현재 화면에만 표시됩니다.";
-      });
-      for (const option of options) {
-        if (card.dataset.side === "answer") option.setAttribute("aria-disabled", "true");
-        else option.addEventListener("click", () => {
-          transient[key] = option.dataset.choice;
-          showOptions(option.dataset.choice);
+      for (const control of card.querySelectorAll("[data-card-setting]")) {
+        const id = control.dataset.cardSetting;
+        if (control.type === "checkbox") control.checked = settings[id];
+        else control.value = settings[id];
+        control.addEventListener("change",() => {
+          settings[id] = preferences[id] = control.type === "checkbox" ? control.checked : control.value;
+          if (id === "panel") preferences.expanded = settingsPanel.open;
+          save(settingsKey,preferences);
+          applySettings();
         });
       }
       applySettings();
-      showOptions(transient[key]);
+
+      const record = load(key,{});
+      const mark = card.querySelector("[data-card-mark]");
+      const reason = card.querySelector("[data-confusion-reason]");
+      const status = card.querySelector("[data-card-record]");
+      const result = card.querySelector(".dc-result");
+      const options = [...card.querySelectorAll("[data-choice]")];
+      const onReview = study(card,load,save);
+      function recordStatus(persisted = true) {
+        if (!status) return;
+        const visits = "답면 " + (record.views ?? 0) + "회";
+        const accuracy = record.answered ? " · 정답 " + (record.right ?? 0) + "/" + record.answered : "";
+        status.textContent = visits + accuracy + (record.marked ? " · 헷갈림 표시됨" : "") +
+          (persisted ? "" : " · 현재 세션에만 저장");
+      }
+      function score() {
+        if (!mark || !session.selected || !data.correct || record.scored === session.attempt) return;
+        record.scored = session.attempt;
+        record.answered = (record.answered ?? 0) + 1;
+        if (session.selected === data.correct) record.right = (record.right ?? 0) + 1;
+        else onReview();
+      }
+      function showOptions() {
+        const revealed = side === "answer" || session.revealed === true;
+        for (const option of options) {
+          option.setAttribute("aria-pressed",String(option.dataset.choice === session.selected));
+          if (revealed && option.dataset.choice === data.correct) option.dataset.right = "yes";
+        }
+        if (result) result.textContent = !revealed ? "" : !session.selected ? "정답과 풀이를 확인하세요."
+          : session.selected === data.correct ? "정답입니다." : "오답입니다. 정답과 풀이를 확인하세요.";
+        const details = card.querySelector("[data-instant-detail]");
+        if (details) details.hidden = !session.revealed;
+      }
+      if (mark) {
+        mark.checked = record.marked === true;
+        reason.value = record.reason ?? "";
+        mark.addEventListener("change",() => {
+          record.marked = mark.checked;
+          if (mark.checked) onReview();
+          else { delete record.reason; reason.value = ""; }
+          recordStatus(save(key,record));
+        });
+        reason.addEventListener("change",() => {
+          record.reason = reason.value;
+          if (reason.value) { mark.checked = record.marked = true; onReview(); }
+          recordStatus(save(key,record));
+        });
+      }
+      if (mark && side === "answer") {
+        if (record.viewed !== session.attempt) { record.viewed = session.attempt; record.views = (record.views ?? 0) + 1; }
+        score();
+        recordStatus(save(key,record));
+      } else recordStatus();
+      for (const option of options) {
+        if (side !== "front") continue;
+        option.addEventListener("click",() => {
+          if (session.revealed) return;
+          session.selected = option.dataset.choice;
+          session.revealed = data.instant === "true" && settings.immediate;
+          keepAttempt();
+          if (session.revealed) {
+            score();
+            if (mark) recordStatus(save(key,record));
+          }
+          showOptions();
+        });
+      }
+      showOptions();
+
+      const query = card.querySelector("[data-filter-query]");
+      if (query) {
+        const kind = card.querySelector("[data-filter-kind]");
+        const days = card.querySelector("[data-filter-days]");
+        const filterStatus = card.querySelector("[data-filter-status]");
+        function updateQuery() {
+          const again = "rated:" + days.value + ":1";
+          const clause = kind.value === "again" ? again : kind.value === "flag" ? "flag:2" : "(" + again + " OR flag:2)";
+          query.value = 'deck:"' + data.deckName.replace(/[\\"]/g,"\\$&") + '" ' + clause;
+          days.disabled = kind.value === "flag";
+          filterStatus.textContent = "";
+        }
+        kind.addEventListener("change",updateQuery);
+        days.addEventListener("change",updateQuery);
+        card.querySelector("[data-filter-copy]").addEventListener("click",async () => {
+          query.select();
+          try { await memory.navigator.clipboard.writeText(query.value); filterStatus.textContent = "Anki에 붙여넣으세요."; }
+          catch { filterStatus.textContent = "선택한 검색식을 복사해 Anki에 붙여넣으세요."; }
+        });
+        updateQuery();
+      }
+      const canvas = card.querySelector("[data-card-writing]");
+      if (!canvas) continue;
+      const pen = canvas.getContext("2d");
+      if (!pen) continue;
+      pen.lineCap = pen.lineJoin = "round";
+      pen.lineWidth = 4;
+      pen.strokeStyle = "#29233a";
+      function paint(from,to) {
+        pen.beginPath();
+        pen.moveTo(...from);
+        pen.lineTo(...to);
+        pen.stroke();
+      }
+      for (const stroke of session.strokes) stroke.slice(1).forEach((point,i) => paint(stroke[i],point));
+      if (side === "answer") continue;
+      let activePointer = null;
+      function coordinate(event) {
+        const bounds = canvas.getBoundingClientRect();
+        return [(event.clientX-bounds.left)*canvas.width/bounds.width,(event.clientY-bounds.top)*canvas.height/bounds.height];
+      }
+      canvas.addEventListener("pointerdown",event => {
+        if (activePointer !== null) return;
+        event.preventDefault();
+        activePointer = event.pointerId;
+        canvas.setPointerCapture(activePointer);
+        session.strokes.push([coordinate(event)]);
+      });
+      canvas.addEventListener("pointermove",event => {
+        if (event.pointerId !== activePointer) return;
+        const stroke = session.strokes.at(-1);
+        const point = coordinate(event);
+        paint(stroke.at(-1),point);
+        stroke.push(point);
+      });
+      for (const name of ["pointerup","pointercancel","lostpointercapture"]) canvas.addEventListener(name,event => {
+        if (event.pointerId !== activePointer) return;
+        activePointer = null;
+        keepAttempt();
+      });
+      card.querySelector("[data-writing-clear]").addEventListener("click",() => {
+        session.strokes = [];
+        pen.clearRect(0,0,canvas.width,canvas.height);
+        keepAttempt();
+      });
     }
   }
 
-  function previewCard(row, job, ordinal, answer) {
-    const values = fieldsFor(row, job);
-    return markup(job.model, ordinal, answer, key => values[key] ?? "", key => Boolean(values[key]));
+  function install(root) { bindCards(root,bindStudy); }
+
+  function previewCard(row, job, ordinal, answer, bank) {
+    const fields = fieldsFor(row,job);
+    return markup(job,ordinal,answer,key => fields[key] ?? "",(key,html) => fields[key] ? html : "",bank);
   }
 
-  function ankiCard(model, ordinal, answer) {
+  function ankiCard(job, ordinal, answer, bank) {
     const token = key => "{{" + key + "}}";
-    const html = markup(model, ordinal, answer, token, () => true)
-      .replace(/<div class="dc-detail"><b>([^<]*)<\/b>{{(\w+)}}<\/div>/g, (match, _, key) =>
-        "{{#" + key + "}}" + match + "{{/" + key + "}}");
-    return html + "<script>(" + install.toString() + ")(document);<\/script>";
+    const wrap = (key, html) => "{{#" + key + "}}" + html + "{{/" + key + "}}";
+    const html = markup(job,ordinal,answer,token,wrap,bank);
+    return html + "<script>(" + bindCards.toString() + ")(document," + bindStudy.toString() + ");<\/script>";
   }
 
-  return { REVISION, CSS, FIELDS, MODELS, escape, rich, plain, fieldsFor, install, previewCard, ankiCard, browserSource: () => "(" + createCardApi.toString() + ")()" };
+  return { REVISION,CSS,FIELDS,MODELS,LEARNING_FEATURES,STUDY_FEATURES,APPEARANCE,learningProfile,escape,rich,plain,
+    fieldsFor,install,previewCard,ankiCard,browserSource:() => "(" + createCardApi.toString() + ")()" };
+
 });
 
 </script>
@@ -1069,7 +1479,7 @@ else if (typeof exports === 'object'){
 })(globalThis, function (Card, Zip, Excel, initSql, sqlBinary) {
   "use strict";
 
-  const VERSION = "0.3.0";
+  const VERSION = "0.4.0";
   const SCHEMA = 1;
   const MAX_INPUT = 24 * 1024 * 1024;
   const MAX_NOTES = 35000;
@@ -1098,7 +1508,125 @@ else if (typeof exports === 'object'){
     ["distractors", "Distractors", "오답 해설"],
     ["source", "Source", "출처", "SourceURL", "SourceFile"],
     ["tags", "Tags", "태그"],
+    ["concept", "ConceptID", "개념ID", "연결 개념 ID"],
+    ["studyRole", "StudyRole", "학습 용도", "진단·보충·재시험 용도"],
   ];
+  const AUTHOR_FIELDS = {
+    kanji:["kanji","answer","word","reading","level","category","onReading","kunReading","example","translation","explanation","source","tags","id"],
+    quiz:["prompt","optionA","optionB","optionC","optionD","correct","answer","explanation","distractors","level","category","translation","example","source","tags","concept","studyRole","id"],
+    recall:["prompt","answer","explanation","example","translation","level","category","source","tags","id"],
+  };
+  const PASTE_FIELDS = {
+    kanji:["kanji","answer","word","reading"],
+    quiz:["prompt","optionA","optionB","optionC","optionD","correct","explanation","distractors"],
+    recall:["prompt","answer"],
+  };
+  const AUTHOR_LABELS = {
+    id:"NoteID", level:"급수", category:"영역", prompt:"질문·문제", answer:"정답·뜻",
+    explanation:"풀이 근거", kanji:"한자", word:"대표어", reading:"읽기", onReading:"음독", kunReading:"훈독",
+    example:"예문", translation:"전체 해석", optionA:"보기 A", optionB:"보기 B", optionC:"보기 C", optionD:"보기 D",
+    correct:"정답 번호", distractors:"오답 해설", source:"출처", tags:"태그",
+    concept:"연결 개념 ID", studyRole:"진단·보충·재시험 용도",
+  };
+  const STUDY_ROLES = { "진단":"diagnosis", "보충":"practice", "재시험":"retest", "변형 재시험":"retest" };
+
+  function authorFields(model) {
+    return AUTHOR_FIELDS[model].map(id => ({ id, label:AUTHOR_LABELS[id] }));
+  }
+
+  function pastedNotes(text, model, withHeader, level) {
+    if (bytes(text).length > MAX_INPUT) throw new Error("붙여넣을 자료를 24 MB 이하로 나눠 주세요.");
+    const table = parseDelimited(text,"\t").filter(entry => entry.row.some(cell => cell.trim()));
+    if (table.length > MAX_NOTES + Number(withHeader)) throw new Error("붙여넣을 노트 수가 제작 한도를 초과합니다.");
+    const headerKeys = new Map(COLUMNS.flatMap(([id,...names]) =>
+      [...names,AUTHOR_LABELS[id]].filter(Boolean).map(name => [normalizeHeader(name),id])));
+    const columns = withHeader ? (table.shift()?.row ?? []).map(name => headerKeys.get(normalizeHeader(name))) : PASTE_FIELDS[model];
+    if (withHeader && !columns.includes(model === "kanji" ? "kanji" : "prompt")) {
+      throw new Error("표의 첫 줄에 필요한 열 이름이 없습니다. " + AUTHOR_LABELS[model === "kanji" ? "kanji" : "prompt"] + " 열을 확인하세요.");
+    }
+    const defined = columns.filter(Boolean);
+    if (new Set(defined).size !== defined.length) throw new Error("붙여넣은 표에 중복 열이 있습니다.");
+    if (!table.length) throw new Error("붙여넣은 표에 카드 내용이 없습니다.");
+    return table.map(({row,line}) => {
+      if (row.slice(columns.length).some(cell => cell.trim())) {
+        throw new Error(line + "행에 지정된 것보다 열이 많습니다. 스프레드시트에서 열 이름까지 복사하거나 안내된 열 순서를 사용하세요.");
+      }
+      const item = Object.fromEntries(defined.map(id => [id,row[columns.indexOf(id)]?.trim() ?? ""]));
+      if (!item.level) item.level = level;
+      return item;
+    });
+  }
+
+  function authorSource(rows, model) {
+    return plainTSV(rows.map(row => {
+      if (model !== "quiz" || row.answer?.trim()) return row;
+      const letter = correctChoice(row.correct ?? "","",[row.optionA,row.optionB,row.optionC,row.optionD]);
+      return letter ? { ...row,answer:row["option" + letter] } : row;
+    }));
+  }
+
+  function learningBank(rows, job, add) {
+    const enabled = Card.STUDY_FEATURES.filter(role => job.learning.included[role]);
+    if (!enabled.length) return null;
+    const classify = row => Object.hasOwn(STUDY_ROLES,row.studyRole)
+      ? STUDY_ROLES[row.studyRole] : row.studyRole.toLowerCase();
+    const inputGroups = new Map();
+    const promptCounts = new Map();
+    for (const row of rows) {
+      if (!row.concept) continue;
+      if (!inputGroups.has(row.concept)) inputGroups.set(row.concept,new Set());
+      inputGroups.get(row.concept).add(classify(row));
+      const promptKey = JSON.stringify([row.concept,normalized(row.prompt)]);
+      promptCounts.set(promptKey,(promptCounts.get(promptKey) ?? 0) + 1);
+    }
+    const questions = [];
+    const concepts = new Set();
+    for (const row of rows) {
+      if (!row.studyRole) continue;
+      const role = classify(row);
+      if (!Card.STUDY_FEATURES.includes(role)) {
+        add("error",row.line,"용도는 진단, 보충, 재시험 중 하나를 사용하세요.");
+        continue;
+      }
+      if (!enabled.includes(role)) continue;
+      const concept = row.concept;
+      if (!concept) {
+        add("error",row.line,"학습 도구에 연결할 개념 ID가 필요합니다.");
+        continue;
+      }
+      if (promptCounts.get(JSON.stringify([concept,normalized(row.prompt)])) > 1) {
+        add("error",row.line,"같은 개념 안에서 진단·보충·재시험 질문은 서로 달라야 합니다.");
+        continue;
+      }
+      if (role === "retest" && ![...inputGroups.get(concept)].some(kind => kind !== "retest")) {
+        add("error",row.line,"변형 재시험은 개념 ID가 같은 원문항과 연결하세요.");
+        continue;
+      }
+      concepts.add(concept);
+      questions.push({
+        role,concept,category:Card.plain(row.category || row.level || "공통"),
+        prompt:Card.plain(row.prompt), options:[row.optionA,row.optionB,row.optionC,row.optionD].map(Card.plain),
+        correct:row.correct, explanation:Card.plain(row.explanation), distractors:Card.plain(row.distractors),
+      });
+    }
+    const roleLabels = { diagnosis:"진단",practice:"보충",retest:"재시험" };
+    for (const role of enabled) {
+      if (!questions.some(q => q.role === role)) add("error",0,"용도가 ‘" + roleLabels[role] + "’인 문제를 한 개 이상 입력하세요.");
+    }
+    const linkedRoles = new Map();
+    for (const q of questions) {
+      if (!linkedRoles.has(q.concept)) linkedRoles.set(q.concept,new Set());
+      linkedRoles.get(q.concept).add(q.role);
+    }
+    for (const [concept,roles] of linkedRoles) {
+      const missing = enabled.filter(role => !roles.has(role));
+      if (missing.length) {
+        add("error",0,concept + "에 " + missing.map(role => roleLabels[role]).join("·") + " 문제를 연결하세요.");
+      }
+    }
+    const links = rows.filter(row => concepts.has(row.concept)).map(row => [row.id,row.concept]);
+    return { questions,links };
+  }
   const GATES = [
     { id:"CONTENT", label:"정답·해설 검수" },
     { id:"IMPORT", label:"Anki 가져오기" },
@@ -1263,7 +1791,8 @@ else if (typeof exports === 'object'){
     const skipped = (directives.match(/\n/g) ?? []).length;
     for (const entry of table) entry.line += skipped;
     if (columns) table.unshift({ row: columns.trimEnd().split(delimiter), line: skipped });
-    return recordsFromTable(table, model, delimiter === "\t" ? "TSV" : "CSV");
+    const format = name === "웹에서_작성한_카드.tsv" ? "웹 직접 작성" : delimiter === "\t" ? "TSV" : "CSV";
+    return recordsFromTable(table, model, format);
   }
 
   function versionKey(input) {
@@ -1295,6 +1824,7 @@ else if (typeof exports === 'object'){
       throw new Error(`목표 노트 수는 1~${MAX_NOTES.toLocaleString()} 범위로 입력하세요.`);
     }
     if (job.level && !/^N[1-5]$/.test(job.level)) throw new Error("급수는 N5~N1 중에서 선택하세요.");
+    job.learning = Card.learningProfile(job.model,raw.learning);
     return job;
   }
 
@@ -1371,7 +1901,8 @@ else if (typeof exports === 'object'){
     if (parsed.mappedLegacy) add("notice", 0, "기존 한자 MASTER의 핵심 학습 필드를 Studio의 신규 노트 유형에 매핑합니다.");
     if (job.level && rows.length !== allRows.length) add("notice", 0, `선택 급수 밖 ${allRows.length - rows.length}개 노트를 범위에서 제외했습니다.`);
     if (job.sample) add("notice", 0, "제작 연습용으로 제공한 표본입니다.");
-    return { rows, issues, distribution: [...distribution].map(([label, notes]) => ({
+    const bank = learningBank(rows,job,add);
+    return { rows, bank, issues, distribution: [...distribution].map(([label, notes]) => ({
       label, notes, cards: notes * Card.MODELS[job.model].types.length,
     })), total: allRows.length, errors: errorCount() };
   }
@@ -1402,6 +1933,18 @@ else if (typeof exports === 'object'){
     try {
       const { shape, identities } = manifest;
       checkDb(db,identities.length,identities.length*shape.cards.length,shape);
+      const previousModel = JSON.parse(scalar(db,"SELECT models FROM col"))[String(shape.id)];
+      if (!previousModel || previousModel.did !== shape.did ||
+          JSON.stringify(previousModel.flds.map(f => f.name)) !== JSON.stringify(shape.fields) ||
+          JSON.stringify(previousModel.tmpls.map(t => t.name)) !== JSON.stringify(shape.cards) ||
+          previousModel.flds.some((f,i) => f.ord !== i || f.id !== i + 1) ||
+          previousModel.tmpls.some((t,i) => t.ord !== i || t.id !== i + 1) ||
+          shape.schemaHash !== await digest(asJSON({
+            fields:previousModel.flds,templates:previousModel.tmpls,
+            css:previousModel.css.replace(/^\.card\{margin:0;background:transparent\}/,""),
+          }))) {
+        throw new Error("이전 후보의 필드, 카드 유형 또는 카드 템플릿을 확인할 수 없습니다.");
+      }
       const notes = new Map(db.exec("SELECT id,guid,flds FROM notes")[0].values.map(([nid,guid,fields]) =>
         [nid,{ guid,id:fields.split("\x1f",1)[0],cards:[] }]));
       for (const [cid,nid] of db.exec("SELECT id,nid FROM cards ORDER BY ord")[0].values) notes.get(nid).cards.push(cid);
@@ -1457,14 +2000,14 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     lapse: { delays:[10], leechAction:0, leechFails:8, minInt:1, mult:0 },
   };
 
-  async function modelMeta(job, clock) {
+  async function modelMeta(job, clock, bank) {
     const scope = job.product + "\0" + job.model;
     const id = slugValue(await digest(scope + "\0model"));
     const did = slugValue(await digest(scope + "\0deck"));
     const fields = Card.FIELDS.map((name, ord) => ({ name, ord, sticky:false, rtl:false, font:"Arial", size:20, id:ord + 1 }));
     const templates = Card.MODELS[job.model].types.map((name, ord) => ({
       name, ord, did:null, bqfmt:"", bafmt:"", bfont:"", bsize:0, id:ord + 1,
-      qfmt:Card.ankiCard(job.model, ord, false), afmt:Card.ankiCard(job.model, ord, true),
+      qfmt:Card.ankiCard(job,ord,false,bank), afmt:Card.ankiCard(job,ord,true,bank),
     }));
     const shape = { id, did, template:Card.REVISION, fields:Card.FIELDS, cards:Card.MODELS[job.model].types,
       schemaHash:await digest(asJSON({ fields, templates, css:Card.CSS })) };
@@ -1487,7 +2030,9 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     const source = prior.manifest;
     if (source.job?.product !== job.product || source.job?.model !== job.model ||
         source.job?.name !== job.name || source.job?.level !== job.level ||
-        source.job?.sample !== job.sample || source.shape?.schemaHash !== shape.schemaHash ||
+        source.job?.sample !== job.sample || !["studio-card-1",Card.REVISION].includes(source.shape?.template) ||
+        JSON.stringify(source.shape?.fields) !== JSON.stringify(shape.fields) ||
+        JSON.stringify(source.shape?.cards) !== JSON.stringify(shape.cards) ||
         source.shape?.did !== shape.did || source.shape?.id !== shape.id) {
       throw new Error("이전판의 제품 ID·모델·덱 이름·급수 범위·템플릿이 일치해야 합니다.");
     }
@@ -1531,7 +2076,9 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     for (let offset = 0; offset < rows.length; offset += 160) {
       const group = rows.slice(offset, offset + 160);
       const hashes = await Promise.all(group.map(async row => {
-        const { line, source, ...data } = row;
+        const { line,source,concept,studyRole,...data } = row;
+        if (concept) data.concept = concept;
+        if (studyRole) data.studyRole = studyRole;
         const [guid, content, sum] = await Promise.all([
           digest(scope + "\0" + row.id), digest(asJSON(data)), digest(row.id, "SHA-1"),
         ]);
@@ -1653,6 +2200,16 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     for (const item of [["원본",source.name],["SHA-256",source.sha256],["입력 형식",source.form],
       ["제품",job.product],["버전",job.version],["모델",Card.MODELS[job.model].name],
       ["범위",job.level || "전체"],["노트 수",rows.length]]) info.addRow(item);
+    if (job.learning) {
+      const learning = workbook.addWorksheet("LEARNING");
+      learning.columns = [{ header:"학습 기능",width:34 },{ header:"포함",width:12 },{ header:"기본값",width:26 }];
+      for (const spec of Card.APPEARANCE) learning.addRow([spec.label,"",spec.values.find(([v]) => v === job.learning.appearance[spec.id])?.[1] ?? ""]);
+      for (const spec of Card.LEARNING_FEATURES) {
+        const active = job.learning.included[spec.id];
+        const preference = spec.defaultLabel && active ? job.learning.opened[spec.id] ? spec.defaultLabel : "닫힘·숨김" : "";
+        learning.addRow([spec.label,active ? "포함" : "제외",preference]);
+      }
+    }
     const written = await Zip.loadAsync(bytes(await workbook.xlsx.writeBuffer()));
     const normalized = new Zip();
     const date = new Date(time).toISOString();
@@ -1705,7 +2262,7 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
       turn.disabled = !record;
       count.textContent = record ? (index + 1) + " / " + list.length + "장" : "조건에 맞는 카드가 없습니다.";
       turn.textContent = answer ? "앞면 보기" : "정답 보기";
-      mount.innerHTML = record ? Card.previewCard(record.row, deck.job, record.ordinal, answer) : "";
+      mount.innerHTML = record ? Card.previewCard(record.row,deck.job,record.ordinal,answer,deck.bank) : "";
       Card.install(mount);
     }
     function search() {
@@ -1729,8 +2286,8 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     search();
   }
 
-  function previewHTML(rows, job, dataset, source) {
-    const data = JSON.stringify({ rows, job }).replaceAll("<","\\u003c");
+  function previewHTML(rows, job, dataset, source, bank) {
+    const data = JSON.stringify({ rows,job,bank }).replaceAll("<","\\u003c");
     const code = ("globalThis.AnkiOpsCard=" + Card.browserSource() + ";(" + startStandalonePreview.toString() + ")();")
       .replace(/<\/script/gi, "<\\/script");
     const title = Card.escape(job.name);
@@ -2517,7 +3074,7 @@ copy of the Program in return for a fee.
     }
     progress("source");
     const scan = await inspect(args);
-    const { job, parsed, rows, issues, errors, distribution } = scan;
+    const { job, parsed, rows, bank, issues, errors, distribution } = scan;
     if (errors) {
       const error = new Error(`원본 검사에서 해결할 항목 ${errors}건을 찾았습니다.`);
       error.issues = issues;
@@ -2530,7 +3087,7 @@ copy of the Program in return for a fee.
     if (job.mode === "update" && parsed.mappedLegacy) throw new Error("이전 한자 MASTER는 Studio 신규 제작용입니다. 업데이트에는 Studio MASTER를 사용하세요.");
     const clock = Math.max(Math.floor(createdAt/1000), (prior?.manifest.clock ?? 0) + 1);
     const stamp = new Date(createdAt).toISOString();
-    const meta = await modelMeta(job, clock);
+    const meta = await modelMeta(job,clock,bank);
     const { shape } = meta;
     const previous = previousIdentities(prior,job,shape,rows);
     const { identities, groups, perGroup } = await makeIdentities(rows,shape,meta.scope,previous,createdAt,job.model);
@@ -2564,7 +3121,7 @@ copy of the Program in return for a fee.
       [apkgName]:apkg,
       "MASTER.xlsx":master,
       "NOTES.tsv":plainTSV(rows),
-      "preview.html":previewHTML(rows,job,dataset,source),
+      "preview.html":previewHTML(rows,job,dataset,source,bank),
       "QA.json":asJSON(result),
       "RUN.json":asJSON(run),
       "CHANGELOG.md":`# v${job.version}\n\n- 추가 ${groups.added} · 수정 ${groups.updated} · 유지 ${groups.unchanged}\n- ${dataset.notes}노트 / ${dataset.cards}카드\n`,
@@ -2573,28 +3130,48 @@ copy of the Program in return for a fee.
         ? "# 업데이트\n\n1. Anki 컬렉션을 백업하고 별도 프로필에서 이전판을 불러옵니다.\n2. 복습 기록이 있는 테스트 카드를 준비합니다.\n3. 후보 APKG를 가져오고 중복·수정 내용·기존 복습 기록을 확인합니다.\n4. 모바일 기기와 동기화를 확인한 뒤 QA에 근거를 기록합니다.\n"
         : "# 신규 가져오기\n\n별도 Anki 프로필에서 APKG를 불러오고 노트·카드 수와 앞뒷면을 확인합니다. 이 패키지에는 학습 이력이 들어 있지 않습니다.\n",
     };
-    const details = {};
-    const zip = new Zip();
-    for (const [file, data] of Object.entries(files)) {
-      details[file] = { sha256:await digest(data), size:bytes(data).byteLength };
-      addFile(zip,file,data,stamp);
-    }
     const manifest = {
       kind:"anki-ops-release", schema:SCHEMA, studioVersion:VERSION,
       id, job, shape, clock, source, dataset,
-      identities:identities.map(({ checksum, ...info }) => info), files:details,
+      identities:identities.map(({ checksum, ...info }) => info),
     };
-    files["manifest.json"] = asJSON(manifest);
-    details["manifest.json"] = { sha256:await digest(files["manifest.json"]), size:bytes(files["manifest.json"]).byteLength };
-    files["SHA256SUMS.txt"] = Object.entries(details).map(([file, detail]) => detail.sha256 + "  " + file).join("\n") + "\n";
-    addFile(zip,"manifest.json",files["manifest.json"],stamp);
-    addFile(zip,"SHA256SUMS.txt",files["SHA256SUMS.txt"],stamp);
-    const archive = await compress(zip);
-    return { run, result, files, archive, archiveName:stem+"-candidate.zip", apkgName, rows };
+    const archive = await archiveFiles(files,manifest,stamp);
+    return { run,result,files,archive,archiveName:stem+"-candidate.zip",apkgName,rows,bank };
   }
 
-  return { VERSION, GATES, GATE_LABELS, MAX_INPUT, MAX_NOTES, digest, build, inspect, stageGates,
-    validateJob, templateWorkbook, previousRelease };
+  async function archiveFiles(files,manifest,stamp) {
+    const details = {};
+    const zip = new Zip();
+    for (const [file,data] of Object.entries(files)) {
+      if (file === "manifest.json" || file === "SHA256SUMS.txt") continue;
+      details[file] = { sha256:await digest(data),size:bytes(data).byteLength };
+      addFile(zip,file,data,stamp);
+    }
+    files["manifest.json"] = asJSON({ ...manifest,files:details });
+    details["manifest.json"] = { sha256:await digest(files["manifest.json"]),size:bytes(files["manifest.json"]).byteLength };
+    files["SHA256SUMS.txt"] = Object.entries(details).map(([file,detail]) => detail.sha256 + "  " + file).join("\n") + "\n";
+    addFile(zip,"manifest.json",files["manifest.json"],stamp);
+    addFile(zip,"SHA256SUMS.txt",files["SHA256SUMS.txt"],stamp);
+    return compress(zip);
+  }
+
+  async function updateEvidence(build,evidence) {
+    const { run } = build;
+    const files = { ...build.files };
+    const result = { ...build.result,gates:stageGates(run.job,evidence) };
+    if (await digest(files[build.apkgName]) !== result.packageSHA256) {
+      throw new Error("기존 후보 APKG의 해시를 확인할 수 없습니다.");
+    }
+    files["QA.json"] = asJSON(result);
+    files["RELEASE.md"] = proofMarkdown(run.job,result,run);
+    const archive = await archiveFiles(files,JSON.parse(files["manifest.json"]),run.createdAt);
+    return { ...build, files, result, archive };
+  }
+
+  return { VERSION,GATES,GATE_LABELS,MAX_INPUT,MAX_NOTES,digest,build,inspect,stageGates,
+    validateJob,templateWorkbook,previousRelease,updateEvidence,authorFields,pastedNotes,parseSource,authorSource,
+    pasteFields:model => PASTE_FIELDS[model].map(key => AUTHOR_LABELS[key]) };
+
 });
 
 </script>
@@ -2868,13 +3445,12 @@ copy of the Program in return for a fee.
       "  --ink:var(--ao-ink); --muted:var(--ao-muted);",
       "}",
       "body.card { background:var(--ao-bg) !important; color:var(--ao-ink); }",
-      ".deck-card { background:var(--ao-surface) !important; border-color:var(--ao-line) !important; color:var(--ao-ink) !important; }",
-      ".deck-card .dc-top, .deck-card .dc-meta, .deck-card .dc-detail b, .deck-card .dc-reading,",
-      ".deck-card .dc-prompt, .deck-card summary { color:var(--ao-muted) !important; }",
-      ".deck-card .dc-grade, .deck-card .dc-answer { background:var(--ao-soft) !important; color:var(--ao-accent) !important; }",
-      ".deck-card .dc-answer { border-left-color:var(--ao-accent) !important; }",
-      ".deck-card .dc-tools { border-top-color:var(--ao-line); }",
-      ".deck-card button:not([data-right=yes]):not([aria-pressed=true]) {",
+      ".deck-card:not([data-theme=dark]) { background:var(--ao-surface) !important; border-color:var(--ao-line) !important; color:var(--ao-ink) !important; }",
+      ".deck-card:not([data-theme=dark]) :is(.dc-top,.dc-meta,.dc-detail b,.dc-reading,.dc-prompt,summary) { color:var(--ao-muted) !important; }",
+      ".deck-card:not([data-theme=dark]) :is(.dc-grade,.dc-answer) { background:var(--ao-soft) !important; color:var(--ao-accent) !important; }",
+      ".deck-card:not([data-theme=dark]) .dc-answer { border-left-color:var(--ao-accent) !important; }",
+      ".deck-card:not([data-theme=dark]) .dc-tools { border-top-color:var(--ao-line); }",
+      ".deck-card:not([data-theme=dark]) button:not([data-right=yes]):not([aria-pressed=true]) {",
       "  color:var(--ao-ink); background:var(--ao-surface); border-color:var(--ao-line);",
       "}",
       ".deck-card button:focus-visible, .deck-card summary:focus-visible { outline-color:var(--ao-accent); }",
@@ -3373,6 +3949,287 @@ globalThis.AnkiOpsSample = {
 
 
 </script>
+<script data-bundle="author.js">
+(() => {
+  "use strict";
+  const Factory = globalThis.AnkiOpsFactory;
+  const Card = globalThis.AnkiOpsCard;
+  const $ = id => document.getElementById(id);
+  const modelOf = () => $("model").value;
+  const select = (values) => {
+    const field = document.createElement("select");
+    for (const [value,label] of values) {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = label;
+      field.append(option);
+    }
+    return field;
+  };
+  const label = (text, control, controlFirst = false) => {
+    const node = document.createElement("label");
+    if (controlFirst) node.append(control,text);
+    else node.append(text,control);
+    return node;
+  };
+  const checkbox = () => {
+    const node = document.createElement("input");
+    node.type = "checkbox";
+    return node;
+  };
+  const appearance = new Map();
+  const features = new Map();
+  for (const spec of Card.APPEARANCE) {
+    const control = select(spec.values);
+    appearance.set(spec.id,control);
+    $("learning-appearance").append(label(spec.label,control));
+  }
+  for (const spec of Card.LEARNING_FEATURES) {
+    const row = document.createElement("div");
+    row.className = "learning-feature";
+    const included = checkbox();
+    row.append(label(spec.label,included,true));
+    let opened;
+    if (spec.defaultLabel) {
+      opened = checkbox();
+      const wrapper = label(spec.defaultLabel,opened,true);
+      wrapper.className = "learning-default";
+      opened.setAttribute("aria-label",spec.label + " · " + spec.defaultLabel);
+      row.append(wrapper);
+    }
+    features.set(spec.id,{ row,included,opened,spec });
+    $("learning-features").append(row);
+  }
+
+  const rawProfile = () => ({
+    included:Object.fromEntries([...features].map(([id,entry]) => [id,entry.included.checked])),
+    opened:Object.fromEntries([...features].filter(([,entry]) => entry.opened).map(([id,entry]) => [id,entry.opened.checked])),
+    appearance:Object.fromEntries([...appearance].map(([id,entry]) => [id,entry.value])),
+  });
+  let model = "";
+  function setProfile(value) {
+    model = modelOf();
+    const profile = Card.learningProfile(model,value);
+    for (const [id,control] of appearance) control.value = profile.appearance[id];
+    for (const [id,{ row,included,opened,spec }] of features) {
+      row.hidden = Boolean(spec.models && !spec.models.includes(model));
+      included.checked = profile.included[id];
+      if (opened) opened.checked = profile.opened[id];
+    }
+    refreshProfile();
+  }
+  function refreshProfile() {
+    const profile = Card.learningProfile(model,rawProfile());
+    const busy = $("build-form").getAttribute("aria-busy") === "true";
+    for (const [id,entry] of features) {
+      const unavailable = Card.STUDY_FEATURES.includes(id) && (!profile.included.settings || !profile.included.records);
+      entry.included.disabled = busy || unavailable;
+      if (unavailable) entry.included.checked = false;
+      if (entry.opened) entry.opened.disabled = busy || !profile.included[id];
+    }
+    $("learning-count").textContent = Object.values(profile.included).filter(Boolean).length + "개 포함";
+    $("learning-note").textContent = model === "quiz"
+      ? "진단·보충·재시험 중 필요한 기능을 고르세요. 선택한 기능의 문항에 용도를 지정하고, 연결할 문항의 개념 ID를 같게 입력하세요."
+      : "새 APKG에 적용합니다. 학습자가 바꾼 설정과 내 기록은 학습 기기에 저장됩니다.";
+  }
+  function syncProfile() {
+    if (model !== modelOf()) setProfile(rawProfile());
+    else refreshProfile();
+  }
+
+  function editor(callbacks) {
+    const panel = $("author-panel");
+    const drafts = new Map();
+    const storageKey = model => "anki-ops-author-v1:" + model;
+    let type, draft, restore, saveTimer, changed = false, storageFailed = false;
+    const longFields = new Set(["prompt","explanation","distractors","example","translation"]);
+    const required = {
+      kanji:new Set(["kanji","answer","word","reading","level"]),
+      quiz:new Set(["prompt","optionA","optionB","optionC","optionD","correct","explanation","distractors","level"]),
+      recall:new Set(["prompt","answer"]),
+    };
+    const hasContent = row => Object.entries(row).some(([id,value]) => !["id","level"].includes(id) && String(value ?? "").trim());
+    const defaultLevel = () => $("level").value;
+    const makeRow = (data = {}) => ({
+      ...data,id:data.id || "web-" + (globalThis.crypto.randomUUID?.() ??
+        Array.from(globalThis.crypto.getRandomValues(new Uint8Array(16)),v => v.toString(16).padStart(2,"0")).join("")),
+    });
+    function load(type) {
+      if (drafts.has(type)) return drafts.get(type);
+      let rows;
+      try { rows = JSON.parse(localStorage.getItem(storageKey(type))); } catch {}
+      const next = { rows:Array.isArray(rows) ? rows : [],index:0 };
+      drafts.set(type,next);
+      return next;
+    }
+    function save() {
+      if (!saveTimer) return;
+      clearTimeout(saveTimer);
+      saveTimer = null;
+      try { localStorage.setItem(storageKey(type),JSON.stringify(draft.rows)); storageFailed = false; }
+      catch { storageFailed = true; message("작성한 카드를 원본으로 적용한 뒤 파일로 저장하세요."); }
+    }
+    function message(text) {
+      $("author-status").textContent = text + (storageFailed ? " · 브라우저 저장 공간이 부족해 현재 탭에 보관합니다." : "");
+    }
+    function dirty() {
+      changed = true;
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(save,350);
+      message("카드 목록을 검토하고 원본으로 사용하세요.");
+      callbacks.changed();
+    }
+    function summary() {
+      const busy = $("build-form").getAttribute("aria-busy") === "true";
+      const count = draft.rows.length;
+      $("author-count").textContent = count ? (draft.index + 1) + " / " + count + "노트" : "작성한 노트 없음";
+      $("author-index").value = count ? draft.index + 1 : "";
+      $("author-index").max = count;
+      $("author-index").disabled = busy || !count;
+      $("author-prev").disabled = busy || draft.index === 0;
+      $("author-next").disabled = busy || draft.index >= count - 1;
+      $("author-remove").disabled = busy || !count;
+      $("author-undo").hidden = !restore;
+      $("author-from-source").hidden = !callbacks.canImport();
+      $("author-from-source").disabled = busy;
+      $("author-apply").disabled = busy || !draft.rows.some(hasContent);
+    }
+    function render(focus = false) {
+      const form = $("author-fields"), extra = $("author-optional");
+      form.replaceChildren(); extra.replaceChildren();
+      const row = draft.rows[draft.index];
+      $("author-extra").hidden = !row;
+      if (row) for (const { id,label:caption } of Factory.authorFields(type)) {
+        let field;
+        if (id === "level") field = select([["","급수 선택"],...["N5","N4","N3","N2","N1"].map(v => [v,v])]);
+        else if (id === "correct") field = select([["","정답 선택"],...["A","B","C","D"].map(v => [v,v])]);
+        else if (id === "studyRole") field = select([["","일반 카드"],["diagnosis","진단"],["practice","보충"],["retest","변형 재시험"]]);
+        else {
+          const multiline = longFields.has(id);
+          field = document.createElement(multiline ? "textarea" : "input");
+          if (multiline) field.rows = id === "prompt" ? 3 : 2;
+          else field.type = "text";
+        }
+        const aliases = id === "studyRole" ? { "진단":"diagnosis","보충":"practice","재시험":"retest","변형 재시험":"retest" }
+          : id === "correct" ? { 1:"A",2:"B",3:"C",4:"D",a:"A",b:"B",c:"C",d:"D" } : {};
+        const value = row[id] ?? "";
+        field.value = Object.hasOwn(aliases,value) ? aliases[value] : value;
+        field.id = "author-field-" + id;
+        field.addEventListener("input",() => {
+          row[id] = field.value;
+          dirty();
+          $("author-apply").disabled = !draft.rows.some(hasContent);
+        });
+        const parent = required[type].has(id) ? form : extra;
+        const wrapper = label(caption,field);
+        if (id === "prompt" || id === "explanation" || id === "distractors") wrapper.classList.add("wide");
+        parent.append(wrapper);
+      }
+      const columns = Factory.pasteFields(type);
+      $("author-paste-guide").textContent = "열 이름 없이 붙여넣을 때의 순서 · " + columns.join(" → ");
+      summary();
+      if (focus) form.querySelector("input, textarea, select")?.focus();
+    }
+    function sync() {
+      if (panel.hidden) return;
+      if (type !== modelOf()) { save(); type = modelOf(); draft = load(type); restore = null; changed = draft.rows.some(hasContent); render(); }
+      else summary();
+    }
+    function add(rows, focus = false) {
+      const occupied = draft.rows.filter(hasContent);
+      if (occupied.length + rows.length > Factory.MAX_NOTES) throw new Error("제작 노트 한도를 초과합니다.");
+      draft.rows = [...occupied,...rows.map(makeRow)];
+      draft.index = occupied.length;
+      dirty();
+      render(focus);
+    }
+    function go(index) {
+      if (!draft.rows.length || !Number.isFinite(index)) return;
+      draft.index = Math.max(0,Math.min(draft.rows.length - 1,index));
+      render();
+    }
+    $("author-prev").addEventListener("click",() => go(draft.index - 1));
+    $("author-next").addEventListener("click",() => go(draft.index + 1));
+    $("author-index").addEventListener("change",event => go(Number(event.target.value) - 1));
+    $("author-new").addEventListener("click",() => {
+      try { add([{ level:defaultLevel() }],true); } catch (error) { message(error.message); }
+    });
+    $("author-remove").addEventListener("click",() => {
+      restore = { index:draft.index,row:draft.rows.splice(draft.index,1)[0] };
+      draft.index = Math.max(0,Math.min(draft.index,draft.rows.length - 1));
+      dirty();
+      render();
+    });
+    $("author-undo").addEventListener("click",() => {
+      if (!restore) return;
+      draft.index = restore.index;
+      draft.rows.splice(restore.index,0,restore.row);
+      restore = null;
+      dirty();
+      render();
+    });
+    $("author-paste-add").addEventListener("click",() => {
+      try {
+        const field = $("author-paste");
+        const rows = Factory.pastedNotes(field.value,type,$("author-with-header").checked,defaultLevel());
+        add(rows);
+        field.value = "";
+        message(rows.length + "노트를 추가했습니다.");
+      } catch (error) { message(error.message); }
+    });
+    $("author-from-source").addEventListener("click",async () => {
+      const before = draft;
+      $("author-from-source").disabled = true;
+      try {
+        const rows = await callbacks.sourceNotes();
+        if (panel.hidden || draft !== before) return;
+        add(rows);
+        message(rows.length + "노트를 현재 파일에서 추가했습니다.");
+      } catch (error) { message(error.message); }
+      finally { if (!panel.hidden) summary(); }
+    });
+    $("author-apply").addEventListener("click",() => {
+      try {
+        const rows = draft.rows.filter(hasContent).map(row => makeRow(row));
+        draft.rows = rows;
+        draft.index = Math.max(0,Math.min(draft.index,rows.length - 1));
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(save,350);
+        save();
+        const text = Factory.authorSource(rows,type);
+        changed = false;
+        try { callbacks.use(text); } catch (error) { changed = true; throw error; }
+        render();
+        message(rows.length + "노트를 제작 원본에 적용했습니다.");
+      } catch (error) { message(error.message); }
+    });
+    panel.addEventListener("input",event => event.stopPropagation());
+    const close = () => { save(); panel.hidden = true; };
+    window.addEventListener("pagehide",save);
+    $("author-close").addEventListener("click",() => {
+      close();
+      $("author-open").focus();
+      callbacks.closed();
+    });
+    return {
+      open() {
+        save();
+        panel.hidden = false;
+        type = modelOf();
+        draft = load(type);
+        changed = draft.rows.some(hasContent);
+        restore = null;
+        if (!draft.rows.length) draft.rows.push(makeRow({ level:defaultLevel() }));
+        render();
+        message(changed ? "이 브라우저에서 작성하던 카드를 불러왔습니다." : "");
+      },
+      close,sync,pending:() => !panel.hidden && changed,
+    };
+  }
+
+  globalThis.AnkiOpsAuthor = { editor,setProfile,syncProfile,getProfile:() => Card.learningProfile(modelOf(),rawProfile()) };
+})();
+</script>
 <script data-bundle="app.js">
 (() => {
   "use strict";
@@ -3381,6 +4238,40 @@ globalThis.AnkiOpsSample = {
   const Factory = globalThis.AnkiOpsFactory;
   const Card = globalThis.AnkiOpsCard;
   const number = value => Number(value).toLocaleString("ko-KR");
+  const Author = globalThis.AnkiOpsAuthor;
+  const authorFilename = "웹에서_작성한_카드.tsv";
+  const author = Author.editor({
+    canImport:() => Boolean(state.input && state.file !== authorFilename),
+    sourceNotes:async () => (await Factory.parseSource(state.input,state.file,$("model").value)).rows,
+    changed() {
+      state.staged = null;
+      clearResult();
+      setStatus("직접 작성 중","작성한 카드를 제작 원본으로 적용하세요.");
+    },
+    closed:() => refreshInput(),
+    use(text) {
+      if (state.busy) throw new Error("현재 제작이 끝나면 다시 적용하세요.");
+      const encoded = new TextEncoder().encode(text);
+      if (encoded.length > Factory.MAX_INPUT) throw new Error("제작 원본 한도는 24 MB입니다.");
+      if (state.sample && $("mode").value !== "update") {
+        const sample = globalThis.AnkiOpsSample.job;
+        const fields = $("build-form").elements;
+        for (const key of ["name","product","expected","level"]) {
+          const field = fields.namedItem(key);
+          if (field.value === String(sample[key])) field.value = "";
+        }
+        if ($("release-version").value === sample.version) $("release-version").value = "1.0.0-RC1";
+        state.sample = false;
+      }
+      state.file = authorFilename;
+      state.input = encoded;
+      state.staged = null;
+      $("source-file").value = "";
+      clearResult();
+      fileDisplay();
+      refreshInput();
+    },
+  });
   const prepared = new Map();
   const memory = new Map();
   const viewNames = { work:"덱 제작", design:"카드 디자인", history:"실행 이력", rules:"운영 기준" };
@@ -3548,7 +4439,7 @@ globalThis.AnkiOpsSample = {
   }
 
   function jobFromForm() {
-    return Object.assign(Object.fromEntries(new FormData($("build-form")).entries()),{ sample:state.sample });
+    return Object.assign(Object.fromEntries(new FormData($("build-form")).entries()),{ sample:state.sample,learning:Author.getProfile() });
   }
 
   function applyJob(raw) {
@@ -3556,11 +4447,14 @@ globalThis.AnkiOpsSample = {
     for (const attr of ["name","product","version","model","mode","level","expected"]) {
       fields.namedItem(attr).value = raw[attr] ?? "";
     }
+    Author.setProfile(raw.learning);
     updateModel();
   }
 
   function updateModel() {
     const model = $("model").value;
+    Author.syncProfile();
+    author.sync();
     $("model-hint").textContent = model === "kanji"
       ? "한자 인식 · 한자 쓰기 · 대표어 읽기"
       : model === "quiz" ? "문제 · 4개 보기 · 정답 근거 · 오답 해설" : "앞면 · 뒷면 · 선택 해설";
@@ -3629,8 +4523,14 @@ globalThis.AnkiOpsSample = {
     if (state.busy) return;
     hideError();
     workflow(state.file ? "verify" : "source");
+    if (author.pending()) {
+      const message = "작성한 카드를 제작 원본으로 적용하세요.";
+      setStatus("직접 작성 중",message);
+      if (showDetails) showError(new Error(message),true);
+      return;
+    }
     if (!state.file) {
-      const message = "원본을 선택하거나 N5 표본을 불러오세요.";
+      const message = "카드를 직접 작성하거나 원본 파일을 선택하세요.";
       setStatus("제작 준비",message);
       if (showDetails) showError(new Error(message),true);
       return;
@@ -3660,6 +4560,7 @@ globalThis.AnkiOpsSample = {
 
   function loadSample() {
     if (state.busy) return;
+    author.close();
     state.sample = true;
     state.file = "JLPT_N5_제작표본.tsv";
     state.input = new TextEncoder().encode(globalThis.AnkiOpsSample.tsv);
@@ -3676,6 +4577,7 @@ globalThis.AnkiOpsSample = {
 
   function reset() {
     if (state.busy) return;
+    author.close();
     state.sample = false;
     state.file = null;
     state.input = null;
@@ -3701,6 +4603,7 @@ globalThis.AnkiOpsSample = {
     busy(true,"원본 읽는 중…");
     try {
       const data = await file.arrayBuffer();
+      author.close();
       const wasSample = state.sample;
       state.file = file.name;
       state.input = data;
@@ -3752,6 +4655,7 @@ globalThis.AnkiOpsSample = {
 
   function draftUpdate() {
     if (!state.build || state.busy) return;
+    author.close();
     const candidate = state.build;
     const next = { ...candidate.run.job, mode:"update", expected:"" };
     const rc = /^(.*)-RC(\d+)$/i.exec(next.version);
@@ -3782,6 +4686,7 @@ globalThis.AnkiOpsSample = {
       const record = await getRecord(key);
       if (!record) throw new Error("저장한 실행을 찾을 수 없습니다.");
       state.scan += 1;
+      author.close();
       switchView("work");
       state.file = record.file;
       state.input = record.input;
@@ -3926,8 +4831,8 @@ globalThis.AnkiOpsSample = {
     }
     const source = await refreshInput(true);
     if (!source || state.view !== "work") return;
-    const { job, rows } = source;
-    setPreview(job,rows);
+    const { job, rows, bank } = source;
+    setPreview(job,rows,bank);
     workflow("render");
     const description = [job.name,"v" + job.version,"제작 전 미리보기"].join(" · ");
     showResults("preview","카드 미리보기",description,false);
@@ -3940,8 +4845,8 @@ globalThis.AnkiOpsSample = {
     else runJob(state.staged,undefined,"files");
   }
 
-  function setPreview(job, rows) {
-    state.preview = { job, rows };
+  function setPreview(job,rows,bank) {
+    state.preview = { job,rows,bank };
     $("card-search").value = "";
     const select = $("card-type");
     select.replaceChildren(element("option","전체 유형"));
@@ -3978,7 +4883,7 @@ globalThis.AnkiOpsSample = {
     $("card-turn").textContent = state.side ? "앞면 보기" : "정답 보기";
     $("card-position").textContent = record ? number(state.cursor + 1) + " / " + number(state.visibleCards.length) + "장" : "검색 결과 없음";
     const mount = $("card-mount");
-    mount.innerHTML = record ? Card.previewCard(record.row,state.preview.job,record.ordinal,state.side) : "";
+    mount.innerHTML = record ? Card.previewCard(record.row,state.preview.job,record.ordinal,state.side,state.preview.bank) : "";
     Card.install(mount);
   }
 
@@ -4020,7 +4925,7 @@ globalThis.AnkiOpsSample = {
     }
     showQA(build);
     renderFiles(build);
-    setPreview(job,build.rows);
+    setPreview(job,build.rows,build.bank);
     showResults(tab,"제작 결과",description,true);
     setStatus("후보 생성 완료",number(dataset.notes) + "노트 · " + number(dataset.cards) + "카드 · 정적 검사 통과");
   }
@@ -4030,9 +4935,11 @@ globalThis.AnkiOpsSample = {
     state.scan += 1;
     $("build").textContent = enabled ? label : "검증 및 후보 생성";
     $("build-form").setAttribute("aria-busy",String(enabled));
-    for (const control of document.querySelectorAll("#workflow button,#build-form input,#build-form select,#build-form button,#evidence-form input,#evidence-form select,#evidence-form button")) {
+    for (const control of document.querySelectorAll("#workflow button,#build-form input,#build-form select,#build-form textarea,#build-form button,#evidence-form input,#evidence-form select,#evidence-form button")) {
       control.disabled = enabled;
     }
+    Author.syncProfile();
+    author.sync();
   }
 
   async function runJob(existing, evidence, tab = "quality") {
@@ -4040,7 +4947,8 @@ globalThis.AnkiOpsSample = {
     hideError();
     let job;
     try {
-      if (!existing && !state.input) throw new Error("엑셀·TSV·CSV 원본을 선택하세요.");
+      if (!existing && author.pending()) throw new Error("작성한 카드를 제작 원본으로 적용하세요.");
+      if (!existing && !state.input) throw new Error("카드를 직접 작성하거나 원본 파일을 선택하세요.");
       job = existing ? existing.raw : Factory.validateJob(jobFromForm());
       if (job.mode === "update" && !(existing?.prior || state.prior)) throw new Error("이전 후보 ZIP을 선택하세요.");
     } catch (error) {
@@ -4063,13 +4971,11 @@ globalThis.AnkiOpsSample = {
         record.status = "started";
         await persist(record);
       }
-      const result = await Factory.build(inputFile(record), phase => {
-        workflow(phase);
-        setStatus(stepLabels[phase],"작업 상태는 실행 이력에서 확인할 수 있습니다.");
-      });
-      if (previousResult && previousResult.result.packageSHA256 !== result.result.packageSHA256) {
-        throw new Error("이전 후보와 APKG 해시가 달라 QA 기록 갱신을 중단했습니다.");
-      }
+      const result = previousResult ? await Factory.updateEvidence(previousResult,record.evidence)
+        : await Factory.build(inputFile(record), phase => {
+          workflow(phase);
+          setStatus(stepLabels[phase],"작업 상태는 실행 이력에서 확인할 수 있습니다.");
+        });
       record.result = result;
       record.status = "ready";
       record.error = "";
@@ -4102,6 +5008,10 @@ globalThis.AnkiOpsSample = {
   $("step-package").addEventListener("click",openPackage);
   $("load-sample").addEventListener("click",loadSample);
   $("reset").addEventListener("click",reset);
+  $("author-open").addEventListener("click",() => {
+    author.open();
+    reveal($("author-panel"),$("author-title"));
+  });
   $("choose-source").addEventListener("click",() => $("source-file").click());
   $("source-file").addEventListener("change",event => sourceChange(event.target.files[0]));
   $("prior-file").addEventListener("change",event => priorChange(event.target.files[0]));
