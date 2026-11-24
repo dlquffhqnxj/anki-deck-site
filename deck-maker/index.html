@@ -140,6 +140,19 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
 .design-stack label{display:grid;gap:5px;font-size:.85rem;font-weight:680}
 .design-stack input[type=file]{max-width:100%}
 .design-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.design-options{display:grid;gap:14px}
+.design-options fieldset{min-width:0;margin:0;padding:10px 12px 12px;border:1px solid var(--line);border-radius:9px}
+.design-options legend{padding:0 4px;color:var(--ink);font-size:.9rem;font-weight:740}
+.design-palettes{display:grid;grid-template-columns:repeat(auto-fit,minmax(87px,1fr));gap:6px}
+.design-palette{display:flex;align-items:center;gap:7px;min-height:42px;padding:5px 8px;text-align:left;
+  border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-size:.82rem;font-weight:650}
+.design-palette:hover,.design-palette[aria-pressed=true]{border-color:var(--accent);background:#f4f0fb}
+.design-palette[aria-pressed=true]{box-shadow:inset 0 0 0 1px var(--accent)}
+.palette-sample{width:18px;height:18px;flex:none;border:1px solid var(--line);border-radius:50%;background:var(--swatch,#fff)}
+.design-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:5px}
+.design-stack .design-feature{display:flex;align-items:center;gap:7px;min-height:36px;cursor:pointer}
+.design-feature input{width:17px;height:17px;margin:0;accent-color:var(--accent)}
+.design-feature input:disabled+span{color:var(--muted);font-weight:500}
 .design-export{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:9px}
 .design-actions input[type=color]{width:46px;height:42px;padding:4px;cursor:pointer}
 .design-preview{width:100%;height:570px;border:1px solid var(--line);border-radius:9px;background:#fff}
@@ -253,13 +266,13 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
     <main id="main" class="main" tabindex="-1">
       <header class="topbar">
         <div class="location"><span>워크스페이스</span><span aria-hidden="true">/</span><strong id="current-location">덱 제작</strong></div>
-        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.2.1.html">오프라인 실행본</a>
+        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.3.0.html">오프라인 실행본</a>
       </header>
       <div class="content">
         <section id="view-work" class="view">
           <div class="hero work-hero">
             <div>
-              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.2.1</span></div>
+              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.3.0</span></div>
               <p>원본을 선택하고 카드 앞뒷면을 확인한 뒤 Anki 덱을 만드세요.</p>
             </div>
             <a class="button secondary" href="#design">카드 디자인 변경</a>
@@ -338,6 +351,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
               <div><h2 id="results-title" tabindex="-1">제작 결과</h2><p id="run-meta"></p></div>
               <div id="result-actions" class="result-actions">
                 <button id="start-update" type="button" class="button secondary">업데이트 시작</button>
+                <button id="customize-built" type="button" class="button secondary">만든 덱 디자인 설정</button>
                 <button id="download-main" type="button" class="button primary">후보 ZIP 받기</button>
               </div>
             </div>
@@ -383,7 +397,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
         </section>
 
         <section id="view-design" class="view" hidden>
-          <div class="hero"><h1 id="design-title" tabindex="-1">카드 디자인 변경</h1><p>색상 선택기로 배경을, CSS로 글꼴·크기·여백을 바꿀 수 있습니다. 문제와 해설의 배치는 앞뒷면 HTML에서 바꿉니다.</p></div>
+          <div class="hero"><h1 id="design-title" tabindex="-1">카드 디자인 변경</h1><p>색상 테마와 카드에 표시할 항목을 골라 내 덱을 꾸며 보세요.</p></div>
           <div class="design-stack">
             <section class="panel">
               <div class="panel-head"><h2>기준 덱</h2></div>
@@ -405,19 +419,33 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
                       <label>노트 유형<select id="design-model"></select></label>
                       <label>카드 유형<select id="design-template"></select></label>
                     </div>
-                    <div class="design-actions">
-                      <label>카드 바깥 배경<input type="color" id="design-background" value="#f4f2ec"></label>
-                      <button type="button" class="button secondary" id="design-use-background">배경 적용</button>
+                    <div class="design-options">
+                      <fieldset>
+                        <legend>색상 테마</legend>
+                        <div id="design-palettes" class="design-palettes"></div>
+                      </fieldset>
+                      <fieldset>
+                        <legend>카드 표시 항목</legend>
+                        <div id="design-features" class="design-features"></div>
+                        <p class="form-hint">선택한 노트 유형의 모든 카드에 적용합니다. 해설과 예문은 뒷면에서 확인하세요.</p>
+                      </fieldset>
+                      <div class="design-actions">
+                        <button type="button" class="button secondary compact" id="design-reset-profile">테마·표시 항목 초기화</button>
+                      </div>
                     </div>
-                    <label>노트 유형 공통 CSS<textarea id="design-css" rows="8" spellcheck="false"></textarea></label>
                     <details class="design-details">
-                      <summary>카드 앞뒷면 HTML</summary>
+                      <summary>상세 편집 · 배경색·CSS·앞뒷면 HTML</summary>
+                      <div class="design-actions">
+                        <label>카드 바깥 배경<input type="color" id="design-background" value="#f4f2ec"></label>
+                        <button type="button" class="button secondary" id="design-use-background">배경 적용</button>
+                      </div>
+                      <label>노트 유형 공통 CSS<textarea id="design-css" rows="8" spellcheck="false"></textarea></label>
                       <label>앞면<textarea id="design-front" rows="6" spellcheck="false"></textarea></label>
                       <label>뒷면<textarea id="design-back" rows="6" spellcheck="false"></textarea></label>
+                      <div class="design-actions">
+                        <button type="button" id="design-render" class="button secondary">미리보기 적용</button>
+                      </div>
                     </details>
-                    <div class="design-actions">
-                      <button type="button" id="design-render" class="button secondary">미리보기 적용</button>
-                    </div>
                   </div>
                 </section>
                 <section class="panel">
@@ -1041,7 +1069,7 @@ else if (typeof exports === 'object'){
 })(globalThis, function (Card, Zip, Excel, initSql, sqlBinary) {
   "use strict";
 
-  const VERSION = "0.2.1";
+  const VERSION = "0.3.0";
   const SCHEMA = 1;
   const MAX_INPUT = 24 * 1024 * 1024;
   const MAX_NOTES = 35000;
@@ -2778,15 +2806,162 @@ copy of the Program in return for a fee.
 })(globalThis);
 </script>
 
+<script data-bundle="customization.js">
+(() => {
+  "use strict";
+
+  const themes = [
+    { id:"blue", label:"블루", background:"#eaf0fc", surface:"#fbfcff", soft:"#e2ebfc", border:"#c5d4ed", accent:"#244f93", ink:"#192b47", muted:"#405472" },
+    { id:"sage", label:"세이지", background:"#eaf2e9", surface:"#fcfefb", soft:"#e0efdf", border:"#c7d9c4", accent:"#326346", ink:"#23392a", muted:"#4b6353" },
+    { id:"lavender", label:"라벤더", background:"#f0ebfc", surface:"#fdfbff", soft:"#ebe2fb", border:"#d9c9ef", accent:"#62448f", ink:"#342748", muted:"#594c6a" },
+    { id:"rose", label:"로즈", background:"#faeaf0", surface:"#fffafc", soft:"#f7e0eb", border:"#ebc8d8", accent:"#8b3659", ink:"#452739", muted:"#704b5e" },
+    { id:"apricot", label:"살구", background:"#faecdf", surface:"#fffaf5", soft:"#f8e3d0", border:"#ebcdb3", accent:"#8c481f", ink:"#442b1d", muted:"#70523e" },
+    { id:"sand", label:"샌드", background:"#f4eedf", surface:"#fffdf6", soft:"#f4ecd5", border:"#e2d2ab", accent:"#71571b", ink:"#3b321e", muted:"#5c5339" },
+    { id:"teal", label:"청록", background:"#e5f2f1", surface:"#f9fefd", soft:"#d8efed", border:"#bcdcd9", accent:"#216362", ink:"#203c3d", muted:"#3f6465" },
+    { id:"slate", label:"슬레이트", background:"#e9edf2", surface:"#fafbfd", soft:"#e2e8ee", border:"#c5cfdb", accent:"#43536b", ink:"#263346", muted:"#4d5d72" },
+  ];
+  const byTheme = new Map(themes.map(theme => [theme.id,theme]));
+  const features = [
+    { id:"records", label:"내 기록", headings:["내 기록","학습 기록"], classes:["kr-record-button","kr-record-modal"] },
+    { id:"settings", label:"학습 설정", headings:["학습 설정","카드 환경 설정"], classes:["kr-settings-button","kr-settings-panel"] },
+    { id:"ruby", label:"후리가나", headings:[], classes:[], selectors:["ruby rt","ruby rp"] },
+    { id:"explanation", label:"풀이·오답 해설", headings:["풀이 근거","오답 해설","핵심 해설","선택지 해설","문항 근거","모양 풀이·구성·획순"], classes:[] },
+    { id:"examples", label:"예문·전체 해석", headings:["문장 예시","예문","해석","전체 해석","예문과 해석"], classes:[] },
+    { id:"level", label:"급수 표시", headings:[], classes:["dc-grade","kr-level-pill","kr-level-fact"] },
+  ];
+  const headingFeatures = new Map(features.flatMap(feature => feature.headings.map(title => [title,feature.id])));
+  const marker = "data-anki-ops-feature";
+  const block = /\n\n\/\* anki-ops-design (\{[^\r\n]*\}) \*\/[\s\S]*?\/\* end anki-ops-design \*\/\n/g;
+
+  function normalize(profile) {
+    const data = profile ?? {};
+    const off = Array.isArray(data.off) ? data.off : [];
+    const background = String(data.background ?? "");
+    return {
+      theme:byTheme.has(data.theme) ? data.theme : "",
+      off:features.map(feature => feature.id).filter(id => off.includes(id)),
+      background:/^#[a-f\d]{6}$/i.test(background) ? background.toLowerCase() : ""
+    };
+  }
+
+  function read(css) {
+    const marker = [...String(css ?? "").matchAll(block)].at(-1);
+    try { return normalize(marker ? JSON.parse(marker[1]) : null); }
+    catch { return normalize(null); }
+  }
+
+  function strip(css) {
+    return String(css ?? "").replace(block,"");
+  }
+
+  function paletteCSS(theme) {
+    const {background,surface,soft,border,accent,ink,muted} = theme;
+    return [
+      ":root, .nightMode, .night_mode, .kf-dark {",
+      "  --ao-bg:" + background + "; --ao-surface:" + surface + "; --ao-soft:" + soft + ";",
+      "  --ao-line:" + border + "; --ao-accent:" + accent + "; --ao-ink:" + ink + "; --ao-muted:" + muted + ";",
+      "  --kr-bg:var(--ao-bg); --kr-surface:var(--ao-surface); --kr-soft:var(--ao-soft);",
+      "  --kr-line:var(--ao-line); --kr-accent:var(--ao-accent); --kr-green:var(--ao-accent);",
+      "  --kr-text:var(--ao-ink); --kr-muted:var(--ao-muted);",
+      "  --paper:var(--ao-bg); --panel:var(--ao-surface); --panel-soft:var(--ao-soft);",
+      "  --line:var(--ao-line); --accent:var(--ao-accent); --accent-soft:var(--ao-soft);",
+      "  --ink:var(--ao-ink); --muted:var(--ao-muted);",
+      "}",
+      "body.card { background:var(--ao-bg) !important; color:var(--ao-ink); }",
+      ".deck-card { background:var(--ao-surface) !important; border-color:var(--ao-line) !important; color:var(--ao-ink) !important; }",
+      ".deck-card .dc-top, .deck-card .dc-meta, .deck-card .dc-detail b, .deck-card .dc-reading,",
+      ".deck-card .dc-prompt, .deck-card summary { color:var(--ao-muted) !important; }",
+      ".deck-card .dc-grade, .deck-card .dc-answer { background:var(--ao-soft) !important; color:var(--ao-accent) !important; }",
+      ".deck-card .dc-answer { border-left-color:var(--ao-accent) !important; }",
+      ".deck-card .dc-tools { border-top-color:var(--ao-line); }",
+      ".deck-card button:not([data-right=yes]):not([aria-pressed=true]) {",
+      "  color:var(--ao-ink); background:var(--ao-surface); border-color:var(--ao-line);",
+      "}",
+      ".deck-card button:focus-visible, .deck-card summary:focus-visible { outline-color:var(--ao-accent); }",
+    ].join("\n");
+  }
+
+  function rules(css, values) {
+    const profile = normalize(values);
+    const result = [];
+    const theme = byTheme.get(profile.theme);
+    if (theme) result.push(paletteCSS(theme));
+    if (profile.background) result.push("body.card { background: " + profile.background + " !important; }");
+    for (const feature of features) {
+      if (!profile.off.includes(feature.id)) continue;
+      const selectors = [
+        "[" + marker + '="' + feature.id + '"]',
+        ...feature.classes.map(name => "." + name),
+        ...(feature.selectors ?? []),
+      ];
+      result.push(selectors.join(", ") + " { display:none !important; }");
+    }
+    const original = strip(css);
+    if (!result.length) return original;
+    return original + "\n\n/* anki-ops-design " + JSON.stringify(profile) + " */\n" +
+      result.join("\n") + "\n/* end anki-ops-design */\n";
+  }
+
+  function fragments(markup) {
+    return String(markup ?? "").split(/(<script\b[^>]*>[\s\S]*?<\/script\s*>|<style\b[^>]*>[\s\S]*?<\/style\s*>|<!--[\s\S]*?-->)/gi);
+  }
+
+  function withFeatureHeadings(html, replace) {
+    return html.replace(
+      /(<(?:details|section|div|article)\b[^<>]*)(>\s*(?:\{\{[#^][^}]+\}\}\s*)*<(?:summary|b|strong|h[1-6])\b[^<>]*>\s*([^<]+?)\s*<\/(?:summary|b|strong|h[1-6])\s*>)/gi,
+      (match,open,rest,title) => {
+        const feature = headingFeatures.get(title.trim());
+        return feature ? replace(match,open,rest,feature) : match;
+      }
+    );
+  }
+
+  function annotate(markup, values) {
+    const {off} = normalize(values);
+    if (!off.length) return markup;
+    return fragments(markup)
+      .map((part,index) => index % 2 ? part : withFeatureHeadings(part,(match,open,rest,feature) => {
+        if (!off.includes(feature) || new RegExp("\\b" + marker + "\\s*=", "i").test(open)) return match;
+        return open + " " + marker + '="' + feature + '"' + rest;
+      })).join("");
+  }
+
+  function available(templates) {
+    const found = new Set(["ruby"]);
+    for (const template of templates) {
+      for (const side of [template.qfmt,template.afmt]) {
+        const markup = fragments(side).filter((_,index) => !(index % 2)).join("");
+        const classes = new Set([...markup.matchAll(/<[^<>]+\sclass\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)]
+          .flatMap(match => (match[1] ?? match[2]).split(/\s+/)));
+        for (const feature of features) {
+          if (feature.classes.some(name => classes.has(name))) found.add(feature.id);
+        }
+        withFeatureHeadings(markup,(match,_,__,feature) => {
+          found.add(feature);
+          return match;
+        });
+      }
+    }
+    return found;
+  }
+
+  globalThis.AnkiOpsCustomization = { themes,features,read,rules,annotate,available };
+})();
+</script>
+
 <script data-bundle="design.js">
 (() => {
   "use strict";
   const $ = id => document.getElementById(id);
   const Original = globalThis.AnkiOpsOriginal;
+  const Design = globalThis.AnkiOpsCustomization;
   const edits = new Map();
+  const paletteButtons = new Map();
+  const featureInputs = new Map();
   const number = value => Number(value).toLocaleString("ko-KR");
   const pageSize = 25;
   let deck, modelID, ordinal, page = 0, answer = false, previewVersion = 0, busy = false;
+  let availableFeatures = new Set();
   let mediaURLs = new Map();
 
   function options(select, entries) {
@@ -2811,6 +2986,7 @@ copy of the Program in return for a fee.
       $("design-next").disabled = $("design-card").dataset.next !== "yes";
       $("design-card").disabled = !$("design-card").value;
       $("design-flip").disabled = !$("design-card").value;
+      showProfile();
     }
   }
 
@@ -2820,6 +2996,73 @@ copy of the Program in return for a fee.
 
   function currentTemplate() {
     return currentModel().tmpls.find(item => String(item.ord) === ordinal);
+  }
+
+  function draftTemplates(id, design = edits.get(id)) {
+    return deck.models[id].tmpls.map(template => ({ ...template, ...design?.templates[template.ord] }));
+  }
+
+  function showProfile() {
+    const profile = Design.read($("design-css").value);
+    for (const [id,button] of paletteButtons) button.setAttribute("aria-pressed",String(id === profile.theme));
+    for (const [id,input] of featureInputs) {
+      input.checked = availableFeatures.has(id) && !profile.off.includes(id);
+      input.disabled = busy || !availableFeatures.has(id);
+      input.title = availableFeatures.has(id) ? "" : "이 노트 유형에서 찾을 수 없는 항목";
+    }
+    $("design-background").value = profile.background || Design.themes.find(theme => theme.id === profile.theme)?.background || "#f4f2ec";
+  }
+
+  function updateProfile(values) {
+    showError();
+    const css = $("design-css");
+    css.value = Design.rules(css.value,values);
+    saveDraft();
+    showProfile();
+    render();
+  }
+
+  function loadProfileControls() {
+    for (const theme of [{id:"",label:"원본",background:"#ffffff"},...Design.themes]) {
+      const button = document.createElement("button");
+      const sample = document.createElement("span");
+      button.type = "button";
+      button.className = "design-palette";
+      button.setAttribute("aria-pressed",theme.id ? "false" : "true");
+      sample.className = "palette-sample";
+      sample.setAttribute("aria-hidden","true");
+      sample.setAttribute("style","--swatch:" + (theme.accent
+        ? "linear-gradient(135deg," + theme.background + " 55%," + theme.accent + " 55%)"
+        : theme.background));
+      const label = document.createElement("span");
+      label.textContent = theme.label;
+      button.append(sample,label);
+      button.addEventListener("click",() => {
+        const profile = Design.read($("design-css").value);
+        updateProfile({ ...profile, theme:theme.id, background:"" });
+      });
+      paletteButtons.set(theme.id,button);
+      $("design-palettes").append(button);
+    }
+    for (const feature of Design.features) {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      const name = document.createElement("span");
+      label.className = "design-feature";
+      input.type = "checkbox";
+      input.value = feature.id;
+      name.textContent = feature.label;
+      label.append(input,name);
+      input.addEventListener("change",() => {
+        const profile = Design.read($("design-css").value);
+        const off = new Set(profile.off);
+        if (input.checked) off.delete(feature.id);
+        else off.add(feature.id);
+        updateProfile({ ...profile,off:[...off] });
+      });
+      featureInputs.set(feature.id,input);
+      $("design-features").append(label);
+    }
   }
 
   function textareaValue(value) {
@@ -2855,6 +3098,8 @@ copy of the Program in return for a fee.
     $("design-css").value = design?.css ?? currentModel().css;
     $("design-front").value = editedTemplate?.qfmt ?? original?.qfmt ?? "";
     $("design-back").value = editedTemplate?.afmt ?? original?.afmt ?? "";
+    availableFeatures = Design.available(draftTemplates(modelID));
+    showProfile();
   }
 
   function selectModel() {
@@ -2974,9 +3219,14 @@ copy of the Program in return for a fee.
         value.textContent = card.fields[index] || "—";
         fields.append(name,value);
       });
-      const template = { ...currentTemplate(), qfmt:$("design-front").value, afmt:$("design-back").value };
+      const css = $("design-css").value;
+      const profile = Design.read(css);
+      const template = { ...currentTemplate(),
+        qfmt:Design.annotate($("design-front").value,profile),
+        afmt:Design.annotate($("design-back").value,profile),
+      };
       const markup = Original.renderCard(model,template,card,answer);
-      const html = await previewDocument(deck,markup,$("design-css").value,card.ord);
+      const html = await previewDocument(deck,markup,css,card.ord);
       if (version === previewVersion) $("design-preview").srcdoc = html;
     } catch (error) {
       if (version === previewVersion) showError(error);
@@ -3017,6 +3267,24 @@ copy of the Program in return for a fee.
       "노트 유형 "+number(models)+"종","미디어 "+number(media)+"개"].join(" · ");
   }
 
+  function designsForExport() {
+    const exportEdits = {};
+    for (const [id,design] of edits) {
+      const { css } = design;
+      const model = deck.models[id];
+      const profile = Design.read(css ?? model.css);
+      const templates = {};
+      for (const original of model.tmpls) {
+        const current = design.templates[original.ord] ?? {};
+        const qfmt = Design.annotate(current.qfmt ?? original.qfmt,profile);
+        const afmt = Design.annotate(current.afmt ?? original.afmt,profile);
+        if (qfmt !== original.qfmt || afmt !== original.afmt) templates[original.ord] = { qfmt,afmt };
+      }
+      exportEdits[id] = { css,templates };
+    }
+    return exportEdits;
+  }
+
   async function download() {
     if (!deck || busy) return;
     showError();
@@ -3024,7 +3292,7 @@ copy of the Program in return for a fee.
     setBusy(true);
     $("design-progress").textContent = "APKG를 만드는 중입니다.";
     try {
-      const blob = await deck.save(Object.fromEntries(edits),{progress:info => {
+      const blob = await deck.save(designsForExport(),{progress:info => {
         $("design-progress").textContent = "APKG를 만드는 중입니다. " + Math.floor(info.percent) + "%";
       }});
       const url = URL.createObjectURL(blob);
@@ -3070,17 +3338,21 @@ copy of the Program in return for a fee.
   $("design-prev").addEventListener("click",() => listCards(page-1));
   $("design-next").addEventListener("click",() => listCards(page+1));
   $("design-flip").addEventListener("click",() => { answer = !answer; render(); });
-  $("design-render").addEventListener("click",() => { showError(); saveDraft(); render(); });
-  $("design-use-background").addEventListener("click",() => {
-    const color = $("design-background").value;
-    const css = $("design-css");
-    const rule = "/* 카드 바깥 배경 */\nbody.card { background: " + color + " !important; }";
-    const prior = /\/\* 카드 바깥 배경 \*\/\nbody\.card \{ background: #[a-f\d]{6} !important; \}/i;
-    css.value = prior.test(css.value) ? css.value.replace(prior,rule) : css.value + "\n\n" + rule + "\n";
+  $("design-render").addEventListener("click",() => {
+    showError();
     saveDraft();
+    availableFeatures = Design.available(draftTemplates(modelID));
+    showProfile();
     render();
   });
+  $("design-use-background").addEventListener("click",() => {
+    const profile = Design.read($("design-css").value);
+    updateProfile({ ...profile,background:$("design-background").value });
+  });
+  $("design-reset-profile").addEventListener("click",() => updateProfile({}));
   $("design-download").addEventListener("click",download);
+  loadProfileControls();
+  globalThis.AnkiOpsDesignEditor = { open:(input,name) => load(() => Original.open(input,name)) };
 })();
 </script>
 
@@ -3870,6 +4142,12 @@ globalThis.AnkiOpsSample = {
     if (state.build) download(state.build.archive,state.build.archiveName,"application/zip");
   });
   $("start-update").addEventListener("click",draftUpdate);
+  $("customize-built").addEventListener("click",() => {
+    const build = state.build;
+    if (!build) return;
+    switchView("design");
+    globalThis.AnkiOpsDesignEditor.open(build.files[build.apkgName],build.apkgName);
+  });
   $("card-prev").addEventListener("click",() => { state.cursor -= 1; state.side = false; renderCard(); });
   $("card-next").addEventListener("click",() => { state.cursor += 1; state.side = false; renderCard(); });
   $("card-turn").addEventListener("click",() => { state.side = !state.side; renderCard(); });
