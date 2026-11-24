@@ -60,6 +60,7 @@ h1,h2,h3,p{margin:0}
 .location strong{color:var(--ink);font-weight:650}
 .content{max-width:1296px;margin:auto;padding:37px clamp(18px,4vw,46px) 48px}
 .hero{margin-bottom:23px}
+.work-hero{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
 .hero-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .hero h1{font-size:clamp(1.8rem,3.2vw,2.65rem);letter-spacing:-.045em;line-height:1.24;font-weight:780}
 .hero p{margin-top:10px;color:var(--muted);font-size:1rem}
@@ -137,6 +138,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
 .design-stack textarea{display:block;width:100%;min-height:110px;padding:10px;border:1px solid #dcd9e6;
   border-radius:8px;background:#fcfbfe;color:var(--ink);font: .87rem/1.5 ui-monospace,Consolas,monospace;resize:vertical}
 .design-stack label{display:grid;gap:5px;font-size:.85rem;font-weight:680}
+.design-stack input[type=file]{max-width:100%}
 .design-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .design-export{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:9px}
 .design-actions input[type=color]{width:46px;height:42px;padding:4px;cursor:pointer}
@@ -235,7 +237,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
       <div class="brand"><span class="brand-icon" aria-hidden="true"></span><div><b>Anki 제작실</b><small>덱 운영 워크스페이스</small></div></div>
       <nav class="nav" aria-label="워크스페이스">
         <button type="button" data-view="work" aria-current="page"><span class="nav-icon nav-work" aria-hidden="true"></span>덱 제작</button>
-        <button type="button" data-view="design"><span class="nav-icon nav-work" aria-hidden="true"></span>기존 덱 편집</button>
+        <button type="button" data-view="design"><span class="nav-icon nav-work" aria-hidden="true"></span>카드 디자인</button>
         <button type="button" data-view="history"><span class="nav-icon nav-history" aria-hidden="true"></span>실행 이력<span id="history-count" class="nav-count" hidden></span></button>
         <button type="button" data-view="rules"><span class="nav-icon nav-rules" aria-hidden="true"></span>운영 기준</button>
       </nav>
@@ -251,13 +253,16 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
     <main id="main" class="main" tabindex="-1">
       <header class="topbar">
         <div class="location"><span>워크스페이스</span><span aria-hidden="true">/</span><strong id="current-location">덱 제작</strong></div>
-        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.2.0.html">오프라인 실행본</a>
+        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.2.1.html">오프라인 실행본</a>
       </header>
       <div class="content">
         <section id="view-work" class="view">
-          <div class="hero">
-            <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.2.0</span></div>
-            <p>원본을 선택하고 카드 앞뒷면을 확인한 뒤 Anki 덱을 만드세요.</p>
+          <div class="hero work-hero">
+            <div>
+              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.2.1</span></div>
+              <p>원본을 선택하고 카드 앞뒷면을 확인한 뒤 Anki 덱을 만드세요.</p>
+            </div>
+            <a class="button secondary" href="#design">카드 디자인 변경</a>
           </div>
           <ol id="workflow" class="workflow" aria-label="제작 진행 단계">
             <li data-step="source"><button type="button" id="step-source"><span aria-hidden="true"></span><b>원본 선택</b></button></li>
@@ -378,13 +383,16 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
         </section>
 
         <section id="view-design" class="view" hidden>
-          <div class="hero"><h1>기존 덱 편집</h1><p>기존 APKG의 카드 디자인을 편집하고 새 APKG로 저장하세요.</p></div>
+          <div class="hero"><h1 id="design-title" tabindex="-1">카드 디자인 변경</h1><p>색상 선택기로 배경을, CSS로 글꼴·크기·여백을 바꿀 수 있습니다. 문제와 해설의 배치는 앞뒷면 HTML에서 바꿉니다.</p></div>
           <div class="design-stack">
             <section class="panel">
               <div class="panel-head"><h2>기준 덱</h2></div>
               <div class="form-body design-stack">
-                <label>APKG 또는 APKG 하나가 든 ZIP<input type="file" id="design-source" accept=".apkg,.zip"></label>
-                <p id="design-summary" role="status">덱 파일을 선택하면 노트 유형과 카드 수가 표시됩니다.</p>
+                <label>편집할 APKG 또는 APKG 하나가 든 ZIP<input type="file" id="design-source" accept=".apkg,.zip"></label>
+                <div class="design-actions">
+                  <button type="button" id="design-sample" class="button secondary">N5 표본으로 디자인 체험</button>
+                </div>
+                <p id="design-summary" role="status">덱이나 표본을 열면 편집할 노트 유형과 카드가 표시됩니다.</p>
               </div>
             </section>
             <div id="design-error" class="error-panel" role="alert" hidden></div>
@@ -1033,7 +1041,7 @@ else if (typeof exports === 'object'){
 })(globalThis, function (Card, Zip, Excel, initSql, sqlBinary) {
   "use strict";
 
-  const VERSION = "0.2.0";
+  const VERSION = "0.2.1";
   const SCHEMA = 1;
   const MAX_INPUT = 24 * 1024 * 1024;
   const MAX_NOTES = 35000;
@@ -2975,13 +2983,13 @@ copy of the Program in return for a fee.
     }
   }
 
-  async function load(file) {
-    if (!file || busy) return;
+  async function load(openDeck) {
+    if (busy) return;
     setBusy(true);
     showError();
     $("design-summary").textContent = "기준 덱을 읽는 중입니다.";
     try {
-      const opened = await Original.open(file,file.name);
+      const opened = await openDeck();
       previewVersion++;
       if (deck) deck.close();
       deck = opened;
@@ -2990,12 +2998,13 @@ copy of the Program in return for a fee.
       options($("design-model"),Object.entries(deck.models).map(([id,model]) => [id,model.name]));
       selectModel();
       $("design-ready").hidden = false;
+      $("design-sample").parentElement.hidden = true;
       $("design-progress").textContent = "편집본은 별도 APKG 파일로 내려받습니다.";
       reportBaseDeck();
     } catch (error) {
       showError(error);
       if (deck) reportBaseDeck();
-      else $("design-summary").textContent = "기준 덱 파일을 선택하세요.";
+      else $("design-summary").textContent = "편집할 덱을 선택하거나 N5 표본을 열어 보세요.";
     } finally {
       $("design-source").value = "";
       setBusy(false);
@@ -3035,7 +3044,18 @@ copy of the Program in return for a fee.
     }
   }
 
-  $("design-source").addEventListener("change",event => load(event.target.files[0]));
+  $("design-source").addEventListener("change",event => {
+    const file = event.target.files[0];
+    if (file) load(() => Original.open(file,file.name));
+  });
+  $("design-sample").addEventListener("click",() => load(async () => {
+    const sample = globalThis.AnkiOpsSample;
+    const input = new TextEncoder().encode(sample.tsv);
+    const { files, apkgName } = await globalThis.AnkiOpsFactory.build({
+      input, name:"JLPT_N5_제작표본.tsv", job:sample.job,
+    });
+    return Original.open(files[apkgName],apkgName);
+  }));
   $("design-model").addEventListener("change",() => { saveDraft(); selectModel(); });
   $("design-template").addEventListener("change",() => {
     saveDraft();
@@ -3091,7 +3111,7 @@ globalThis.AnkiOpsSample = {
   const number = value => Number(value).toLocaleString("ko-KR");
   const prepared = new Map();
   const memory = new Map();
-  const viewNames = { work:"덱 제작", design:"기존 덱 편집", history:"실행 이력", rules:"운영 기준" };
+  const viewNames = { work:"덱 제작", design:"카드 디자인", history:"실행 이력", rules:"운영 기준" };
   const steps = ["source","verify","render","archive"];
   const stepLabels = {
     source:"원본을 읽는 중", verify:"입력과 이전판을 검증하는 중",
@@ -3241,7 +3261,18 @@ globalThis.AnkiOpsSample = {
       else tab.removeAttribute("aria-current");
     }
     if (view === "history") renderHistory();
+    if (view === "design") {
+      if (location.hash !== "#design") location.hash = "#design";
+      $("design-title").focus({ preventScroll:true });
+    } else if (location.hash === "#design") {
+      location.hash = "";
+    }
     window.scrollTo(0,0);
+  }
+
+  function showLinkedView() {
+    if (location.hash === "#design" && state.view !== "design") switchView("design");
+    else if (!location.hash && state.view === "design") switchView("work");
   }
 
   function jobFromForm() {
@@ -3845,6 +3876,8 @@ globalThis.AnkiOpsSample = {
   $("card-search").addEventListener("input",resetCardList);
   $("card-type").addEventListener("input",resetCardList);
   if (location.protocol === "file:") $("portable-link").hidden = true;
+  window.addEventListener("hashchange",showLinkedView);
+  showLinkedView();
   loadSample();
   loadHistory();
 })();
