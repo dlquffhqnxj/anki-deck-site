@@ -20,7 +20,7 @@ jobs:
       PAGES_ARTIFACT_NAME: github-pages-${{ github.run_attempt }}
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.retry_deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - name: Check catalog and release links
@@ -29,6 +29,23 @@ jobs:
         run: node --test scripts/check_study.cjs
       - name: Check deck authoring and cumulative updates
         run: node --test scripts/check_deck_maker.cjs
+      - name: Keep each published producer version immutable
+        run: |
+          version=$(node scripts/deck_maker_release.cjs --version)
+          tag="deck-maker-v$version"
+          existing=$(git ls-remote --tags origin "refs/tags/$tag")
+          if [[ -n "$existing" ]]; then
+            git fetch --depth=1 origin "refs/tags/$tag:refs/tags/$tag"
+            git diff --quiet "$tag" HEAD -- deck-maker/index.html || {
+              echo '::error::Increment the deck maker version and add its changelog entry before deploying changed code.'
+              exit 1
+            }
+          fi
+      - name: Build the public ten-card practice preview
+        run: |
+          node scripts/deck_maker_release.cjs "$RUNNER_TEMP/deck-maker-release"
+          mkdir -p deck-maker/contrast
+          cp "$RUNNER_TEMP/deck-maker-release/JLPT_Grammar_Contrast_10_Preview.html" deck-maker/contrast/index.html
       - name: Stage verified Munkyeol furigana dictionaries
         run: python3 munkyeol/stage-dictionaries.py munkyeol/furigana
       - uses: actions/configure-pages@v5
@@ -51,5 +68,41 @@ jobs:
           exit 1
       - uses: actions/deploy-pages@v4
         id: deployment
+        continue-on-error: true
         with:
           artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
+      - name: Allow the uploaded Pages artifact to propagate
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 12
+      - uses: actions/deploy-pages@v4
+        id: retry_deployment
+        if: steps.deployment.outcome == 'failure'
+        with:
+          artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
+
+  deck-maker-release:
+    needs: publish
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Archive each published deck maker version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(node scripts/deck_maker_release.cjs --version)
+          tag="deck-maker-v$version"
+          draft=$(gh release view "$tag" --json isDraft --jq .isDraft 2>/dev/null || true)
+          if [[ "$draft" == false ]]; then exit 0; fi
+          dest="$RUNNER_TEMP/deck-maker-release"
+          node scripts/deck_maker_release.cjs "$dest"
+          assets=("$dest/Anki_Deck_Operations_v$version.html" "$dest/JLPT_Grammar_Contrast_10.apkg" "$dest/JLPT_Grammar_Contrast_10_Preview.html")
+          if [[ "$draft" == true ]]; then
+            gh release upload "$tag" --clobber "${assets[@]}"
+            gh release edit "$tag" --draft=false --latest=false --notes-file "$dest/notes.md"
+          else
+            gh release create "$tag" --target "$GITHUB_SHA" --latest=false \
+              --title "독립 웹 덱 제작기 v$version" --notes-file "$dest/notes.md" "${assets[@]}"
+          fi

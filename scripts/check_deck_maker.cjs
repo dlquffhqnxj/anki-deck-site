@@ -99,7 +99,7 @@ test("the displayed version, offline filename, and changelog match the producer"
   assert.ok(html.includes('<span class="version">v' + version + '</span>'));
   assert.ok(html.includes('Anki_Deck_Operations_v' + version + '.html'));
   const changelog = readFileSync(join(__dirname, "../deck-maker/CHANGELOG.md"), "utf8");
-  assert.ok(changelog.split('\n').some(line => line.startsWith('## v' + version + ' ·')));
+  assert.ok(changelog.split('\n').find(line => line.startsWith('## v')).startsWith('## v' + version + ' ·'));
 });
 
 test("exact retests retain both NoteIDs and support different passages under a shared stem", () => {
@@ -151,4 +151,62 @@ test("the exported retest bank names each source and carries the distinct readin
   ]);
   const broken=await inspect(p.notes.map(n=>n.id==="retest-1"?{...n,retestFor:"missing"}:n));
   assert.ok(broken.errors>0);
+});
+
+test("the ten contrast notes validate and an existing pair accumulates its sources", async () => {
+  const p = projects.starterProject();
+  assert.equal(p.notes.length, 10);
+  assert.equal(new Set(p.notes.map(note => note.id)).size, 10);
+  const clean = await factory.inspect({input: new TextEncoder().encode(factory.authorSource(p.notes, p.job.model)),
+    name: "contrast.tsv", job: p.job});
+  assert.equal(clean.errors, 0);
+  const example = JSON.parse(p.notes[0].contrast);
+  assert.equal(p.notes.filter(note => JSON.parse(note.contrast).items.length === 2).length, 10);
+  const reversed = {...example, choices: [...example.choices].reverse(),
+    items: example.items.map(item => ({...item, correct: 1 - item.correct}))};
+  const first = projects.missionCard(p, reversed, ["one"]);
+  p.notes[0] = first;
+  const second = projects.missionCard(p, example, ["two", "one"]);
+  assert.equal(first.id, second.id);
+  assert.deepEqual(JSON.parse(second.contrast).origins, ["one", "two"]);
+  const broken = JSON.parse(second.contrast);
+  broken.items[1].clues[0] = "없는 단서";
+  assert.throws(() => projects.missionCard(p, broken), /단서/);
+  assert.match(cards.fieldsFor(p.notes[0], p.job).Explanation, /<template data-note-practice>/);
+});
+
+test("typing uses authored alternatives or distinct readings from the same deck", () => {
+  const rows = [{id: "a", word: "学校", reading: "がっこう"}, {id: "b", word: "電車", reading: "でんしゃ"}];
+  cards.Practice.prepare(rows, {model: "lab-word"}, cards.plain);
+  assert.equal(cards.Practice.kana("ｶﾞｯｺｳ"), "がっこう");
+  assert.equal(new Set(rows[0]._recall.choices).size, 2);
+  assert.ok(rows[0]._recall.choices.includes("でんしゃ"));
+  const only = [{id: "a", word: "学校", reading: "がっこう"}];
+  cards.Practice.prepare(only, {model: "lab-word"}, cards.plain);
+  assert.equal(only[0]._recall.choices.length, 0);
+  const [verb, ordinary] = ["동사 활용", "문법"].map(category => ({
+    id: category, category, prompt: "書く의 て형", optionA: "書いて", optionB: "書って", correct: "A"}));
+  cards.Practice.prepare([verb, ordinary], {model: "kr-quiz"}, cards.plain);
+  assert.equal(verb._recall.answers[0], "書いて");
+  assert.equal(ordinary._recall, undefined);
+});
+
+test("version evidence replaces older per-device snapshots and retains the denominator", () => {
+  const p = project();
+  const snapshot = (device, v, rev, n, total) => ({
+    kind: "anki-author-feedback", schema: 1, deck: [p.job.product, p.job.model, p.job.level, false, p.job.name], device,
+    rows: [{id: "q1", ord: 0, v, rev, total, pairs: [{a: "まで", b: "までに", n}], typed: {solo: 0}}]
+  });
+  function importSnapshot(s) {return projects.mergeFeedback(p, projects.readFeedback(JSON.stringify(s), p));}
+  const first = snapshot("desk1", "1.0.0-RC1", 5, 4, 5);
+  assert.equal(importSnapshot(first), 1);
+  assert.equal(importSnapshot(first), 0);
+  assert.equal(importSnapshot(snapshot("desk1", "1.0.0-RC1", 3, 2, 3)), 0);
+  importSnapshot(snapshot("desk1", "1.0.0-RC2", 3, 2, 3));
+  importSnapshot(snapshot("ipad2", "1.0.0-RC2", 1, 1, 1));
+  const evidence = projects.evidence(p).notes.get("q1"), key = JSON.stringify(["まで", "までに"]);
+  assert.deepEqual([evidence.get("1.0.0-RC1").pairs.get(key), evidence.get("1.0.0-RC1").total], [4, 5]);
+  assert.deepEqual([evidence.get("1.0.0-RC2").pairs.get(key), evidence.get("1.0.0-RC2").total], [3, 4]);
+  assert.throws(() => projects.readFeedback(JSON.stringify({...first, deck: ["different"]}), p), /다른 덱/);
+  assert.throws(() => importSnapshot(snapshot("desk1", "1.0.0-RC2", 4, 4, 3)), /횟수/);
 });

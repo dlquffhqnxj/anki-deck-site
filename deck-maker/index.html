@@ -513,6 +513,12 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
   #view-decks:has(#desk-active:not([hidden])) .work-hero>.desk-actions .button{min-height:38px;padding:6px 10px}
 }
 
+#contrast-editor:not([hidden]),#feedback-report:not([hidden]),.quality-note{display:grid;gap:12px}
+.pair-note>label,#desk-feedback>label,#desk-contrast>label{display:grid;gap:5px;margin:7px 0}
+.quality-note{padding:14px 4px;border-top:1px solid var(--line,#d7dedb)}
+.quality-note p,.quality-note small{margin:0;overflow-wrap:anywhere}
+.quality-note .text-button{justify-self:start}
+#feedback-report,#contrast-editor{margin-top:12px}
 </style>
 </head>
 <body>
@@ -539,12 +545,12 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
     <main id="main" class="main" tabindex="-1">
       <header class="topbar">
         <div class="location"><span>워크스페이스</span><span aria-hidden="true">/</span><strong id="current-location">덱 제작</strong></div>
-        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.7.0.html">오프라인 실행본</a>
+        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.8.0.html">오프라인 실행본</a>
       </header>
       <div class="content">
         <section id="view-decks" class="view">
-          <div class="hero work-hero"><div><div class="hero-title"><h1>내 덱</h1><span class="version">v0.7.0</span></div><p>덱을 골라 오늘 작성한 노트를 더하고 누적된 카드로 Anki 덱을 만드세요.</p></div>
-            <div class="desk-actions"><button type="button" id="desk-new" class="button primary">새 덱 만들기</button><button type="button" id="desk-import" class="button secondary">백업 복원</button><input type="file" id="desk-backup-file" accept=".zip" hidden></div></div>
+          <div class="hero work-hero"><div><div class="hero-title"><h1>내 덱</h1><span class="version">v0.8.0</span></div><p>덱을 골라 오늘 작성한 노트를 더하고 누적된 카드로 Anki 덱을 만드세요.</p></div>
+            <div class="desk-actions"><button type="button" id="desk-new" class="button primary">새 덱 만들기</button><button type="button" id="desk-contrast-sample" class="button secondary">혼동 표현 10쌍 열기</button><button type="button" id="desk-import" class="button secondary">백업 복원</button><input type="file" id="desk-backup-file" accept=".zip" hidden></div></div>
           <p id="desk-status" class="desk-status" role="status" aria-live="polite"></p>
           <form id="desk-create" class="panel" hidden><div class="panel-head"><h2>새 덱 만들기</h2></div><div class="form-body">
             <div class="field-grid"><label>덱 이름<input id="desk-name" required maxlength="90" placeholder="예: N3·N2 문법과 독해"></label><label>카드 구성<select id="desk-model"></select></label>
@@ -566,6 +572,19 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
               </section>
               <button type="button" id="desk-legacy" class="button text-button" hidden>이전 공용 초안 가져오기</button>
               <section id="desk-review" hidden><h3>누적 전 확인</h3><p id="desk-balance" role="status"></p><div id="desk-differences"></div><button type="button" id="desk-commit" class="button primary">선택한 분량 누적 저장</button> <button type="button" id="desk-dismiss" class="button text-button">비교 닫기</button></section>
+              <details id="desk-contrast"><summary>오답으로 문제 만들기</summary>
+                <label>혼동 표현 예시<select id="contrast-pick"></select></label>
+                <div class="desk-actions"><button type="button" class="button secondary" id="contrast-open">미션 초안 열기</button><a class="button text-button" href="https://dlquffhqnxj.github.io/anki-deck-site/deck-maker/contrast/" target="_blank" rel="noopener">표본 10장 풀어보기</a></div>
+                <div id="contrast-editor" hidden><div class="field-grid"><label>미션 제목<input id="contrast-title" maxlength="160"></label><label>노트 급수<select id="contrast-level"><option value="">급수 선택</option><option>N5</option><option>N4</option><option>N3</option><option>N2</option><option>N1</option></select></label><label>표현 A<input id="contrast-a" maxlength="180"></label><label>표현 B<input id="contrast-b" maxlength="180"></label></div>
+                <div id="contrast-lines" class="pair-grid"></div><label>두 표현의 차이<textarea id="contrast-why" rows="2"></textarea></label><p id="contrast-info" class="form-hint"></p>
+                <div class="desk-actions"><button id="contrast-commit" type="button" class="button primary">검토한 미션 누적</button><button id="contrast-close" type="button" class="button secondary">초안 닫기</button></div></div>
+              </details>
+              <details id="desk-feedback"><summary>학습 기록 가져오기 · 버전별 검수</summary>
+                <label>학습 카드에서 받은 코드<textarea id="feedback-code" rows="3" placeholder="‘제작기에 학습 기록 보내기’에서 복사한 코드를 붙여넣으세요."></textarea></label>
+                <div class="desk-actions"><button id="feedback-import" type="button" class="button secondary">이 덱에 기록 반영</button><label class="button text-button">JSON 가져오기<input id="feedback-file" type="file" accept=".json" hidden></label></div>
+                <div id="feedback-report" hidden><div class="field-grid"><label>비교할 이전 덱 버전<select id="feedback-before"></select></label><label>확인할 덱 버전<select id="feedback-after"></select></label></div>
+                <p class="form-hint">보기 조합별 오답 횟수와 해당 노트의 전체 채점 응답 수를 비교합니다. 직접 쓰기와 보기 도움 횟수는 따로 표시합니다.</p><div id="feedback-results"></div></div>
+              </details>
               <details id="desk-pairs" hidden>
                 <summary>7일 변형 문제 짝짓기 <span id="pair-count" class="desk-count"></span></summary>
                 <p class="form-hint">같은 개념을 다른 질문이나 지문으로 묻는 노트 두 개를 고르세요. 원문항에서 틀리거나 헷갈렸다고 표시하면 7일 후 카드 안에서 변형 문항이 열립니다. Anki의 일반 학습은 각 카드의 기존 일정을 따릅니다.</p>
@@ -586,7 +605,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
         <section id="view-work" class="view" hidden>
           <div class="hero work-hero">
             <div>
-              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.7.0</span></div>
+              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.8.0</span></div>
               <p>제작 모델을 고르고, 학습할 내용을 입력해 나만의 Anki 덱을 만드세요.</p>
             </div>
             <a class="button secondary" href="#design">기존 APKG 디자인 편집</a>
@@ -851,7 +870,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
         <section id="view-rules" class="view" hidden>
           <div class="hero"><h1>운영 기준</h1><p>원본, 카드 식별자와 검사 근거를 같은 실행에 연결합니다.</p></div>
           <div class="rules-grid">
-            <section class="panel rule-panel"><h2>제작기 변경 이력</h2><p><b>v0.7.0 · 2026-11-26</b> 찍어서 맞힌 문제 복습, 반복된 오답 보기 비교, 원문항과 7일 변형 문항 연결을 추가했습니다. 내 덱에서 누적 수량과 다음 제작 작업을 구분해 표시합니다.</p><p><b>v0.6.0 · 2026-11-26</b> 내 덱, 오늘 분량 비교·누적, 덱 전체 백업·복원, 오답 복습 미션을 추가했습니다.</p><p>v0.5.0 · 2026-11-24　Kanji LAB v1.9.2형과 한자혁명 v1.10.0형 제작 모델을 추가했습니다.</p><p>제작기 버전과 각 덱의 버전은 별도로 기록합니다.</p></section>
+            <section class="panel rule-panel"><h2>제작기 변경 이력</h2><p><b>v0.8.0 · 2026-11-26</b> 반복 오답에서 대조 문항을 만들고, 읽기·활용은 보기를 열기 전에 직접 씁니다. 학습 기록을 가져오면 덱 버전별 응답과 오답 보기를 비교할 수 있습니다.</p><p><b>v0.7.0 · 2026-11-26</b> 찍어서 맞힌 문제 복습, 반복된 오답 보기 비교, 원문항과 7일 변형 문항 연결을 추가했습니다. 내 덱에서 누적 수량과 다음 제작 작업을 구분해 표시합니다.</p><p><b>v0.6.0 · 2026-11-26</b> 내 덱, 오늘 분량 비교·누적, 덱 전체 백업·복원, 오답 복습 미션을 추가했습니다.</p><p>v0.5.0 · 2026-11-24　Kanji LAB v1.9.2형과 한자혁명 v1.10.0형 제작 모델을 추가했습니다.</p><p>제작기 버전과 각 덱의 버전은 별도로 기록합니다.</p></section>
             <section class="panel rule-panel"><h2>원본과 모델</h2>
               <p>웹에서 카드 내용을 작성하거나 Excel 표를 붙여넣으면 NoteID를 발급합니다. 기존 NoteID가 있는 자료를 가져올 때는 그 값을 사용합니다. JLPT 한자 모델은 한자 인식·쓰기·대표어 읽기 카드 3장을 만들고, 객관식과 기본 회상은 노트당 1장을 만듭니다.</p>
               <p>기존 한자 MASTER는 핵심 필드를 읽어 신규 덱으로 제작합니다. N2·N3 일일 문항의 TSV 형식도 객관식 모델에서 읽을 수 있습니다.</p>
@@ -1196,7 +1215,7 @@ else if (typeof exports === 'object'){
   ];
   const shared = ["source","tags","id"];
   const quizOptions = ["optionA","optionB","optionC","optionD","correct"];
-  const support = ["concept","studyRole","retestFor"];
+  const support = ["concept","studyRole","retestFor","contrast"];
   const details = ["onReading","kunReading","radical","strokeCount"];
   const models = {
     "lab-kanji":{
@@ -1236,7 +1255,7 @@ else if (typeof exports === 'object'){
     },
   };
   const parts = ["유사 한자","기본 뜻·읽기","어휘·문맥","동사 활용","종합 실전"];
-  const featureDefaults = { settings:true,records:true,recovery:true,ruby:true,explanation:true,examples:true,filter:true,
+  const featureDefaults = { settings:true,records:true,recovery:true,firstRecall:true,ruby:true,explanation:true,examples:true,filter:true,
     immediate:true,writing:true,strokes:true,levelBadge:true,comparison:true,stats:true,goals:true,weakness:true };
   function supports(model, feature) {
     const spec = models[model];
@@ -1737,7 +1756,135 @@ else if (typeof exports === 'object'){
     return [...FIELDS,...Profiles.columns.map(([,name]) => name),"SourceText"];
   }
 
+  function practiceTools() {
+    function clean(value) {
+      return String(value ?? "")
+        .normalize("NFKC")
+        .replace(/\s+/gu, " ")
+        .trim();
+    }
+    function kana(value) {
+      return clean(value)
+        .toLowerCase()
+        .replace(/\s+/gu, "")
+        .replace(/[ァ-ヶ]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 96));
+    }
+    const pairKey = (choices) => JSON.stringify(choices.map((s) => clean(s).toLowerCase()).sort());
+    function checkMission(m) {
+      const text = (s, max) => typeof s === "string" && s.trim().length > 0 && s.length <= max;
+      const pair = (a) =>
+        Array.isArray(a) && a.length === 2 && a.every((s) => text(s, 180)) && clean(a[0]) !== clean(a[1]);
+      if (
+        !m ||
+        !pair(m.choices) ||
+        !text(m.title, 160) ||
+        !text(m.why, 3000) ||
+        !Array.isArray(m.items) ||
+        m.items.length !== 2
+      )
+        throw Error("두 보기, 두 문장과 비교 해설을 확인하세요.");
+      for (const i of m.items) {
+        if (
+          !i ||
+          !text(i.text, 1600) ||
+          i.text.split("（　）").length !== 2 ||
+          ![0, 1].includes(i.correct) ||
+          !pair(i.clues) ||
+          ![0, 1].includes(i.clue) ||
+          !i.clues.every((c) => i.text.includes(c))
+        )
+          throw Error("각 문장에 빈칸 （　） 하나와 문장 안의 단서 후보 두 개, 정답 및 결정 단서를 지정하세요.");
+      }
+      if (m.items[0].correct === m.items[1].correct || clean(m.items[0].text) === clean(m.items[1].text))
+        throw Error("두 문장의 정답이 서로 달라야 합니다.");
+      if (
+        m.origins !== undefined &&
+        (!Array.isArray(m.origins) || m.origins.length > 35000 || m.origins.some((id) => !text(id, 180)))
+      )
+        throw Error("원문항 ID를 확인하세요.");
+      return m;
+    }
+    function hash(text) {
+      let n = 2166136261;
+      for (const c of text) n = Math.imul(n ^ c.charCodeAt(0), 16777619);
+      return n >>> 0;
+    }
+    function prepare(rows, job, plain) {
+      const model = job.model,
+        byGroup = new Map();
+      for (const row of rows) {
+        const spelling = plain(row.word || row.kanji || ""),
+          category = plain(row.category || "") + " " + plain(row.part || "");
+        let spec;
+        if (model.endsWith("-word") || (["kanji", "lab-kanji"].includes(model) && row.word && row.reading)) {
+          spec = {
+            ordinal: model.endsWith("-word") ? 0 : 2,
+            prompt: plain(row.word),
+            label: "단어 읽기",
+            answer: plain(row.reading),
+            group: "reading",
+          };
+        } else if (
+          (model === "quiz" || model.endsWith("-quiz") || model === "recall") &&
+          /읽기|読み|동사\s*활용|활용형|活用/.test(category) &&
+          !row.contrast
+        ) {
+          spec = {
+            ordinal: 0,
+            prompt: plain(row.prompt),
+            label: category.trim(),
+            answer: plain(row["option" + row.correct] || row.answer),
+            group: /읽기|読み/.test(category) ? "reading" : "verb",
+          };
+        } else if (model === "kr-kanji" && (row.onReading || row.kunReading)) {
+          spec = {
+            ordinal: 0,
+            prompt: spelling,
+            label: "한자 읽기 · 음독 또는 훈독 하나",
+            answer: [plain(row.onReading), plain(row.kunReading)].filter(Boolean).join(" / "),
+            group: "reading",
+          };
+        }
+        if (!spec || !spec.prompt || !spec.answer || spec.answer.length > 240) continue;
+        const words = spec.answer.split(/\s*(?:[、,/／;；・|]|\s또는\s)\s*/u).filter(Boolean);
+        if (!words.length) continue;
+        const options = ["A", "B", "C", "D"].map((k) => plain(row["option" + k] || "")).filter(Boolean);
+        row._recall = {
+          ordinal: spec.ordinal,
+          prompt: spec.prompt,
+          label: spec.label,
+          answers: words,
+          choices: options,
+          group: spec.group,
+        };
+        if (!byGroup.has(spec.group)) byGroup.set(spec.group, new Map());
+        byGroup.get(spec.group).set(kana(words[0]), words[0]);
+      }
+      const pools = new Map([...byGroup].map(([k, v]) => [k, [...v.values()]]));
+      for (const row of rows) {
+        const r = row._recall;
+        if (!r || r.choices.length >= 2) continue;
+        const pool = pools.get(r.group) || [],
+          banned = new Set(r.answers.map(kana)),
+          picks = [r.answers[0]],
+          seed = hash(row.id);
+        for (let i = 0; i < pool.length && picks.length < 4; i++) {
+          const v = pool[(seed + i) % pool.length];
+          if (!banned.has(kana(v))) {
+            picks.push(v);
+            banned.add(kana(v));
+          }
+        }
+        const pivot = seed % picks.length;
+        r.choices = picks.length > 1 ? [...picks.slice(pivot), ...picks.slice(0, pivot)] : [];
+      }
+    }
+    return { clean, kana, pairKey, checkMission, prepare };
+  }
+  const Practice = practiceTools();
   function fieldsFor(row, job) {
+    const payload = row.contrast ? {mission:Practice.checkMission(JSON.parse(row.contrast))} : row._recall ? {recall:row._recall} : null;
+    const seed = payload ? '<template data-note-practice>'+escape(JSON.stringify(payload)).replaceAll("{","&#123;").replaceAll("}","&#125;")+'</template>' : "";
     const extra = {};
     if (Profiles.models[job.model]) {
       for (const [key, name] of Profiles.columns) {
@@ -1751,7 +1898,7 @@ else if (typeof exports === 'object'){
       Category: escape(row.category || MODELS[job.model].name),
       Product: escape(job.product), Version: escape(job.version),
       Kanji: rich(row.kanji), Prompt: rich(row.prompt), Answer: rich(row.answer),
-      Explanation: rich(row.explanation), Word: rich(row.word), Reading: rich(row.reading),
+      Explanation: rich(row.explanation)+seed, Word: rich(row.word), Reading: rich(row.reading),
       OnReading: rich(row.onReading), KunReading: rich(row.kunReading), Example: rich(row.example),
       Translation: rich(row.translation), OptionA: rich(row.optionA), OptionB: rich(row.optionB),
       OptionC: rich(row.optionC), OptionD: rich(row.optionD), Correct: escape(row.correct),
@@ -1763,6 +1910,7 @@ else if (typeof exports === 'object'){
   const LEARNING_FEATURES = [
     { id:"settings", label:"학습 설정", initial:true, defaultLabel:"처음에 열기" },
     { id:"records", label:"내 기록", initial:true, defaultLabel:"처음에 열기" },
+    { id:"firstRecall", label:"읽기·활용은 보기 전에 직접 쓰기", initial:true },
     { id:"recovery", label:"오답 복습 미션 · 최대 3문항", initial:true },
     { id:"ruby", label:"후리가나", initial:true, defaultLabel:"기본 표시" },
     { id:"explanation", label:"풀이·오답 해설", initial:true, defaultLabel:"답면에서 펼치기", opened:true },
@@ -1876,7 +2024,479 @@ else if (typeof exports === 'object'){
   }
 
   // Kept self-contained because the same function runs inside the exported Anki note type.
-  function bindRecovery(card, load, save, scope, session, schedule = () => {}) {
+  function bindPractice(card, load, save, session, keepAttempt, helpers) {
+    const shell = card.querySelector("[data-learn]");
+    if (!shell)
+      return {
+        score() {},
+        handoff() {},
+        patternEntries() {
+          return [];
+        },
+      };
+    const doc = card.ownerDocument,
+      win = doc.defaultView,
+      cfg = shell.dataset;
+    const scope = cfg.deck,
+      ledger = "anki-ops-attempts-v1:" + scope + ":",
+      dueKey = "anki-ops-typed-review-v1:" + scope;
+    const identity = card.dataset.note,
+      ordinal = Number(card.dataset.ordinal),
+      version = card.dataset.version;
+    const localId = JSON.stringify([identity, ordinal, version]),
+      key = ledger + localId,
+      shelfId = JSON.stringify([identity, ordinal]);
+    const tracking = cfg.records === "true",
+      front = card.dataset.side === "front";
+    const work = shell.querySelector("[data-exercise]"),
+      rest = shell.querySelector("[data-study-transfer]");
+    const embedded = shell.querySelector("[data-seed-source]").content.querySelector("[data-note-practice]");
+    let payload = {};
+    try {
+      if (embedded) payload = JSON.parse(embedded.content.textContent);
+    } catch {}
+    const mission = payload.mission,
+      typed = cfg.typing === "true" && payload.recall?.ordinal === ordinal ? payload.recall : null;
+    function el(tag, text) {
+      const e = doc.createElement(tag);
+      if (text !== undefined) e.textContent = text;
+      return e;
+    }
+    function btn(label, act) {
+      const b = el("button", label);
+      b.type = "button";
+      b.addEventListener("click", act);
+      return b;
+    }
+    function line() {
+      const e = el("div");
+      e.className = "learn-row";
+      return e;
+    }
+    const options = Array.from(card.querySelectorAll("[data-choice]"), (b) => [
+      b.dataset.choice,
+      (
+        b.querySelector(".pq-choice-text,.kr-choice-copy")?.textContent ||
+        b.textContent.replace(/^\s*\d+[.)]\s*/, "")
+      ).trim(),
+    ]);
+    const map = new Map(options);
+    const data = () =>
+      load(key, {
+        id: identity,
+        ord: ordinal,
+        v: version,
+        rev: 0,
+        total: 0,
+        pairs: [],
+        typed: { solo: 0, aided: 0, wrong: 0, reveal: 0 },
+      });
+    const persist = (r) => {
+      r.rev++;
+      save(key, r);
+    };
+    function score(selected, correct) {
+      if (!tracking || mission || typed || !correct || !map.has(selected)) return;
+      const r = data();
+      if (r.lastChoice === session.attempt) return;
+      r.lastChoice = session.attempt;
+      r.total++;
+      if (selected !== correct) {
+        const a = map.get(selected),
+          b = map.get(correct);
+        if (a && b) {
+          let pair = r.pairs.find((p) => p.a === a && p.b === b);
+          if (!pair) {
+            pair = { a, b, n: 0 };
+            r.pairs.push(pair);
+          }
+          pair.n++;
+        }
+      }
+      persist(r);
+    }
+    function gradeContrast(state) {
+      if (!tracking) return;
+      const r = data();
+      if (r.lastContrast === session.attempt) return;
+      r.isContrast = true;
+      r.lastContrast = session.attempt;
+      for (const [i, item] of mission.items.entries()) {
+        r.total++;
+        if (state.answers[i] === item.correct) continue;
+        const a = mission.choices[state.answers[i]],
+          b = mission.choices[item.correct];
+        let pair = r.pairs.find((p) => p.a === a && p.b === b);
+        if (!pair) {
+          pair = { a, b, n: 0 };
+          r.pairs.push(pair);
+        }
+        pair.n++;
+        pair.at = Date.now();
+        pair.prompt = item.text;
+        pair.why = mission.why;
+      }
+      persist(r);
+    }
+    function ledgerRows() {
+      let keys = [];
+      try {
+        keys = Object.keys(win.localStorage);
+      } catch {}
+      const fallback = win.ankiOpsCardSession;
+      if (fallback) keys.push(...fallback.keys());
+      return [...new Set(keys)]
+        .filter((k) => typeof k === "string" && k.startsWith(ledger))
+        .map((k) => load(k, null))
+        .filter(Boolean);
+    }
+    function patternEntries() {
+      return ledgerRows()
+        .filter((r) => r.isContrast)
+        .flatMap((r) =>
+          r.pairs.map((p) => ({
+            picked: p.a,
+            right: p.b,
+            count: p.n,
+            at: p.at,
+            prompt: p.prompt,
+            why: p.why,
+            noteId: r.id,
+          })),
+        );
+    }
+    function recordTyped(outcome, spec) {
+      if (!tracking) return;
+      const r = data();
+      if (r.lastTyped?.attempt === session.attempt) {
+        if (r.lastTyped.result === outcome) return;
+        r.typed[r.lastTyped.result]--;
+      }
+      r.lastTyped = { attempt: session.attempt, result: outcome };
+      r.typed[outcome]++;
+      persist(r);
+      const shelf = load(dueKey, {});
+      if (outcome === "aided")
+        shelf[shelfId] = {
+          prompt: spec.prompt,
+          answers: spec.answers,
+          choices: spec.choices,
+          label: spec.label,
+          at: Date.now(),
+        };
+      if (outcome === "solo") delete shelf[shelfId];
+      save(dueKey, shelf);
+    }
+    function sendCode(selected) {
+      if (!tracking) return;
+      let device = load("anki-ops-feedback-device-v1", "");
+      if (!device) {
+        device =
+          win.crypto?.randomUUID?.() ||
+          "web-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2);
+        save("anki-ops-feedback-device-v1", device);
+      }
+      const rows = ledgerRows().map(({ id, ord, v, rev, total, pairs, typed }) => ({
+        id,
+        ord,
+        v,
+        rev,
+        total,
+        pairs: pairs.map(({ a, b, n }) => ({ a, b, n })),
+        typed,
+      }));
+      const report = {
+        kind: "anki-author-feedback",
+        schema: 1,
+        deck: JSON.parse(decodeURIComponent(scope)),
+        device,
+        rows,
+      };
+      if (selected) report.selected = selected;
+      let box = shell.querySelector("[data-transfer-box]");
+      if (!box) {
+        box = el("section");
+        box.dataset.transferBox = "";
+        shell.append(box);
+      }
+      box.hidden = false;
+      box.replaceChildren();
+      box.append(
+        el("strong", selected ? "이 오답으로 문제 만들기" : "제작기로 학습 기록 가져가기"),
+        el("p", "같은 덱의 ‘학습 기록 가져오기’에 이 코드를 붙여넣으세요."),
+      );
+      const ta = el("textarea");
+      ta.readOnly = true;
+      ta.rows = 3;
+      ta.setAttribute("aria-label", "제작기용 학습 코드");
+      ta.value = JSON.stringify(report);
+      box.append(ta);
+      const row = line(),
+        out = el("output");
+      row.append(
+        btn("코드 복사", async () => {
+          try {
+            await win.navigator.clipboard.writeText(ta.value);
+            out.textContent = "복사했습니다.";
+          } catch {
+            ta.focus();
+            ta.select();
+            out.textContent = "선택된 코드를 복사하세요.";
+          }
+        }),
+        btn("JSON 저장", () => {
+          const url = win.URL.createObjectURL(new win.Blob([ta.value], { type: "application/json" }));
+          const a = el("a");
+          a.href = url;
+          a.download = "anki-study-feedback.json";
+          a.click();
+          win.setTimeout(() => win.URL.revokeObjectURL(url), 1000);
+        }),
+        btn("닫기", () => {
+          box.hidden = true;
+        }),
+      );
+      box.append(row, out);
+      box.scrollIntoView({ block: "nearest" });
+    }
+    function contrast() {
+      card.dataset.contrastNote = "";
+      work.replaceChildren();
+      const state = (session.contrast ||= { answers: [null, null], clues: [null, null], graded: false });
+      state.order ||= mission.items.map(() => [Math.random() < 0.5, Math.random() < 0.5]);
+      // The answer side shows the key without awarding an unattempted mission.
+      const show = state.graded || !front;
+      work.append(el("h3", mission.title));
+      mission.items.forEach((item, i) => {
+        const block = el("fieldset");
+        block.append(el("legend", "문장 " + (i + 1)), el("p", item.text));
+        function picks(label, choices, arr, expected) {
+          const buttons = line();
+          buttons.setAttribute("role", "group");
+          buttons.setAttribute("aria-label", label + " " + (i + 1));
+          for (const j of state.order[i][label === "표현" ? 0 : 1] ? [1, 0] : [0, 1]) {
+            const v = choices[j];
+            const b = btn(v, () => {
+              arr[i] = j;
+              keepAttempt();
+              contrast();
+            });
+            b.disabled = show;
+            b.setAttribute("aria-pressed", String(arr[i] === j));
+            buttons.append(b);
+          }
+          block.append(el("small", label), buttons);
+          if (show)
+            block.append(el("small", (label === "표현" ? "정답 표현 · " : "결정 단서 · ") + choices[expected]));
+        }
+        picks("표현", mission.choices, state.answers, item.correct);
+        picks("판단 단서", item.clues, state.clues, item.clue);
+        work.append(block);
+      });
+      if (!show) {
+        const grade = btn("표현과 단서 채점", () => {
+          state.graded = true;
+          gradeContrast(state);
+          keepAttempt();
+          contrast();
+          card.dispatchEvent(new win.Event("anki-ops-contrast-graded"));
+        });
+        grade.className = "learn-submit";
+        grade.disabled = [...state.answers, ...state.clues].some((i) => i === null);
+        work.append(grade);
+      } else {
+        const expressions = mission.items.filter((item, i) => state.answers[i] === item.correct).length;
+        const clues = mission.items.filter((item, i) => state.clues[i] === item.clue).length;
+        if (state.graded)
+          work.append(
+            el(
+              "strong",
+              expressions === 2 && clues === 2
+                ? "미션 완료 · 두 표현과 결정 단서를 모두 맞혔습니다."
+                : "표현 " + expressions + "/2 · 결정 단서 " + clues + "/2",
+            ),
+          );
+        else work.append(el("small", "채점 없이 정답을 확인했습니다."));
+        work.append(el("p", mission.why));
+      }
+    }
+    function exercise(host, spec, state, change, finish) {
+      host.replaceChildren();
+      const hint = el("small", spec.label),
+        status = el("output");
+      status.setAttribute("aria-live", "polite");
+      host.append(hint, el("p", spec.prompt));
+      if (
+        state.result === "solo" ||
+        state.result === "aided" ||
+        state.result === "reveal" ||
+        state.result === "wrong"
+      ) {
+        status.textContent =
+          { solo: "보기 없이 정답", aided: "보기를 본 뒤 정답", wrong: "오답", reveal: "정답 확인" }[
+            state.result
+          ] +
+          " · " +
+          spec.answers.join(" / ");
+        host.append(status);
+        return;
+      }
+      if (!state.open && !state.failed) {
+        const input = el("input");
+        input.type = "text";
+        input.autocomplete = "off";
+        input.placeholder = "보기를 열기 전에 답을 입력하세요";
+        input.setAttribute("aria-label", "보기 전 내 답");
+        input.value = state.input || "";
+        input.addEventListener("input", () => {
+          state.input = input.value;
+          change();
+        });
+        const submit = () => {
+          if (!input.value.trim()) return;
+          const ok = spec.answers.some((v) => helpers.kana(v) === helpers.kana(input.value));
+          if (ok) state.result = "solo";
+          else state.failed = true;
+          change();
+          finish(ok ? "solo" : "wrong");
+          exercise(host, spec, state, change, finish);
+        };
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.isComposing) {
+            e.preventDefault();
+            submit();
+          }
+        });
+        host.append(input, btn("내 답 확인", submit));
+      } else if (state.failed) host.append(el("p", "첫 답을 다시 확인하세요."));
+      if (!state.open) {
+        host.append(
+          btn(spec.choices.length ? "보기 열기" : "정답 확인", () => {
+            if (spec.choices.length) state.open = true;
+            else {
+              state.result = "reveal";
+              finish("reveal");
+            }
+            change();
+            exercise(host, spec, state, change, finish);
+          }),
+        );
+      } else {
+        const choices = line();
+        for (const value of spec.choices) {
+          const b = btn(value, () => {
+            const ok = spec.answers.some((a) => helpers.kana(a) === helpers.kana(value));
+            state.result = ok ? "aided" : "wrong";
+            change();
+            finish(ok ? "aided" : "wrong");
+            exercise(host, spec, state, change, finish);
+          });
+          choices.append(b);
+        }
+        host.append(choices);
+      }
+    }
+    let run = null;
+    function drawShelf() {
+      rest.replaceChildren();
+      if (!tracking) return;
+      const shelf = load(dueKey, {}),
+        keys = Object.keys(shelf).sort((a, b) => shelf[a].at - shelf[b].at);
+      if (!run) {
+        if (keys.length)
+          rest.append(
+            btn("보기 도움 " + Math.min(3, keys.length) + "문제 다시 쓰기", () => {
+              run = { items: keys.slice(0, 3).map((k) => [k, shelf[k]]), at: 0, solved: 0, state: {} };
+              card.dataset.typedMission = "";
+              work.hidden = true;
+              drawShelf();
+            }),
+          );
+        const transfer = el("details"),
+          summary = el("summary", "제작기에 학습 기록 보내기");
+        transfer.append(
+          summary,
+          btn("제작기용 코드 만들기", () => sendCode()),
+        );
+        rest.append(transfer);
+        return;
+      }
+      const leave = () => {
+        run = null;
+        delete card.dataset.typedMission;
+        work.hidden = false;
+        drawShelf();
+      };
+      if (run.at >= run.items.length) {
+        rest.append(
+          el("strong", "보기 없이 " + run.solved + " / " + run.items.length + "문제 회상"),
+          btn("복습 마치기", leave),
+        );
+        return;
+      }
+      const [k, spec] = run.items[run.at],
+        area = el("section");
+      rest.append(el("strong", "다시 쓰기 " + (run.at + 1) + " / " + run.items.length), area);
+      const next = btn("다음 문제", () => {
+        run.at++;
+        run.state = {};
+        drawShelf();
+      });
+      next.disabled = !run.state.result;
+      exercise(
+        area,
+        spec,
+        run.state,
+        () => {},
+        (outcome) => {
+          if (outcome === "solo") {
+            const q = load(dueKey, {});
+            delete q[k];
+            save(dueKey, q);
+            run.solved++;
+          }
+          if (run.state.result) next.disabled = false;
+        },
+      );
+      rest.append(next, btn("미션 나가기", leave));
+    }
+    if (mission) contrast();
+    else if (typed && front) {
+      card.dataset.specialFront = "";
+      const state = (session.typed ||= {});
+      exercise(work, typed, state, keepAttempt, (outcome) => {
+        recordTyped(outcome, typed);
+        drawShelf();
+      });
+    } else if (typed && !front) {
+      const state = (session.typed ||= {});
+      if (!state.result) {
+        state.result = state.failed ? "wrong" : "reveal";
+        recordTyped(state.result, typed);
+        keepAttempt();
+      }
+      work.append(
+        el(
+          "small",
+          { solo: "보기 없이 정답", aided: "보기 도움을 받아 정답", wrong: "오답", reveal: "정답 확인" }[
+            state.result
+          ],
+        ),
+      );
+    }
+    const question = card.querySelector(
+      ".pq-question,.kr-quiz-expression,.dc-focus,.kf-word,.kr-word-prompt,.kr-glyph",
+    );
+    if ((mission || (typed && front)) && question && !question.closest("[data-learn]")) {
+      const focus = el("div");
+      focus.dataset.learnFocus = "";
+      focus.append(work);
+      question.replaceWith(focus);
+    }
+    drawShelf();
+    return { score, handoff: sendCode, patternEntries };
+  }
+  function bindRecovery(card, load, save, scope, session, schedule = () => {}, advanced) {
     const panel = card.querySelector("[data-recovery]");
     if (!panel) return () => {};
     const doc = card.ownerDocument,
@@ -2011,15 +2631,15 @@ else if (typeof exports === 'object'){
       });
     }
     function patterns(q) {
-      if (!(card.dataset.side === "answer" || session.revealed)) return;
+      if (!(card.dataset.side === "answer" || session.revealed || session.contrast?.graded)) return;
       const box = el("details");
       box.dataset.patterns = "";
       box.append(el("summary", "반복해서 헷갈린 보기"));
       box.addEventListener("toggle", () => {
         if (!box.open || box.children.length > 1) return;
         const pairs = new Map();
-        for (const r of Object.values(q))
-          for (const entry of r.confusions || []) {
+        const oldEntries=Object.entries(q).flatMap(([id,r])=>(r.confusions || []).map(entry=>({...entry,noteId:id.slice(0,id.lastIndexOf("/"))})));
+        for (const entry of [...oldEntries,...advanced.patternEntries()]) {
             const k = JSON.stringify([clean(entry.picked), clean(entry.right)]);
             if (!pairs.has(k))
               pairs.set(k, { picked: entry.picked, right: entry.right, count: 0, examples: [] });
@@ -2052,6 +2672,7 @@ else if (typeof exports === 'object'){
               row.append(el("p", e.prompt));
               if (e.why) row.append(el("small", e.why));
             }
+            row.append(btn("이 오답으로 문제 만들기",()=>advanced.handoff({picked:pair.picked,right:pair.right,ids:[...new Set(pair.examples.map(e=>e.noteId))]})));
             box.append(row);
           }
           offset += 10;
@@ -2365,10 +2986,12 @@ else if (typeof exports === 'object'){
   }
   function markup(job, ordinal, answer, val, group, bank) {
     const html = baseMarkup(job,ordinal,answer,val,group,bank);
-    if (!learningProfile(job.model,job.learning).included.recovery) return html;
+    const included=learningProfile(job.model,job.learning).included;
+    const scope=encodeURIComponent(JSON.stringify([job.product,job.model,job.level || "",!!job.sample,job.name]));
+    const shell='<section data-learn data-deck="'+escape(scope)+'" data-records="'+included.records+'" data-typing="'+included.firstRecall+'"><style>'+"[data-learn]{margin:10px 0;font:inherit;text-align:start;color:inherit;overflow-wrap:anywhere}\n:is([data-learn],[data-learn-focus]) [hidden]{display:none!important}\n:is([data-learn],[data-learn-focus]) h3,:is([data-learn],[data-learn-focus]) p{margin:4px 0}\n:is([data-learn],[data-learn-focus]) fieldset{min-width:0;margin:8px 0;padding:9px;border:1px solid currentColor;border-radius:8px}\n:is([data-learn],[data-learn-focus]) legend{font-weight:650;padding:0 4px}\n:is([data-learn],[data-learn-focus]) input,:is([data-learn],[data-learn-focus]) textarea{box-sizing:border-box;width:100%;font:inherit;padding:7px;color:inherit;background:transparent;border:1px solid currentColor;border-radius:7px}\n:is([data-learn],[data-learn-focus]) button{font:inherit;color:inherit;background:transparent;border:1px solid currentColor;border-radius:7px;padding:6px 9px;min-height:40px;cursor:pointer}\n:is([data-learn],[data-learn-focus]) button[aria-pressed=\"true\"]{box-shadow:inset 0 0 0 2px currentColor;font-weight:700}\n:is([data-learn],[data-learn-focus]) .learn-row{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}\n:is([data-learn],[data-learn-focus]) output{display:block;white-space:pre-line;margin:6px 0}\n:is([data-learn],[data-learn-focus]) details>summary{cursor:pointer;font-weight:650;padding:6px 0}\n[data-special-front] [data-choice], [data-special-front] .dc-result{display:none!important}\n[data-contrast-note] [data-choice], [data-contrast-note] .pq-question, [data-contrast-note] .kr-quiz-expression, [data-contrast-note] .dc-focus{display:none!important}\n[data-typed-mission]>:not([data-learn]){display:none!important}\n\n[data-learn-focus]{text-align:start;color:inherit;min-width:0}\n[data-special-front] rt,[data-special-front] .kf-front>.kf-prompt,[data-special-front] .kr-hero>.kr-prompt{display:none!important}\n[data-special-front] [data-learn-focus] [data-exercise]>p:first-of-type{font-size:1.35em;font-weight:650;line-height:1.45}\n:is([data-contrast-note],[data-special-front]) [data-anki-ops-feature=\"level\"]{background:#405c53!important;color:#fff!important;border-color:#405c53!important}\n:is([data-learn],[data-learn-focus]) button{min-height:44px}\n:is([data-learn],[data-learn-focus]) button:focus-visible{outline:3px solid var(--accent,#4d6c80);outline-offset:2px}\n[data-learn-focus] fieldset{border-color:var(--line,#b8bcb7);padding:10px 12px}\n[data-learn-focus] fieldset p{font-size:1.09em;line-height:1.55}\n[data-learn-focus] button[aria-pressed=\"true\"]{background:#405c53;color:white;border-color:#405c53}\n[data-exercise]>.learn-submit{background:#405c53;color:white;border-color:#405c53}\n[data-exercise]>.learn-submit:disabled{opacity:.55;cursor:default}"+ '</style><template data-seed-source>'+val("Explanation")+'</template><div data-exercise></div><div data-study-transfer></div></section>';
     const footer = Profiles.models[job.model] ? '<footer class="op-footer">' : '<div class="dc-meta">';
     const at = html.lastIndexOf(footer);
-    return html.slice(0,at) + recoveryMarkup(job,ordinal,answer,val) + html.slice(at);
+    return html.slice(0,at) + shell + (included.recovery ? recoveryMarkup(job,ordinal,answer,val) : "") + html.slice(at);
   }
   function baseMarkup(job, ordinal, answer, val, group, bank) {
     const { model } = job;
@@ -2744,7 +3367,7 @@ else if (typeof exports === 'object'){
       if (!active) draw();
     };
   }
-  function bindCards(root, study, recovery, bindExtra) {
+  function bindCards(root, study, recovery, practice, helpers, bindExtra) {
     const memory = root.ownerDocument?.defaultView || root.defaultView || window;
     const fallback = memory.ankiOpsCardSession ??= new Map();
     function load(key, value) {
@@ -2818,8 +3441,10 @@ else if (typeof exports === 'object'){
       const options = [...card.querySelectorAll("[data-choice]")];
       let notify = () => {};
       const onReview = study(card,load,save,(action,value)=>notify(action,value));
-      const recover = recovery(card,load,save,scope,session,onReview);
+      const advanced = practice(card,load,save,session,keepAttempt,helpers);
+      const recover = recovery(card,load,save,scope,session,onReview,advanced);
       notify = recover;
+      card.addEventListener("anki-ops-contrast-graded",()=>recover("refresh"));
       function recordStatus(persisted = true) {
         if (!status) return;
         const visits = "답면 " + (record.views ?? 0) + "회";
@@ -2830,6 +3455,7 @@ else if (typeof exports === 'object'){
       function score() {
         if (!mark || !session.selected || !data.correct || record.scored === session.attempt) return;
         record.scored = session.attempt;
+        advanced.score(session.selected,data.correct);
         profileEvent("score",session.selected === data.correct);
         record.answered = (record.answered ?? 0) + 1;
         if (session.selected === data.correct) record.right = (record.right ?? 0) + 1;
@@ -2973,7 +3599,7 @@ else if (typeof exports === 'object'){
     }
   }
 
-  function install(root) { bindCards(root,bindStudy,bindRecovery,Profiles.bindExtra); }
+  function install(root) { bindCards(root,bindStudy,bindRecovery,bindPractice,Practice,Profiles.bindExtra); }
 
   function renderInto(mount,row,job,ordinal,answer,bank) {
     if (!row) { mount.replaceChildren(); return; }
@@ -3008,10 +3634,10 @@ else if (typeof exports === 'object'){
       (empty ? "{{^" + key + "}}" + empty + "{{/" + key + "}}" : "");
     const html = markup(job,ordinal,answer,token,wrap,bank);
     const extra = Profiles.models[job.model] ? "," + Profiles.bindExtra.toString() : "";
-    return html + "<script>(" + bindCards.toString() + ")(document," + bindStudy.toString() + "," + bindRecovery.toString() + extra + ");<\/script>";
+    return html + "<script>(" + bindCards.toString() + ")(document," + bindStudy.toString() + "," + bindRecovery.toString() + "," + bindPractice.toString() + ",(" + practiceTools.toString() + ")()" + extra + ");<\/script>";
   }
 
-  return { REVISION,CSS,FIELDS,MODELS,LEARNING_FEATURES,STUDY_FEATURES,APPEARANCE,learningProfile,escape,rich,plain,
+  return { Practice,REVISION,CSS,FIELDS,MODELS,LEARNING_FEATURES,STUDY_FEATURES,APPEARANCE,learningProfile,escape,rich,plain,
     Profiles,featureSupported,appearanceFor,fieldList,fieldsFor,install,renderInto,previewCard,ankiCard,
     browserSource:model => "(" + createCardApi.toString() + ")(" + Profiles.browserSource(model) + ")" };
 
@@ -3031,7 +3657,7 @@ else if (typeof exports === 'object'){
 })(globalThis, function (Card, Zip, Excel, initSql, sqlBinary) {
   "use strict";
 
-  const VERSION = "0.7.0";
+  const VERSION = "0.8.0";
   const Profiles = Card.Profiles;
   const SCHEMA = 1;
   const MAX_INPUT = 24 * 1024 * 1024;
@@ -3064,10 +3690,11 @@ else if (typeof exports === 'object'){
     ["concept", "ConceptID", "개념ID", "연결 개념 ID"],
     ["studyRole", "StudyRole", "학습 용도", "진단·보충·재시험 용도"],
     ["retestFor","RetestFor","원문항 NoteID"],
+    ["contrast","ContrastMission","혼동 미션 JSON"],
   ];
   const AUTHOR_FIELDS = {
     kanji:["kanji","answer","word","reading","level","category","onReading","kunReading","example","translation","explanation","source","tags","id"],
-    quiz:["prompt","optionA","optionB","optionC","optionD","correct","answer","explanation","distractors","level","category","translation","example","source","tags","concept","studyRole","retestFor","id"],
+    quiz:["prompt","optionA","optionB","optionC","optionD","correct","answer","explanation","distractors","level","category","translation","example","source","tags","concept","studyRole","retestFor","contrast","id"],
     recall:["prompt","answer","explanation","example","translation","level","category","source","tags","id"],
   };
   const PASTE_FIELDS = {
@@ -3080,7 +3707,7 @@ else if (typeof exports === 'object'){
     explanation:"풀이 근거", kanji:"한자", word:"대표어", reading:"읽기", onReading:"음독", kunReading:"훈독",
     example:"예문", translation:"전체 해석", optionA:"보기 A", optionB:"보기 B", optionC:"보기 C", optionD:"보기 D",
     correct:"정답 번호", distractors:"오답 해설", source:"출처", tags:"태그",
-    concept:"연결 개념 ID", studyRole:"진단·보충·재시험 용도", retestFor:"7일 재시험 원문항 NoteID",
+    concept:"연결 개념 ID", studyRole:"진단·보충·재시험 용도", retestFor:"7일 재시험 원문항 NoteID", contrast:"혼동 미션 JSON",
   };
   const STUDY_ROLES = { "진단":"diagnosis", "보충":"practice", "재시험":"retest", "변형 재시험":"retest" };
 
@@ -3539,6 +4166,13 @@ else if (typeof exports === 'object'){
     if (parsed.mappedLegacy) add("notice", 0, "기존 한자 MASTER의 핵심 학습 필드를 Studio의 신규 노트 유형에 매핑합니다.");
     if (job.level && rows.length !== allRows.length) add("notice", 0, `선택 급수 밖 ${allRows.length - rows.length}개 노트를 범위에서 제외했습니다.`);
     if (job.sample) add("notice", 0, "제작 연습용으로 제공한 표본입니다.");
+    for (const row of rows) if (row.contrast) {
+      try {
+        if (!(job.model==="quiz" || Profiles.models[job.model]?.kind==="quiz")) throw Error("혼동 미션은 객관식 모델을 선택하세요.");
+        Card.Practice.checkMission(JSON.parse(row.contrast));
+      } catch(e) { add("error",row.line,e.message); }
+    }
+    if (!errorCount() && job.learning.included.firstRecall) Card.Practice.prepare(rows,job,Card.plain);
     const bank = learningBank(rows,job,add);
     return { rows, bank, issues, distribution: [...distribution].map(([label, notes]) => ({
       label, notes, cards: notes * Card.MODELS[job.model].types.length,
@@ -3717,10 +4351,11 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     for (let offset = 0; offset < rows.length; offset += 160) {
       const group = rows.slice(offset, offset + 160);
       const hashes = await Promise.all(group.map(async row => {
-        const { line,source,concept,studyRole,retestFor,...data } = row;
+        const { line,source,concept,studyRole,retestFor,contrast,_recall,...data } = row;
         if (concept) data.concept = concept;
         if (studyRole) data.studyRole = studyRole;
         if (retestFor) data.retestFor = retestFor;
+        if (contrast) data.contrast = contrast;
         const [guid, content, sum] = await Promise.all([
           digest(scope + "\0" + row.id), digest(asJSON(data)), digest(row.id, "SHA-1"),
         ]);
@@ -6029,6 +6664,374 @@ globalThis.AnkiOpsSample = {
     if (!notes.some((note) => F.studyRole(note) === "retest")) learning.included.retest = false;
     return { notes, learning };
   }
+  const contrastCatalog = [
+    {
+      key: "deadline",
+      title: "기한과 지속",
+      choices: ["まで", "までに"],
+      items: [
+        { text: "この資料を金曜日（　）提出してください。", correct: 1, clues: ["提出", "資料"], clue: 0 },
+        { text: "この資料を金曜日（　）保管してください。", correct: 0, clues: ["資料", "保管"], clue: 1 },
+      ],
+      why: "제출은 기한 안에 마치는 동작이고, 보관은 그 시점까지 이어지는 상태입니다.",
+      level: "N5",
+    },
+    {
+      key: "location",
+      title: "존재 장소와 활동 장소",
+      choices: ["に", "で"],
+      items: [
+        { text: "図書館（　）自習室があります。", correct: 0, clues: ["自習室", "あります"], clue: 1 },
+        { text: "図書館（　）日本語を勉強します。", correct: 1, clues: ["勉強します", "日本語"], clue: 0 },
+      ],
+      why: "있는 장소에는 に, 공부하는 활동이 이루어지는 장소에는 で를 씁니다.",
+      level: "N5",
+    },
+    {
+      key: "simultaneous",
+      title: "동시 동작과 양보",
+      choices: ["ながら", "ものの"],
+      items: [
+        { text: "音楽を聴き（　）、同時に宿題をした。", correct: 0, clues: ["同時に", "宿題"], clue: 0 },
+        {
+          text: "宿題を早く終えた（　）、結局遊ぶ時間はなかった。",
+          correct: 1,
+          clues: ["宿題", "遊ぶ時間はなかった"],
+          clue: 1,
+        },
+      ],
+      why: "첫 문장은 두 동작을 동시에 합니다. 둘째 문장은 숙제를 일찍 끝냈어도 기대한 결과가 없었습니다.",
+      level: "N2",
+    },
+    {
+      key: "giving",
+      title: "주는 방향",
+      choices: ["あげた", "くれた"],
+      items: [
+        { text: "私は妹に誕生日の本を（　）。", correct: 0, clues: ["誕生日", "私は妹に"], clue: 1 },
+        { text: "妹は私に誕生日の本を（　）。", correct: 1, clues: ["妹は私に", "誕生日"], clue: 0 },
+      ],
+      why: "화자가 동생에게 주면 あげた, 동생이 화자에게 주면 くれた입니다.",
+      level: "N5",
+    },
+    {
+      key: "interval",
+      title: "기간 전체와 기간 중 한 번",
+      choices: ["間", "間に"],
+      items: [
+        {
+          text: "店が閉まっていた（　）、入口の照明はずっと消えていた。",
+          correct: 0,
+          clues: ["ずっと", "入口"],
+          clue: 0,
+        },
+        {
+          text: "店が閉まっていた（　）、一度だけ警報が鳴った。",
+          correct: 1,
+          clues: ["警報", "一度だけ"],
+          clue: 1,
+        },
+      ],
+      why: "조명이 꺼진 상태는 기간 전체에 이어지고, 경보가 울린 사건은 그 기간 안의 한 시점에 일어납니다.",
+      level: "N4",
+    },
+    {
+      key: "decision",
+      title: "스스로 내린 결정과 정해진 일",
+      choices: ["ことにした", "ことになった"],
+      items: [
+        {
+          text: "誰にも言われず、自分の意思で毎朝走る（　）。",
+          correct: 0,
+          clues: ["毎朝", "自分の意思で"],
+          clue: 1,
+        },
+        {
+          text: "規則が変わり、本人の希望にかかわらず全員が研修を受ける（　）。",
+          correct: 1,
+          clues: ["本人の希望にかかわらず", "研修"],
+          clue: 0,
+        },
+      ],
+      why: "스스로 선택한 결정인지, 규칙이나 외부 사정으로 정해진 일인지 구분합니다.",
+      level: "N3",
+    },
+    {
+      key: "source",
+      title: "정보 출처와 원인",
+      choices: ["によると", "によって"],
+      items: [
+        { text: "気象台の発表（　）、今夜は大雪になるそうだ。", correct: 0, clues: ["発表", "今夜"], clue: 0 },
+        { text: "昨夜の強風（　）、駅前の看板が倒れた。", correct: 1, clues: ["駅前", "強風"], clue: 1 },
+      ],
+      why: "발표를 인용하는 문장에는 によると, 물리적 원인을 설명하는 문장에는 によって가 맞습니다.",
+      level: "N3",
+    },
+    {
+      key: "cause",
+      title: "고마운 원인과 탓",
+      choices: ["おかげで", "せいで"],
+      items: [
+        {
+          text: "丁寧に教えてくださった先生の（　）、合格できた。本当にありがたい。",
+          correct: 0,
+          clues: ["先生", "ありがたい"],
+          clue: 1,
+        },
+        {
+          text: "目覚ましをかけ忘れた（　）、始発に乗り遅れてしまった。",
+          correct: 1,
+          clues: ["乗り遅れてしまった", "始発"],
+          clue: 0,
+        },
+      ],
+      why: "첫 문장은 도움에 감사하고, 둘째 문장은 좋지 않은 결과의 원인을 탓합니다.",
+      level: "N3",
+    },
+    {
+      key: "window",
+      title: "기회가 남을 때와 매번",
+      choices: ["うちに", "たびに"],
+      items: [
+        {
+          text: "スープが温かい（　）、冷める前にどうぞ。",
+          correct: 0,
+          clues: ["冷める前に", "スープ"],
+          clue: 0,
+        },
+        {
+          text: "この写真を見る（　）、決まってあの日を思い出す。",
+          correct: 1,
+          clues: ["写真", "決まって"],
+          clue: 1,
+        },
+      ],
+      why: "상태가 바뀌기 전의 기회에는 うちに, 같은 행동을 할 때마다 반복되는 일에는 たびに를 씁니다.",
+      level: "N3",
+    },
+    {
+      key: "purpose",
+      title: "능력의 목표와 행동의 목적",
+      choices: ["ように", "ために"],
+      items: [
+        {
+          text: "日本語で流暢に話せる（　）、毎朝音読している。",
+          correct: 0,
+          clues: ["毎朝", "話せる"],
+          clue: 1,
+        },
+        {
+          text: "新しい辞書を買う（　）、その代金を毎月貯めている。",
+          correct: 1,
+          clues: ["買う", "毎月"],
+          clue: 0,
+        },
+      ],
+      why: "말할 수 있게 되는 능력의 목표와, 사전을 사겠다는 의도적인 행동 목적을 구분합니다.",
+      level: "N4",
+    },
+  ];
+  function quizModel(model) {
+    return model === "quiz" || C.Profiles.models[model]?.kind === "quiz";
+  }
+  function idSuffix(value) {
+    // The full choice pair is checked on every lookup, including possible hash collisions.
+    let hi = 2166136261,
+      lo = 1779033703;
+    for (const c of value) {
+      hi = Math.imul(hi ^ c.charCodeAt(0), 16777619);
+      lo = Math.imul(lo + c.charCodeAt(0), 2246822519);
+    }
+    return (hi >>> 0).toString(36) + "-" + (lo >>> 0).toString(36);
+  }
+  function missionData(row) {
+    return row.contrast ? JSON.parse(row.contrast) : null;
+  }
+  function missionCard(project, m, origins = [], editing = "") {
+    C.Practice.checkMission(m);
+    if (!quizModel(project.job.model)) throw Error("혼동 미션은 객관식 제작 모델의 덱에 누적하세요.");
+    const fingerprint = C.Practice.pairKey(m.choices);
+    const existing = project.notes.find(
+      (row) => row.contrast && C.Practice.pairKey(missionData(row).choices) === fingerprint,
+    );
+    const old = editing ? project.notes.find((n) => n.id === editing && n.contrast) : existing;
+    if (editing && (!old || (existing && existing.id !== editing)))
+      throw Error("같은 표현 쌍의 미션이 이미 있습니다.");
+    const id = old?.id || "mix-" + idSuffix(fingerprint);
+    if (!old && project.notes.some((n) => n.id === id)) throw Error("미션 NoteID가 다른 노트와 겹칩니다.");
+    const prior = old ? missionData(old) : null;
+    const stored = {
+      title: m.title.trim(),
+      choices: m.choices.map((s) => s.trim()),
+      items: m.items.map((i) => ({
+        text: i.text.trim(),
+        correct: i.correct,
+        clues: i.clues.map((s) => s.trim()),
+        clue: i.clue,
+      })),
+      why: m.why.trim(),
+      origins: [...new Set([...(prior?.origins || []), ...origins].filter((k) => k && k !== id))].sort(),
+    };
+    const answers = stored.items.map((i) => i.correct),
+      choice = answers[0] * 2 + answers[1];
+    const options = [0, 1, 2, 3].map(
+      (n) => "① " + stored.choices[Math.floor(n / 2)] + " / ② " + stored.choices[n % 2],
+    );
+    const level =
+      project.job.level || m.level || old?.level || project.notes.find((n) => origins.includes(n.id))?.level;
+    if (!/^N[1-5]$/.test(level || "")) throw Error("저장할 노트의 제작 급수를 선택하세요.");
+    return {
+      ...old,
+      id,
+      level,
+      category: "문법 · 혼동 비교",
+      prompt: stored.title + "\n" + stored.items.map((i, n) => n + 1 + ". " + i.text).join("\n"),
+      optionA: options[0],
+      optionB: options[1],
+      optionC: options[2],
+      optionD: options[3],
+      correct: "ABCD"[choice],
+      answer: options[choice],
+      explanation: stored.why,
+      distractors: stored.items.map((i, n) => n + 1 + "번 단서 · " + i.clues[i.clue]).join("\n"),
+      contrast: JSON.stringify(stored),
+    };
+  }
+  function readFeedback(text, project) {
+    if (typeof text !== "string" || text.length > 16 * 1024 * 1024)
+      throw Error("16 MB 이하 학습 코드를 사용하세요.");
+    let x;
+    try {
+      x = JSON.parse(text);
+    } catch {
+      throw Error("학습 카드에서 복사한 전체 코드 또는 JSON 파일을 선택하세요.");
+    }
+    const scope = [
+      project.job.product,
+      project.job.model,
+      project.job.level || "",
+      !!project.job.sample,
+      project.job.name,
+    ];
+    if (
+      x?.kind !== "anki-author-feedback" ||
+      x.schema !== 1 ||
+      !Array.isArray(x.rows) ||
+      x.rows.length > 105000 ||
+      typeof x.device !== "string" ||
+      !/^[\w-]{4,100}$/.test(x.device)
+    )
+      throw Error("지원하는 제작기용 학습 코드가 아닙니다.");
+    if (JSON.stringify(x.deck) !== JSON.stringify(scope))
+      throw Error("이 코드는 다른 덱에서 만들었습니다. 원래 덱을 선택하세요.");
+    const num = (n) => Number.isSafeInteger(n) && n >= 0 && n <= 1e9;
+    const label = (s, max) => typeof s === "string" && s.trim() && s.length <= max;
+    const normalized = [],
+      seen = new Set();
+    for (const r of x.rows) {
+      if (
+        !r ||
+        !label(r.id, 180) ||
+        !/^(?:\d{1,4}\.){2}\d{1,4}(?:-(?:rc|preview\.?)\d{1,4})?$/i.test(r.v) ||
+        !num(r.ord) ||
+        r.ord >= C.MODELS[project.job.model].types.length ||
+        !num(r.rev) ||
+        !num(r.total) ||
+        !Array.isArray(r.pairs) ||
+        r.pairs.length > 5000 ||
+        r.pairs.some((p) => !p || !label(p.a, 32767) || !label(p.b, 32767) || !num(p.n) || !p.n || p.a === p.b) ||
+        r.pairs.reduce((s, p) => s + p.n, 0) > r.total
+      )
+        throw Error("학습 횟수 또는 보기 데이터가 올바르지 않습니다.");
+      const typed = {};
+      for (const k of ["solo", "aided", "wrong", "reveal"]) {
+        typed[k] = r.typed?.[k] ?? 0;
+        if (!num(typed[k])) throw Error("회상 횟수를 확인하세요.");
+      }
+      const k = JSON.stringify([r.id, r.ord, r.v]);
+      if (seen.has(k)) throw Error("같은 노트의 버전별 집계가 중복되어 있습니다.");
+      seen.add(k);
+      normalized.push({
+        id: r.id,
+        ord: r.ord,
+        v: r.v,
+        rev: r.rev,
+        total: r.total,
+        pairs: r.pairs.map((p) => ({ a: p.a, b: p.b, n: p.n })),
+        typed,
+      });
+    }
+    let selected = null;
+    if (x.selected) {
+      const q = x.selected;
+      if (
+        !label(q.picked, 180) ||
+        !label(q.right, 180) ||
+        C.Practice.clean(q.picked) === C.Practice.clean(q.right) ||
+        !Array.isArray(q.ids) ||
+        q.ids.length > 35000 ||
+        q.ids.some((id) => !label(id, 180))
+      )
+        throw Error("선택한 표현 쌍을 읽을 수 없습니다.");
+      selected = { picked: q.picked, right: q.right, ids: [...new Set(q.ids)] };
+    }
+    return { device: x.device, rows: normalized, selected };
+  }
+  function mergeFeedback(project, report) {
+    const reports = (project.studyReports ||= {});
+    const deviceKey = "source@" + report.device,
+      writer = (reports[deviceKey] ||= {});
+    let changed = 0;
+    for (const r of report.rows) {
+      const k = JSON.stringify([r.id, r.ord, r.v]),
+        old = writer[k];
+      if (!old || r.rev > old.rev) {
+        writer[k] = r;
+        changed++;
+      }
+    }
+    return changed;
+  }
+  function evidence(project) {
+    const notes = new Map(),
+      versions = new Set();
+    for (const writer of Object.values(project.studyReports || {}))
+      for (const r of Object.values(writer)) {
+        versions.add(r.v);
+        if (!notes.has(r.id)) notes.set(r.id, new Map());
+        const editions = notes.get(r.id);
+        if (!editions.has(r.v))
+          editions.set(r.v, { total: 0, pairs: new Map(), solo: 0, aided: 0, wrong: 0, reveal: 0 });
+        const e = editions.get(r.v);
+        e.total += r.total;
+        for (const k of ["solo", "aided", "wrong", "reveal"]) e[k] += r.typed[k];
+        for (const pair of r.pairs) {
+          const k = JSON.stringify([
+            C.Practice.clean(pair.a).toLowerCase(),
+            C.Practice.clean(pair.b).toLowerCase(),
+          ]);
+          e.pairs.set(k, (e.pairs.get(k) || 0) + pair.n);
+        }
+      }
+    return { notes, versions: [...versions].sort((a, b) => F.compareReleases(a, b)) };
+  }
+
+  function starterProject() {
+    const p = blank(
+      F.validateJob({
+        name: "JLPT 문법 · 혼동 표현 10쌍",
+        product: "jlpt-grammar-contrast-10",
+        model: "lab-quiz",
+        mode: "new",
+        version: "1.0.0-RC1",
+        level: "",
+        sample: true,
+      }),
+    );
+    p.notes = contrastCatalog.map((m) => missionCard(p, m));
+    p.unbuilt = true;
+    return p;
+  }
   function feedbackGaps(notes) {
     const groups = { options: [], recall: [] };
     for (const row of notes) {
@@ -6377,7 +7380,7 @@ globalThis.AnkiOpsSample = {
     latestVersion,
     setPair,
     removePair,
-    feedbackGaps
+    contrastCatalog,quizModel,missionCard,starterProject,readFeedback,mergeFeedback,evidence,feedbackGaps
   };
 })(globalThis);
 </script>
@@ -7275,9 +8278,9 @@ globalThis.AnkiOpsSample = {
     function stash() {
       if (!project) return;
       project.draftAt = Date.now();
-      const { draft, paste, headers, draftAt } = project;
+      const { draft, paste, headers, draftAt, missionDraft } = project;
       try {
-        localStorage.setItem(draftKey(project.key), JSON.stringify({ draft, paste, headers, draftAt }));
+        localStorage.setItem(draftKey(project.key), JSON.stringify({ draft, paste, headers, draftAt, missionDraft }));
       } catch {
         message(
           "이 브라우저의 초안 저장 공간이 부족합니다. 분량을 비교해 저장하거나 전체 백업을 받으세요.",
@@ -7300,9 +8303,9 @@ globalThis.AnkiOpsSample = {
     }
     async function save(change) {
       const p = project;
-      const { draft, paste, headers, draftAt } = p;
+      const { draft, paste, headers, draftAt, missionDraft } = p;
       project = await store.update(p.key, p.rev, (old) => {
-        Object.assign(old, { draft, paste, headers, draftAt });
+        Object.assign(old, { draft, paste, headers, draftAt, missionDraft });
         change(old);
         return old;
       });
@@ -7343,6 +8346,7 @@ globalThis.AnkiOpsSample = {
       primary.replaceChildren();
       more.replaceChildren();
       for (const field of Factory.authorFields(model)) {
+        if(field.id==="contrast")continue;
         const id = field.id;
         let input;
         if (["level", "part", "correct", "studyRole"].includes(id)) {
@@ -7532,6 +8536,7 @@ globalThis.AnkiOpsSample = {
       });
     }
     function editNote(row, field) {
+      if(row.contrast){openContrast({...JSON.parse(row.contrast),level:row.level},[],row.id);return;}
       if (
         Object.entries(project.draft).some(([k, v]) => !["id", "level", "part"].includes(k) && v) &&
         !window.confirm("작성 중인 노트를 이 노트로 바꿀까요?")
@@ -7699,6 +8704,337 @@ globalThis.AnkiOpsSample = {
         "원문항과 7일 변형 문항을 연결했습니다. 누적 덱 제작으로 반영하세요."
       );
     });
+    const blankMission = (choices = ["", ""]) => ({
+      title: "",
+      choices: [...choices],
+      level: project.job.level || "",
+      items: [0, 1].map((n) => ({ text: "", clues: ["", ""], correct: n, clue: 0 })),
+      why: "",
+      origins: [],
+      editing: "",
+    });
+    let qualityToken = 0,
+      qualityData = null,
+      qualityKey = "";
+    function openContrast(m, origins = [], editing = "") {
+      project.missionDraft = {
+        ...structuredClone(m),
+        level: project.job.level || m.level || "",
+        origins: [...new Set([...(m.origins || []), ...origins])],
+        editing,
+      };
+      stash();
+      $("desk-contrast").open = true;
+      drawContrast();
+      $("contrast-editor").scrollIntoView({ block: "nearest" });
+    }
+    function contrastInputs() {
+      const m = project?.missionDraft;
+      if (!m) return;
+      m.title = $("contrast-title").value;
+      m.level = $("contrast-level").value;
+      m.choices = [$("contrast-a").value, $("contrast-b").value];
+      m.why = $("contrast-why").value;
+      m.items = [0, 1].map((n) => ({
+        text: $("mix-text-" + n).value,
+        correct: +$("mix-correct-" + n).value,
+        clues: [$("mix-clueA-" + n).value, $("mix-clueB-" + n).value],
+        clue: +$("mix-key-" + n).value,
+      }));
+      stash();
+    }
+    function drawContrast() {
+      const box = $("desk-contrast");
+      box.hidden = !P.quizModel(project.job.model);
+      const m = project.missionDraft;
+      $("contrast-editor").hidden = !m;
+      if (!m || box.hidden) return;
+      $("contrast-level").disabled = !!project.job.level;
+      $("contrast-title").value = m.title;
+      $("contrast-level").value = m.level || project.job.level || "";
+      $("contrast-a").value = m.choices[0];
+      $("contrast-b").value = m.choices[1];
+      $("contrast-why").value = m.why;
+      const host = $("contrast-lines");
+      host.replaceChildren();
+      m.items.forEach((item, n) => {
+        const row = element("section", undefined, "pair-note");
+        row.append(element("h3", "문장 " + (n + 1)));
+        const text = element("textarea");
+        text.rows = 2;
+        text.id = "mix-text-" + n;
+        text.value = item.text;
+        text.placeholder = "빈칸에 （　）를 입력하세요";
+        row.append(labelled("문장과 빈칸", text));
+        function select(id, caption, labels, value) {
+          const s = element("select");
+          s.id = id + n;
+          labels.forEach((v, i) => opt(s, String(i), v));
+          s.value = String(value);
+          row.append(labelled(caption, s));
+        }
+        select("mix-correct-", "정답 표현", ["A", "B"], item.correct);
+        ["A", "B"].forEach((letter, i) => {
+          const f = element("input");
+          f.id = "mix-clue" + letter + "-" + n;
+          f.value = item.clues[i];
+          row.append(labelled("문장 안 단서 " + letter, f));
+        });
+        select("mix-key-", "결정 단서", ["단서 A", "단서 B"], item.clue);
+        host.append(row);
+      });
+      $("contrast-info").textContent =
+        (m.origins.length ? "연결할 원문항 " + m.origins.length + "개 · " : "") +
+        "두 표현과 두 단서를 검토한 뒤 누적하세요.";
+    }
+    for (const item of P.contrastCatalog)
+      opt($("contrast-pick"), item.key, item.choices.join(" / ") + " · " + item.title);
+    opt($("contrast-pick"), "custom", "직접 만든 표현 쌍");
+    const exampleFor = (pair) =>
+      P.contrastCatalog.find((m) => Card.Practice.pairKey(m.choices) === Card.Practice.pairKey(pair));
+    function forPair(pair, origins) {
+      const match = project.notes.find(
+        (r) => r.contrast && Card.Practice.pairKey(JSON.parse(r.contrast).choices) === Card.Practice.pairKey(pair),
+      );
+      const draft = match
+        ? { ...JSON.parse(match.contrast), level: match.level }
+        : exampleFor(pair) || blankMission(pair);
+      if (project.missionDraft && !window.confirm("작성 중인 혼동 미션 초안을 선택한 표현으로 바꿀까요?")) return;
+      openContrast(draft, origins, match?.id || "");
+    }
+    click("contrast-open", () => {
+      const selected = P.contrastCatalog.find((m) => m.key === $("contrast-pick").value);
+      if (selected) forPair(selected.choices, []);
+      else if (!project.missionDraft || window.confirm("새 혼동 미션 초안을 작성할까요?"))
+        openContrast(blankMission());
+    });
+    $("contrast-editor").addEventListener("input", contrastInputs);
+    click("contrast-close", async () => {
+      if (!window.confirm("작성 중인 미션 초안을 닫을까요?")) return;
+      await save((p) => {
+        delete p.missionDraft;
+        p.draftAt = Date.now();
+      });
+      drawProject();
+    });
+    click("contrast-commit", async () => {
+      if (project.pending) throw Error("비교 중인 분량을 먼저 저장하거나 닫으세요.");
+      contrastInputs();
+      const m = project.missionDraft,
+        row = P.missionCard(project, m, m.origins, m.editing),
+        old = project.notes.find((n) => n.id === row.id);
+      const notes = old ? project.notes.map((n) => (n.id === row.id ? row : n)) : [...project.notes, row];
+      await P.validateNotes(project, notes);
+      await save((p) => {
+        p.notes = notes;
+        p.unbuilt = true;
+        delete p.missionDraft;
+        p.draftAt = Date.now();
+      });
+      drawProject();
+      await library();
+      message(
+        (old ? "기존 미션과 원문항 연결을 저장했습니다." : "검토한 혼동 미션 한 장을 누적했습니다.") +
+          " · " +
+          row.id,
+      );
+    });
+    click("desk-contrast-sample", async () => {
+      const initial = P.starterProject(),
+        old = await getRecord(initial.key);
+      if (!old) {
+        await P.validateNotes(initial, initial.notes);
+        await store.update(initial.key, -1, () => initial);
+      }
+      await select(initial.key);
+      message(
+        old
+          ? "저장한 혼동 표현 표본 덱을 열었습니다."
+          : "10쌍·20문장을 누적했습니다. 누적 덱 제작에서 APKG를 받을 수 있습니다.",
+      );
+    });
+    async function importFeedback(text) {
+      const r = P.readFeedback(text, project);
+      let count = 0;
+      await save((p) => {
+        count = P.mergeFeedback(p, r);
+      });
+      qualityKey = "";
+      $("feedback-code").value = "";
+      drawProject();
+      $("desk-feedback").open = true;
+      if (r.selected && P.quizModel(project.job.model)) {
+        const ids = new Set(project.notes.map((n) => n.id));
+        forPair(
+          [r.selected.picked, r.selected.right],
+          r.selected.ids.filter((id) => ids.has(id)),
+        );
+      }
+      message("학습 기록 반영 · 새로 반영한 버전별 집계 " + count + "건");
+    }
+    click("feedback-import", () => importFeedback($("feedback-code").value));
+    $("feedback-file").addEventListener(
+      "change",
+      guard(async () => {
+        const f = $("feedback-file").files[0];
+        $("feedback-file").value = "";
+        if (!f) return;
+        if (f.size > 16 * 1024 * 1024) throw Error("16 MB 이하 JSON을 선택하세요.");
+        await importFeedback(await f.text());
+      }),
+    );
+    function refreshQuality() {
+      const before = $("feedback-before"),
+        after = $("feedback-after");
+      if (!project || !$("desk-feedback").open) return;
+      const cacheKey = project.key + "|" + project.rev;
+      if (qualityKey !== cacheKey) {
+        const oldBefore = before.value,
+          oldAfter = after.value,
+          same = qualityKey.startsWith(project.key + "|");
+        qualityData = P.evidence(project);
+        qualityKey = cacheKey;
+        const versions = qualityData.versions;
+        before.replaceChildren();
+        after.replaceChildren();
+        opt(before, "", "이전 기록 없음");
+        for (const v of versions) {
+          opt(before, v, "v" + v);
+          opt(after, v, "v" + v);
+        }
+        before.value = same && versions.includes(oldBefore) ? oldBefore : versions.at(-2) || "";
+        after.value = same && versions.includes(oldAfter) ? oldAfter : versions.at(-1) || "";
+      }
+      $("feedback-report").hidden = !qualityData.versions.length;
+      drawEvidence().catch((error) => message(error.message, true));
+    }
+    async function drawEvidence() {
+      const ticket = ++qualityToken,
+        p = project,
+        host = $("feedback-results"),
+        previous = $("feedback-before").value,
+        next = $("feedback-after").value;
+      host.replaceChildren();
+      if (!next) return;
+      if (previous && Factory.compareReleases(previous, next) >= 0) {
+        host.append(element("p", "확인할 버전보다 앞선 덱 버전을 선택하세요."));
+        return;
+      }
+      async function edition(v) {
+        const ref = p.versions.find((x) => x.version === v);
+        if (!ref) return null;
+        const r = await getRecord(ref.key);
+        return r?.result?.rows ? new Map(r.result.rows.map((n) => [n.id, n])) : null;
+      }
+      const [left, right] = await Promise.all([edition(previous), edition(next)]);
+      if (ticket !== qualityToken || p !== project) return;
+      const notes = new Map(project.notes.map((r) => [r.id, r]));
+      const list = [...qualityData.notes].filter(([, v]) => v.has(next) || v.has(previous));
+      list.sort(([, a], [, b]) => {
+        const score = (m) => {
+          const row = m.get(next);
+          return row ? [...row.pairs.values()].reduce((a, n) => a + n, 0) + row.aided : 0;
+        };
+        return score(b) - score(a);
+      });
+      let pos = 0;
+      const more = button("다음 20노트", append, "text-button");
+      function append() {
+        more.remove();
+        for (const [id, editions] of list.slice(pos, pos + 20)) {
+          const a = editions.get(previous),
+            b = editions.get(next),
+            n = notes.get(id),
+            line = element("section", undefined, "quality-note");
+          line.append(element("strong", n ? P.title(n) : id));
+          if (previous) {
+            const x = left?.get(id),
+              y = right?.get(id);
+            const changed =
+              x && y
+                ? [
+                    ["풀이 해설", ["explanation", "distractors", "comparison"]],
+                    ["질문·지문", ["prompt", "passage"]],
+                    ["보기·정답", ["optionA", "optionB", "optionC", "optionD", "correct", "answer"]],
+                  ]
+                    .filter(([, ks]) => ks.some((k) => (x[k] || "") !== (y[k] || "")))
+                    .map(([t]) => t)
+                : null;
+            line.append(
+              element(
+                "small",
+                !changed
+                  ? "두 버전의 원문 대조 자료 없음"
+                  : changed.length
+                    ? changed.join(" · ") + " 변경"
+                    : "비교한 질문·보기·해설 동일",
+              ),
+            );
+          }
+          const keys = new Set([...(a?.pairs.keys() || []), ...(b?.pairs.keys() || [])]);
+          const fmt = (e, k) => (e?.total ? (e.pairs.get(k) || 0) + " / " + e.total : "응답 없음");
+          for (const k of keys) {
+            const [wrong, correct] = JSON.parse(k);
+            line.append(
+              element(
+                "p",
+                wrong +
+                  " → " +
+                  correct +
+                  " · " +
+                  (previous ? "v" + previous + " " + fmt(a, k) + " → " : "") +
+                  "v" +
+                  next +
+                  " " +
+                  fmt(b, k),
+              ),
+            );
+            if (n && P.quizModel(p.job.model))
+              line.append(button("이 오답으로 문제 만들기", () => forPair([wrong, correct], [id]), "text-button"));
+          }
+          if (!keys.size)
+            line.append(
+              element(
+                "p",
+                "객관식 응답 · " +
+                  (previous ? "v" + previous + " " + (a?.total || 0) + "회 → " : "") +
+                  "v" +
+                  next +
+                  " " +
+                  (b?.total || 0) +
+                  "회",
+              ),
+            );
+          for (const [v, e] of [
+            [previous, a],
+            [next, b],
+          ])
+            if (e && e.solo + e.aided + e.wrong + e.reveal)
+              line.append(
+                element(
+                  "small",
+                  "v" +
+                    v +
+                    " · 직접 정답 " +
+                    e.solo +
+                    " · 보기 후 정답 " +
+                    e.aided +
+                    " · 오답 " +
+                    e.wrong +
+                    " · 정답 확인 " +
+                    e.reveal,
+                ),
+              );
+          if (n) line.append(button("원문·보기·해설 열기", () => editNote(n, "explanation"), "text-button"));
+          host.append(line);
+        }
+        pos += 20;
+        if (pos < list.length) host.append(more);
+      }
+      append();
+    }
+    $("desk-feedback").addEventListener("toggle", refreshQuality);
+    for (const id of ["feedback-before", "feedback-after"]) $(id).addEventListener("change", refreshQuality);
     function drawQuality() {
       const box = $("desk-quality"),
         host = $("desk-quality-list");
@@ -7781,6 +9117,8 @@ globalThis.AnkiOpsSample = {
       drawSettings();
       drawNotes();
       drawQuality();
+      drawContrast();
+      refreshQuality();
       drawPairs();
       rows = p.pending ? P.plan(p, p.pending.rows) : [];
       differencePage();
@@ -7887,6 +9225,7 @@ globalThis.AnkiOpsSample = {
         old.paste = p.paste;
         old.headers = p.headers;
         old.draftAt = p.draftAt;
+        old.missionDraft = p.missionDraft;
         records.put(record);
         runs.put({ ...summary(record), deckKey: old.key });
         return old;
