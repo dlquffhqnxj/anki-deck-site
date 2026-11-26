@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ko">
 <head>
+<script>if(new URLSearchParams(location.search).get("guide")==="anki")document.documentElement.classList.add("anki-guide");</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#22243a">
@@ -549,6 +550,57 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
   .desk-study-controls>.desk-actions:last-child>.button{flex:1}
   #desk-study-choice{margin-bottom:6px}
 }
+html.anki-guide body>.layout,html.anki-guide body>.skip-link{display:none}
+.ug-entry-links{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.usage{max-width:1200px;margin:auto;padding:18px clamp(16px,4vw,58px) 36px;color:var(--ink)}
+.usage [hidden]{display:none!important}
+.ug-top,.ug-actions,.ug-toggle,.ug-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ug-top{justify-content:space-between;border-bottom:1px solid var(--line);padding:0 0 14px;color:var(--muted);font-size:.9rem}
+.ug-top a,.ug-footer a{color:var(--accent-dark);text-underline-offset:3px}
+.ug-heading{padding:clamp(18px,3.2vw,40px) 0 18px}
+.ug-heading h1{font-size:clamp(1.8rem,4.1vw,3.1rem);line-height:1.12;letter-spacing:-.055em}
+.ug-heading p,.ug-instructions p{margin-top:10px;line-height:1.65;word-break:keep-all;overflow-wrap:anywhere}
+.ug-heading p{color:var(--muted)}
+.ug-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 18px}
+.ug-steps a{min-height:48px;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:8px 12px;font-weight:700;text-decoration:none;line-height:1.33}
+.ug-steps span{border-radius:50%;width:24px;height:24px;flex-shrink:0;display:grid;place-items:center;background:#edeaf6;color:#53458a;font-size:.82rem}
+.ug-steps a[aria-current]{background:#534488;border-color:#534488;color:white}
+.ug-steps a[aria-current] span{color:#50418b;background:#fff}
+.ug-grid{display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);gap:18px;align-items:start}
+.ug-instructions,.ug-preview{min-width:0;border:1px solid var(--line);border-radius:14px;background:#fff;padding:clamp(16px,2.1vw,26px)}
+.usage h2{font-size:clamp(1.16rem,2vw,1.5rem);line-height:1.35;letter-spacing:-.04em}
+.usage h3{font-size:1rem;margin:18px 0 7px}
+.ug-instructions ol{padding-left:21px;margin:12px 0 15px;line-height:1.65}
+.ug-instructions li+li{margin-top:8px}
+.ug-inputs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:15px 0}
+.usage label{display:grid;gap:4px;font-weight:600;font-size:.88rem}
+.usage :is(input,select,textarea){max-width:100%;min-width:0;border:1px solid var(--line);border-radius:7px;padding:8px;background:#fff;color:inherit;font:inherit}
+.usage textarea{width:100%;resize:vertical}
+.usage button{font:inherit;border:1px solid var(--line);border-radius:7px;padding:8px 11px;background:#fff;color:var(--ink);cursor:pointer;line-height:1.4}
+.usage button.ug-primary{background:#584997;color:white;border-color:#584997;font-weight:650}
+.usage button.ug-secondary,.ug-toggle [aria-pressed=true]{background:#f2eef9;color:#4c3b86;border-color:#c6bddf}
+.ug-preview-head{display:flex;align-items:end;justify-content:space-between;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.ug-kicker,.ug-small,.ug-footer,.ug-preview-head label{font-size:.85rem;color:var(--muted)}
+.ug-kicker{display:block;font-weight:700;color:#356f65;margin-bottom:3px}
+.ug-fact,.ug-callout{border-left:3px solid #4c8378;padding:8px 12px;background:#f0f7f3;color:#245448}
+.ug-fact{font-weight:650}
+.ug-callout p{margin-top:3px}
+.ug-detail{margin:14px 0 0;border-top:1px solid var(--line);padding-top:10px}
+.ug-detail summary{cursor:pointer;color:#4c3b86;font-weight:650;line-height:1.55}
+.ug-detail label,.ug-detail button,.ug-devices .ug-toggle,.ug-edit label,.ug-edit button,.ug-edit .ug-actions{margin-top:8px}
+.ug-edit{border-top:1px solid var(--line);margin-top:12px}
+.ug-edit fieldset{min-width:0;border:1px solid var(--line);padding:8px 10px 12px;border-radius:8px;margin:10px 0}
+.ug-edit legend{font-weight:700;padding:0 5px}.ug-edit .ug-small{margin:5px 0 0}
+.ug-preview #ug-card{min-width:0;overflow-wrap:anywhere}
+.ug-reviewbar{border-top:1px solid var(--line);padding-top:12px;margin-top:12px;display:grid;gap:6px;justify-items:start}
+#ug-grades>span{display:block;color:var(--muted);font-size:.8rem;margin-bottom:4px}
+#ug-message{background:#f2f0fa;padding:8px 10px;border-radius:6px}
+#ug-message[role=alert]{background:#fdf2ee;color:#833924}
+.ug-footer{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);gap:5px 16px}.ug-footer p{font-weight:650}
+.ug-mobile-jump{display:none}
+@media(max-width:780px){.ug-grid{grid-template-columns:1fr}.ug-steps a{padding:8px 5px;gap:5px;font-size:.86rem}.ug-steps span{width:20px;height:20px}.ug-heading{padding-top:20px}.ug-preview{padding:12px}.usage button{min-height:42px}.ug-mobile-jump{display:inline-block;margin:0 0 12px;text-underline-offset:3px}.ug-reviewbar{position:sticky;bottom:0;background:white;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:2}}
+@media(max-width:410px){.usage{padding:12px}.ug-steps{gap:4px}.ug-steps a{flex-direction:column;text-align:center;justify-content:center;min-height:57px}.ug-inputs{gap:6px}.ug-preview-head{align-items:start}}
+
 </style>
 </head>
 <body>
@@ -575,11 +627,11 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
     <main id="main" class="main" tabindex="-1">
       <header class="topbar">
         <div class="location"><span>워크스페이스</span><span aria-hidden="true">/</span><strong id="current-location">덱 제작</strong></div>
-        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.10.0.html">오프라인 실행본</a>
+        <div class="ug-entry-links"><a class="button secondary compact" href="?guide=anki" target="_blank" rel="noopener">Anki 사용법</a><a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.10.1.html">오프라인 실행본</a></div>
       </header>
       <div class="content">
         <section id="view-decks" class="view">
-          <div class="hero work-hero"><div><div class="hero-title"><h1>내 덱</h1><span class="version">v0.10.0</span></div><p>덱을 골라 오늘 작성한 노트를 더하고 누적된 카드로 Anki 덱을 만드세요.</p></div>
+          <div class="hero work-hero"><div><div class="hero-title"><h1>내 덱</h1><span class="version">v0.10.1</span></div><p>덱을 골라 오늘 작성한 노트를 더하고 누적된 카드로 Anki 덱을 만드세요.</p></div>
             <div class="desk-actions"><button type="button" id="desk-new" class="button primary">새 덱 만들기</button><button type="button" id="desk-contrast-sample" class="button secondary">혼동 표현 10쌍 열기</button><button type="button" id="desk-import" class="button secondary">백업 복원</button><input type="file" id="desk-backup-file" accept=".zip" hidden></div></div>
           <p id="desk-status" class="desk-status" role="status" aria-live="polite"></p>
           <form id="desk-create" class="panel" hidden><div class="panel-head"><h2>새 덱 만들기</h2></div><div class="form-body">
@@ -649,7 +701,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
         <section id="view-work" class="view" hidden>
           <div class="hero work-hero">
             <div>
-              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.10.0</span></div>
+              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.10.1</span></div>
               <p>제작 모델을 고르고, 학습할 내용을 입력해 나만의 Anki 덱을 만드세요.</p>
             </div>
             <a class="button secondary" href="#design">기존 APKG 디자인 편집</a>
@@ -914,7 +966,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
         <section id="view-rules" class="view" hidden>
           <div class="hero"><h1>운영 기준</h1><p>원본, 카드 식별자와 검사 근거를 같은 실행에 연결합니다.</p></div>
           <div class="rules-grid">
-            <section class="panel rule-panel"><h2>제작기 변경 이력</h2><p><b>v0.10.0 · 2026-11-26</b> 내 덱에서 공부하고 오답·찍어서 맞힌 답·보기 도움을 세 장씩 복습합니다. 반복한 오답으로 같은 덱에 새 문제를 만들 수 있습니다.</p><p><b>v0.9.0 · 2026-11-26</b> 작성 중인 카드의 앞·뒷면, 누적 후 수량, 초안 이어쓰기와 내 덱에서 APKG 받기를 추가했습니다.</p><p><b>v0.8.0 · 2026-11-26</b> 반복 오답에서 대조 문항을 만들고, 읽기·활용은 보기를 열기 전에 직접 씁니다. 학습 기록을 가져오면 덱 버전별 응답과 오답 보기를 비교할 수 있습니다.</p><p><b>v0.7.0 · 2026-11-26</b> 찍어서 맞힌 문제 복습, 반복된 오답 보기 비교, 원문항과 7일 변형 문항 연결을 추가했습니다. 내 덱에서 누적 수량과 다음 제작 작업을 구분해 표시합니다.</p><p><b>v0.6.0 · 2026-11-26</b> 내 덱, 오늘 분량 비교·누적, 덱 전체 백업·복원, 오답 복습 미션을 추가했습니다.</p><p>v0.5.0 · 2026-11-24　Kanji LAB v1.9.2형과 한자혁명 v1.10.0형 제작 모델을 추가했습니다.</p><p>제작기 버전과 각 덱의 버전은 별도로 기록합니다.</p></section>
+            <section class="panel rule-panel"><h2>제작기 변경 이력</h2><p><b>v0.10.1 · 2026-11-26</b> 이전 버전에서 만든 덱의 학습 설정을 불러올 때 발생한 오류를 수정했습니다. Anki 사용법 미리보기를 추가했습니다.</p><p><b>v0.10.0 · 2026-11-26</b> 내 덱에서 공부하고 오답·찍어서 맞힌 답·보기 도움을 세 장씩 복습합니다. 반복한 오답으로 같은 덱에 새 문제를 만들 수 있습니다.</p><p><b>v0.9.0 · 2026-11-26</b> 작성 중인 카드의 앞·뒷면, 누적 후 수량, 초안 이어쓰기와 내 덱에서 APKG 받기를 추가했습니다.</p><p><b>v0.8.0 · 2026-11-26</b> 반복 오답에서 대조 문항을 만들고, 읽기·활용은 보기를 열기 전에 직접 씁니다. 학습 기록을 가져오면 덱 버전별 응답과 오답 보기를 비교할 수 있습니다.</p><p><b>v0.7.0 · 2026-11-26</b> 찍어서 맞힌 문제 복습, 반복된 오답 보기 비교, 원문항과 7일 변형 문항 연결을 추가했습니다. 내 덱에서 누적 수량과 다음 제작 작업을 구분해 표시합니다.</p><p><b>v0.6.0 · 2026-11-26</b> 내 덱, 오늘 분량 비교·누적, 덱 전체 백업·복원, 오답 복습 미션을 추가했습니다.</p><p>v0.5.0 · 2026-11-24　Kanji LAB v1.9.2형과 한자혁명 v1.10.0형 제작 모델을 추가했습니다.</p><p>제작기 버전과 각 덱의 버전은 별도로 기록합니다.</p></section>
             <section class="panel rule-panel"><h2>원본과 모델</h2>
               <p>웹에서 카드 내용을 작성하거나 Excel 표를 붙여넣으면 NoteID를 발급합니다. 기존 NoteID가 있는 자료를 가져올 때는 그 값을 사용합니다. JLPT 한자 모델은 한자 인식·쓰기·대표어 읽기 카드 3장을 만들고, 객관식과 기본 회상은 노트당 1장을 만듭니다.</p>
               <p>기존 한자 MASTER는 핵심 필드를 읽어 신규 덱으로 제작합니다. N2·N3 일일 문항의 TSV 형식도 객관식 모델에서 읽을 수 있습니다.</p>
@@ -940,6 +992,73 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
       </div>
     </main>
   </div>
+  <main id="anki-usage" class="usage" hidden aria-labelledby="ug-title">
+    <div class="ug-top"><a id="ug-home" href="./index.html">← 내 덱</a><span>Anki 제작실</span></div>
+    <header class="ug-heading"><h1 id="ug-title">Anki 사용법 미리보기</h1><p>카드를 만들고, Anki에서 풀고, 반복한 오답을 다음 덱에 반영해 보세요. 아래 연습은 이 화면에서만 진행됩니다.</p></header>
+    <nav class="ug-steps" aria-label="사용법 단계">
+      <a href="#make"><span>1</span>제작·가져오기</a><a href="#study"><span>2</span>학습·복습</a><a href="#mistakes"><span>3</span>오답으로 문제 만들기</a>
+    </nav>
+    <button type="button" class="ug-mobile-jump" data-ug-jump="#ug-card-title">실습 카드로 이동 ↓</button>
+    <div class="ug-grid">
+      <section class="ug-instructions" tabindex="-1" aria-label="단계별 사용법">
+        <div data-ug-page="make">
+          <h2>한 노트가 세 카드가 됩니다</h2>
+          <p>Kanji LAB 한자 모델에 한자·훈음·대표어·읽기를 입력합니다. 아래 값을 바꾼 뒤 카드 유형과 앞·뒷면을 바꿔 보세요.</p>
+          <div class="ug-inputs" id="ug-inputs">
+            <label>한자<input id="ug-kanji" value="学" maxlength="16" lang="ja"></label>
+            <label>훈음<input id="ug-answer" value="배울 학" maxlength="100"></label>
+            <label>대표어<input id="ug-word" value="学校" maxlength="55" lang="ja"></label>
+            <label>읽기<input id="ug-reading" value="がっこう" maxlength="100" lang="ja"></label>
+          </div>
+          <p class="ug-fact">1노트 → 한자 인식 · 한자 쓰기 · 대표어 읽기, 총 3카드</p>
+          <h3>내 덱에 적용하기</h3>
+          <ol><li><b>제작기</b>에서 <b>오늘 분량 추가</b>로 입력한 뒤 <b>작성한 노트 비교 → 선택한 분량 누적 저장 → 제작·APKG 받기</b>를 누릅니다.</li><li><b>Anki</b>에 내려받은 <code>.apkg</code>를 가져옵니다. 기존 덱을 업데이트할 때는 같은 제작 프로젝트와 NoteID를 이어 씁니다.</li></ol>
+          <button class="ug-primary" id="ug-dl-kanji" type="button">이 한자 3장 APKG 받기</button>
+          <details class="ug-detail"><summary>기존 ‘JLPT N5 제작 표본’에 새 학습 버튼 넣기</summary><p>원래 10노트·30카드를 열고 <b>누적 덱 제작</b>을 한 번 실행하세요. 완료되면 <b>내 덱 → APKG 받기</b>에서 새 제작본을 내려받아 같은 Anki 컬렉션에 가져옵니다. <b>APKG 받기</b>만 누르면 마지막으로 만든 파일을 다시 받습니다.</p></details>
+          <div class="ug-devices"><h3>어디서 가져오나요?</h3>
+            <div class="ug-toggle" aria-label="사용 기기"><button type="button" data-ug-device="pc" aria-pressed="true">PC · Mac</button><button type="button" data-ug-device="ios" aria-pressed="false">iPhone · iPad</button><button type="button" data-ug-device="web" aria-pressed="false">AnkiWeb</button></div>
+            <p id="ug-device-copy" aria-live="polite">Anki 데스크톱에서 <b>파일 → 가져오기</b>로 APKG를 선택합니다. 가져온 뒤 덱 목록에서 덱 이름을 선택하고 <b>Study Now</b>를 누릅니다.</p>
+          </div>
+        </div>
+        <div data-ug-page="study" hidden>
+          <h2>기억한 답과 도움받은 답을 구분합니다</h2>
+          <div class="ug-toggle" aria-label="연습할 카드"><button type="button" data-ug-study="words" aria-pressed="true">단어 읽기</button><button type="button" data-ug-study="quiz" aria-pressed="false">객관식 확신도</button></div>
+          <div id="ug-words-help">
+            <ol><li><b>카드 안에서</b> <span lang="ja">学校</span>의 읽기 <span lang="ja">がっこう</span>를 입력하고 <b>내 답 확인</b>을 누릅니다.</li><li>도움이 필요하면 <b>보기 열기</b>로 답을 고릅니다. 보기를 보고 맞히면 카드 안에 <b>보기 도움 …문제 다시 쓰기</b>가 생깁니다.</li><li>다시 쓰기에서 보기를 열지 않고 맞혀 보세요. 한 번에 최대 세 장을 연습합니다.</li></ol>
+          </div>
+          <div id="ug-quiz-help" hidden><ol><li>두 예문의 정답은 마감 시한을 나타내는 <b lang="ja">までに</b>입니다. 보기를 고르고 필요하면 답면을 엽니다.</li><li>맞혔어도 근거가 불확실하면 <b>찍어서 맞혔어요</b>를 누릅니다. 틀린 답과 확신도가 낮았던 답은 <b>오답·확신도 복습</b>에서 다시 풀 수 있습니다.</li></ol></div>
+          <div class="ug-callout"><b>Anki의 다음 복습일</b><p><b>정답 보기(Show Answer)</b> 후 Anki 창 아래에서 <b>Again · Hard · Good · Easy</b> 중 하나를 누릅니다. 이 평가가 다음 복습 시점을 정합니다. 카드 안의 보기 도움·확신도는 제작기가 만든 복습 기능입니다.</p></div>
+          <p>웹에서 공부할 때는 <b>내 덱 → 공부 시작</b>과 <b>복습할 카드</b>를 씁니다. 웹 개인 복습 목록은 해당 브라우저에 저장됩니다.</p>
+          <button type="button" class="ug-primary" id="ug-dl-study">단어 읽기 3장 APKG 받기</button>
+        </div>
+        <div data-ug-page="mistakes" hidden>
+          <h2>같은 오답 두 번을 새 문제 한 장으로</h2>
+          <p>객관식 문법 덱에서 <span lang="ja">まで</span>와 <span lang="ja">までに</span>를 혼동한 예입니다. N5 한자 표본을 사용 중이면 이 문법 예제로 세 번째 단계를 체험하세요.</p>
+          <ol><li><b>Anki 카드</b>에서 같은 오답 보기를 두 번 고른 뒤 <b>오답·확신도 복습 → 반복해서 헷갈린 보기</b>를 엽니다. <b lang="ja">まで → までに · 2회</b>를 펼쳐 <b>이 오답으로 문제 만들기 → 코드 복사</b>를 누릅니다.</li><li><b>웹 제작기</b>에서 같은 덱의 <b>학습 기록 가져오기 · 버전별 검수</b>에 코드를 붙여넣고 <b>이 덱에 기록 반영</b>을 누릅니다. 다른 기기로 옮길 때는 카드에서 JSON 파일을 받을 수도 있습니다.</li><li>두 문장의 정답과 결정 단서를 검토해 <b>검토한 미션 누적</b>을 누릅니다. 새 APKG를 같은 Anki 컬렉션에 가져오면 원래 두 문제에 미션 한 장이 추가됩니다.</li></ol>
+          <button class="ug-primary" id="ug-seed" type="button">오답 2회 예시 실행</button>
+          <p class="ug-small">두 예문에서 <span lang="ja">まで</span>를 고르는 과정을 재현하고, 카드가 발급한 실습용 코드를 아래에 채웁니다.</p>
+          <details class="ug-detail" id="ug-transfer"><summary>제작기에서 코드 반영해 보기</summary>
+            <label>제작기용 학습 코드<textarea id="ug-code" rows="3" spellcheck="false"></textarea></label>
+            <div class="ug-actions"><button class="ug-secondary" id="ug-fill-code" type="button">현재 카드의 코드 채우기</button><button class="ug-primary" id="ug-import" type="button">이 덱에 기록 반영</button></div>
+          </details>
+          <section id="ug-edit" class="ug-edit" aria-labelledby="ug-edit-title" hidden><h3 id="ug-edit-title">혼동 미션 검토</h3><p id="ug-origins"></p><div id="ug-sentences"></div><label>두 표현의 차이<textarea id="ug-why" rows="2"></textarea></label><button class="ug-primary" id="ug-commit" type="button">검토한 미션 누적</button></section>
+          <p class="ug-fact" id="ug-count" role="status">누적 원본 2노트 · 2카드</p>
+          <div class="ug-actions"><button type="button" id="ug-dl-base" class="ug-secondary">원문항 2장 APKG</button><button type="button" id="ug-dl-update" class="ug-primary" hidden>미션 포함 3장 APKG</button></div>
+          <details class="ug-detail"><summary>이 예제를 실제 제작기와 Anki에서 이어 하기</summary><p>먼저 <b>원문항 2장 APKG</b>를 Anki에 가져옵니다. 아래 ZIP은 제작기의 <b>내 덱 → 백업 복원</b>에서 여세요. 그러면 실제 Anki 카드에서 받은 코드를 붙여넣을 같은 이름·ID의 원본 덱이 생깁니다.</p><button type="button" id="ug-dl-source" class="ug-secondary">원문항 제작기 백업 ZIP 받기</button></details>
+        </div>
+        <p id="ug-message" role="status" aria-live="polite" hidden></p>
+      </section>
+      <section class="ug-preview" aria-labelledby="ug-card-title">
+        <div class="ug-preview-head"><div><span class="ug-kicker" id="ug-face">앞면</span><h2 id="ug-card-title" tabindex="-1">카드 미리보기</h2></div><label>표시할 카드<select id="ug-select"></select></label></div>
+        <div id="ug-card"></div>
+        <button type="button" class="ug-mobile-jump" data-ug-jump=".ug-instructions">단계 설명으로 ↑</button><div class="ug-reviewbar"><button type="button" id="ug-turn" class="ug-primary">뒷면 보기</button>
+          <div id="ug-grades" hidden><span>Anki 평가 연습</span><div class="ug-actions"><button type="button" data-grade="Again">Again</button><button type="button" data-grade="Hard">Hard</button><button type="button" data-grade="Good">Good</button><button type="button" data-grade="Easy">Easy</button></div></div>
+          <span class="ug-small" id="ug-card-status" role="status" aria-live="polite"></span>
+        </div>
+      </section>
+    </div>
+    <footer class="ug-footer"><p>Anki 공식 사용 설명서</p><a href="https://docs.ankiweb.net/manual/importing/packaged-decks" target="_blank" rel="noopener">APKG 가져오기</a><a href="https://docs.ankiweb.net/manual/studying" target="_blank" rel="noopener">학습 평가</a><a href="https://docs.ankiweb.net/ankimobile/shared-decks" target="_blank" rel="noopener">iPhone·iPad</a><a href="https://docs.ankiweb.net/manual/syncing" target="_blank" rel="noopener">AnkiWeb 동기화</a></footer>
+  </main>
   <div id="toast" class="toast" role="status" hidden></div>
 <noscript>이 파일을 내려받아 JavaScript가 활성화된 Chrome 또는 Edge에서 열어 주세요.</noscript>
 <script data-bundle="vendor/jszip.min.js">
@@ -3726,7 +3845,7 @@ else if (typeof exports === 'object'){
 })(globalThis, function (Card, Zip, Excel, initSql, sqlBinary) {
   "use strict";
 
-  const VERSION = "0.10.0";
+  const VERSION = "0.10.1";
   const Profiles = Card.Profiles;
   const SCHEMA = 1;
   const MAX_INPUT = 24 * 1024 * 1024;
@@ -7350,6 +7469,11 @@ globalThis.AnkiOpsSample = {
       Object.fromEntries(keys.filter((k) => Object.hasOwn(row, k)).map((k) => [k, row[k]]))
     );
   }
+  // Older saved runs predate per-model learning settings. Adapt the editable
+  // project without mutating its archived job, note identities or editions.
+  function readProject(p) {
+    return { ...p, job: { ...p.job, learning: C.learningProfile(p.job.model, p.job.learning) } };
+  }
   function openStore(dbPromise) {
     async function update(k, rev, change) {
       const db = await dbPromise;
@@ -7363,11 +7487,12 @@ globalThis.AnkiOpsSample = {
         tx.onabort = () => reject(error || tx.error || new Error("저장을 완료하지 못했습니다."));
         req.onsuccess = () => {
           try {
-            const old = req.result;
+            const old = req.result && readProject(req.result);
             if (rev !== undefined && (old?.rev ?? -1) !== rev)
               throw new Error("다른 탭에서 덱을 변경했습니다. 덱을 다시 열어 최신 내용에서 이어가세요.");
             result = change(old, records, runs);
             if (!result) return;
+            result = readProject(result);
             result.rev = (old?.rev || 0) + 1;
             result.when = Date.now();
             records.put(result);
@@ -7588,6 +7713,7 @@ globalThis.AnkiOpsSample = {
     light,
     plan,
     merge,
+    readProject,
     openStore,
     addEdition,
     backup,
@@ -7603,6 +7729,434 @@ globalThis.AnkiOpsSample = {
   };
 })(globalThis);
 </script>
+<script data-bundle="anki-guide.js">
+(function (root) {
+  "use strict";
+  root.AnkiOpsUsageGuide = function (download) {
+    const F = root.AnkiOpsFactory,
+      C = root.AnkiOpsCard,
+      P = root.AnkiOpsProjects;
+    const $ = (name) => document.getElementById("ug-" + name);
+    const page = document.getElementById("anki-usage");
+    page.hidden = false;
+    document.title = "Anki 사용법 미리보기 · Anki 제작실";
+    const home = new URL(location.href);
+    home.searchParams.delete("guide");
+    home.hash = "";
+    $("home").href = home.href;
+
+    function makeProject(name, product, model, level, notes) {
+      const p = P.blank(F.validateJob({ name, product, model, level, version: "1.0.0", mode: "new" }));
+      p.notes = notes.map((note) => ({ level, ...note }));
+      return p;
+    }
+    const kanji = makeProject("사용법 예제 · 한자", "guide-kanji", "lab-kanji", "N5", [
+      { id: "guide-kanji-001", kanji: "学", answer: "배울 학", word: "学校", reading: "がっこう" },
+    ]);
+    const words = makeProject("사용법 예제 · 단어 읽기", "guide-reading", "lab-word", "N5", [
+      { id: "guide-read-001", word: "学校", reading: "がっこう", answer: "학교" },
+      { id: "guide-read-002", word: "電車", reading: "でんしゃ", answer: "전철" },
+      { id: "guide-read-003", word: "仕事", reading: "しごと", answer: "일" },
+    ]);
+    const quiz = makeProject(
+      "사용법 예제 · 기한 표현",
+      "guide-deadline",
+      "lab-quiz",
+      "N4",
+      [
+        [
+          "guide-quiz-001",
+          "申込書は金曜日の17時（　）提出してください。",
+          "신청서 제출을 끝내야 하는 시한입니다.",
+        ],
+        [
+          "guide-quiz-002",
+          "明日の朝9時（　）受付を済ませてください。",
+          "접수를 마치라는 뜻이므로 완료해야 하는 시각을 고릅니다.",
+        ],
+      ].map(([id, prompt, explanation]) => ({
+        id,
+        prompt,
+        explanation,
+        category: "문법",
+        optionA: "まで",
+        optionB: "までに",
+        optionC: "から",
+        optionD: "の間",
+        correct: "B",
+        answer: "までに",
+        distractors: "まで는 동작이나 상태가 이어지는 끝 시점에 씁니다.",
+      })),
+    );
+    const baseQuiz = { ...quiz, notes: quiz.notes.slice() };
+    const sampleMission = P.contrastCatalog.find(
+      (m) => C.Practice.pairKey(m.choices) === C.Practice.pairKey(["まで", "までに"]),
+    );
+    const file = "사용법_예제.tsv";
+    const encoder = new TextEncoder();
+    const previewStores = { make: new Map(), study: new Map(), mistakes: new Map() };
+    let step = "make",
+      type = "words",
+      index = 0,
+      back = false,
+      scene,
+      drawId = 0,
+      busy = false;
+    let draft,
+      origins = [],
+      baseEdition;
+    function textElement(tag, text) {
+      const el = document.createElement(tag);
+      el.textContent = text;
+      return el;
+    }
+    function notice(text = "", error = false) {
+      const box = $("message");
+      box.setAttribute("role", error ? "alert" : "status");
+      box.textContent = text;
+      box.hidden = !text;
+    }
+    function task(fn) {
+      return async () => {
+        if (busy) return;
+        busy = true;
+        page.setAttribute("aria-busy", "true");
+        try {
+          await fn();
+        } catch (error) {
+          notice(error.message || String(error), true);
+        } finally {
+          busy = false;
+          page.removeAttribute("aria-busy");
+        }
+      };
+    }
+    const on = (id, fn) => $(id).addEventListener("click", task(fn));
+    function project() {
+      return step === "make" ? kanji : step === "study" && type === "words" ? words : quiz;
+    }
+    function sourceOf(p, job = p.job) {
+      return encoder.encode(F.authorSource(p.notes, job.model));
+    }
+    async function inspect(p) {
+      const scan = await F.inspect({ input: sourceOf(p), name: file, job: p.job });
+      if (scan.errors)
+        throw Error(
+          scan.issues
+            .filter((i) => i.type === "error")
+            .map((i) => i.message)
+            .slice(0, 2)
+            .join(" · "),
+        );
+      return scan;
+    }
+    function setSelect() {
+      const p = project();
+      const labels =
+        step === "make"
+          ? C.MODELS[p.job.model].types
+          : (step === "mistakes" ? p.notes : p === quiz ? baseQuiz.notes : p.notes).map(
+              (n, i) => n.word || (n.contrast ? "추가한 혼동 미션" : "원문항 " + (i + 1)),
+            );
+      $("select").replaceChildren(...labels.map((v, i) => new Option(v, i)));
+      index = Math.min(index, labels.length - 1);
+      $("select").value = String(index);
+    }
+    function paint() {
+      if (!scene) return;
+      const row = scene.rows[step === "make" ? 0 : index];
+      if (!row) return;
+      $("face").textContent = back ? "뒷면" : "앞면";
+      $("card-title").textContent =
+        step === "make"
+          ? C.MODELS[kanji.job.model].types[index]
+          : row.contrast
+            ? "두 문장 혼동 미션"
+            : row.word || "기한 표현 · 원문항 " + (index + 1);
+      C.renderInto(
+        $("card"),
+        row,
+        scene.job,
+        step === "make" ? index : 0,
+        back,
+        scene.bank,
+        previewStores[step],
+      );
+      $("turn").hidden = step !== "make" && back;
+      $("turn").textContent =
+        step === "make" ? (back ? "앞면 보기" : "뒷면 보기") : "정답 보기 (Show Answer)";
+      $("grades").hidden = step === "make" || !back;
+      $("select").value = String(index);
+    }
+    async function show() {
+      const ticket = ++drawId;
+      setSelect();
+      if (step === "make") {
+        const out = F.draftCard(kanji, kanji.notes[0]);
+        scene = { job: out.job, rows: [out.row] };
+        paint();
+      } else {
+        const p = project(),
+          scanned = await inspect(p);
+        if (ticket !== drawId) return;
+        scene = scanned;
+        paint();
+      }
+    }
+    function chosenStage() {
+      const name = location.hash.slice(1);
+      return ["make", "study", "mistakes"].includes(name) ? name : "make";
+    }
+    async function navigate() {
+      step = chosenStage();
+      index = 0;
+      back = false;
+      scene = null;
+      for (const pane of page.querySelectorAll("[data-ug-page]")) pane.hidden = pane.dataset.ugPage !== step;
+      for (const a of page.querySelectorAll(".ug-steps a")) {
+        if (a.hash === "#" + step) a.setAttribute("aria-current", "step");
+        else a.removeAttribute("aria-current");
+      }
+      $("card-status").textContent = "";
+      notice();
+      await show();
+    }
+    window.addEventListener("hashchange", () => navigate().catch((e) => notice(e.message, true)));
+    $("select").addEventListener("change", () => {
+      index = Number($("select").value);
+      back = false;
+      $("card-status").textContent = "";
+      paint();
+    });
+    on("turn", () => {
+      back = !back;
+      paint();
+    });
+    for (const b of page.querySelectorAll("[data-grade]"))
+      b.addEventListener("click", () => {
+        const label = b.dataset.grade;
+        index = (index + 1) % $("select").options.length;
+        back = false;
+        paint();
+        $("card-status").textContent =
+          label + "을 눌러 다음 예제로 이동했습니다. 실제 Anki에서는 복습 일정에 반영됩니다.";
+      });
+    $("inputs").addEventListener("input", () => {
+      for (const k of ["kanji", "answer", "word", "reading"]) kanji.notes[0][k] = $(k).value;
+      show().catch((e) => notice(e.message, true));
+    });
+    const devices = {
+      pc: "Anki 데스크톱에서 파일 → 가져오기로 APKG를 선택합니다. 덱 목록에서 가져온 덱을 누른 뒤 Study Now로 시작합니다.",
+      ios: "Safari 다운로드 목록이나 파일 앱에서 APKG를 누르고 Anki(AnkiMobile)에서 엽니다. 가져오기가 끝나면 덱 목록에서 해당 덱을 누릅니다.",
+      web: "데스크톱이나 AnkiMobile에서 APKG를 먼저 가져옵니다. 같은 AnkiWeb 계정으로 동기화한 뒤 AnkiWeb의 덱 목록에서 공부합니다.",
+    };
+    for (const b of page.querySelectorAll("[data-ug-device]"))
+      b.addEventListener("click", () => {
+        for (const o of page.querySelectorAll("[data-ug-device]"))
+          o.setAttribute("aria-pressed", String(o === b));
+        $("device-copy").textContent = devices[b.dataset.ugDevice];
+      });
+    for (const b of page.querySelectorAll("[data-ug-study]"))
+      b.addEventListener(
+        "click",
+        task(async () => {
+          type = b.dataset.ugStudy;
+          index = 0;
+          back = false;
+          for (const o of page.querySelectorAll("[data-ug-study]"))
+            o.setAttribute("aria-pressed", String(o === b));
+          $("words-help").hidden = type !== "words";
+          $("quiz-help").hidden = type === "words";
+          $("dl-study").textContent =
+            type === "words" ? "단어 읽기 3장 APKG 받기" : "기한 표현 2장 APKG 받기";
+          $("card-status").textContent = "";
+          notice();
+          await show();
+        }),
+      );
+    for (const jump of page.querySelectorAll("[data-ug-jump]"))
+      jump.addEventListener("click", () => {
+        const target = page.querySelector(jump.dataset.ugJump);
+        target.focus({ preventScroll: true });
+        target.scrollIntoView({ block: "start" });
+      });
+
+    // The APKG and backup share the same project identity and real build history.
+    async function edition(p, previous) {
+      const createdAt =
+        p.job.product === quiz.job.product ? Date.UTC(2026, 10, 26, 0, 0, previous ? 2 : 0) : Date.now();
+      const raw = { ...p.job, version: previous ? "1.0.1" : "1.0.0", mode: previous ? "update" : "new" };
+      const input = sourceOf(p, raw),
+        prior = previous?.result.archive;
+      const result = await F.build({ input, job: raw, name: file, createdAt, priorBytes: prior });
+      return {
+        key: "job-" + p.job.product + "-" + raw.version.replaceAll(".", "-"),
+        when: createdAt,
+        createdAt,
+        raw,
+        file,
+        input,
+        prior,
+        priorName: previous?.result.archiveName || "",
+        evidence: {},
+        status: "ready",
+        result,
+      };
+    }
+    async function base() {
+      if (!baseEdition) baseEdition = await edition(baseQuiz);
+      return baseEdition;
+    }
+    async function sendApkg(p, update = false) {
+      notice("예제 APKG를 제작하고 있습니다.");
+      const record = update
+        ? await edition(p, await base())
+        : p === baseQuiz
+          ? await base()
+          : await edition(p);
+      const r = record.result;
+      download(r.files[r.apkgName], r.apkgName);
+      notice(
+        r.run.dataset.notes +
+          "노트 · " +
+          r.run.dataset.cards +
+          "카드 APKG를 만들었습니다. Anki에서 가져오세요.",
+      );
+    }
+    on("dl-kanji", () => sendApkg(kanji));
+    on("dl-study", () => sendApkg(type === "words" ? words : baseQuiz));
+    on("dl-base", () => sendApkg(baseQuiz));
+    on("dl-update", () => sendApkg(quiz, true));
+    on("dl-source", async () => {
+      notice("제작기 백업을 준비하고 있습니다.");
+      const record = await base(),
+        p = P.blank(baseQuiz.job);
+      P.addEdition(p, record);
+      const zip = await P.backup(p, async () => record);
+      download(zip, "guide-deadline-project-v1.0.0.zip", "application/zip");
+      notice("원문항 2개의 제작기 백업입니다. 내 덱 → 백업 복원에서 여세요.");
+    });
+
+    function cardRoot() {
+      return $("card").firstElementChild?.shadowRoot || $("card");
+    }
+    function currentCode() {
+      const field = cardRoot().querySelector("[data-transfer-box] textarea");
+      if (!field?.value)
+        throw Error("카드에서 ‘이 오답으로 문제 만들기’를 누르거나 ‘오답 2회 예시 실행’을 먼저 눌러 주세요.");
+      $("code").value = field.value;
+    }
+    async function openDetails(details) {
+      if (details.open) return;
+      const opened = new Promise((resolve) => details.addEventListener("toggle", resolve, { once: true }));
+      details.open = true;
+      await opened;
+    }
+    async function seedWrongAnswers() {
+      if (!scene || step !== "mistakes") return;
+      previewStores.mistakes = new Map();
+      for (const i of [0, 1]) {
+        index = i;
+        back = false;
+        paint();
+        cardRoot().querySelector('[data-choice="A"]').click();
+        back = true;
+        paint();
+      }
+      const panel = cardRoot().querySelector("[data-r-panel]");
+      await openDetails(panel);
+      if (step !== "mistakes") return;
+      const patterns = panel.querySelector("[data-patterns]");
+      if (!patterns) throw Error("카드의 오답·확신도 복습을 열어 주세요.");
+      await openDetails(patterns);
+      if (step !== "mistakes") return;
+      const pair = [...patterns.querySelectorAll("button")].find(
+        (b) => b.textContent === "이 오답으로 문제 만들기",
+      );
+      if (!pair) throw Error("반복해서 헷갈린 보기에서 표현 쌍을 열어 주세요.");
+      await openDetails(pair.closest("details"));
+      if (step !== "mistakes") return;
+      pair.click();
+      currentCode();
+      $("transfer").open = true;
+      $("transfer").scrollIntoView({ block: "nearest" });
+      notice("두 원문항의 실습 코드를 채웠습니다. ‘이 덱에 기록 반영’을 눌러 보세요.");
+    }
+    on("seed", seedWrongAnswers);
+    on("fill-code", () => {
+      currentCode();
+      notice("현재 카드에서 받은 코드를 채웠습니다.");
+    });
+    function renderDraft() {
+      const fields = $("sentences");
+      fields.replaceChildren();
+      for (const [i, item] of draft.items.entries()) {
+        const box = document.createElement("fieldset");
+        box.append(textElement("legend", "문장 " + (i + 1)));
+        const label = textElement("label", "예문"),
+          input = document.createElement("textarea");
+        input.rows = 2;
+        input.lang = "ja";
+        input.value = item.text;
+        input.addEventListener("input", () => {
+          item.text = input.value;
+        });
+        label.append(input);
+        box.append(label);
+        box.append(textElement("p", "정답 표현 · " + draft.choices[item.correct]));
+        const clueLabel = textElement("label", "결정 단서"),
+          clue = document.createElement("input");
+        clue.lang = "ja";
+        clue.value = item.clues[item.clue];
+        clue.addEventListener("input", () => {
+          item.clues[item.clue] = clue.value;
+        });
+        clueLabel.append(clue);
+        box.append(clueLabel, textElement("p", "비교 단서 · " + item.clues[1 - item.clue]));
+        fields.append(box);
+      }
+      $("why").value = draft.why;
+      $("origins").textContent = "연결할 원문항 " + origins.length + "개 · " + origins.join(", ");
+      $("edit").hidden = false;
+    }
+    on("import", () => {
+      const report = P.readFeedback($("code").value, quiz);
+      if (
+        !report.selected ||
+        C.Practice.pairKey([report.selected.picked, report.selected.right]) !==
+          C.Practice.pairKey(sampleMission.choices)
+      )
+        throw Error("기한 표현 예제에서 ‘이 오답으로 문제 만들기’로 발급한 코드를 사용하세요.");
+      const ids = new Set(quiz.notes.map((n) => n.id));
+      origins = report.selected.ids.filter((id) => ids.has(id));
+      if (!origins.length) throw Error("이 예제의 원문항 연결을 찾을 수 없습니다.");
+      P.mergeFeedback(quiz, report);
+      const existing = quiz.notes.find((n) => n.contrast);
+      draft = structuredClone(existing ? JSON.parse(existing.contrast) : sampleMission);
+      renderDraft();
+      notice("표현이 한 번씩 정답이 되는지, 결정 단서가 문장 안에 있는지 확인하세요.");
+      $("edit").scrollIntoView({ block: "nearest" });
+    });
+    on("commit", async () => {
+      if (!draft) return;
+      draft.why = $("why").value;
+      const row = P.missionCard(quiz, draft, origins);
+      const changes = P.plan(quiz, [row]),
+        merged = P.merge(quiz, changes, [0]);
+      await P.validateNotes(quiz, merged);
+      quiz.notes = merged;
+      index = quiz.notes.findIndex((n) => n.id === row.id);
+      back = false;
+      await show();
+      $("dl-update").hidden = false;
+      $("count").textContent =
+        "누적 원본 " + quiz.notes.length + "노트 · " + quiz.notes.length + "카드 · 원문항 2 + 혼동 미션 1";
+      notice("같은 표현 쌍은 같은 미션에 연결됩니다. 새 미션을 풀거나 ‘미션 포함 3장 APKG’를 받으세요.");
+    });
+    navigate().catch((error) => notice(error.message, true));
+  };
+})(globalThis);
+</script>
 <script data-bundle="app.js">
 (() => {
   "use strict";
@@ -7612,6 +8166,10 @@ globalThis.AnkiOpsSample = {
   const Card = globalThis.AnkiOpsCard;
   const number = value => Number(value).toLocaleString("ko-KR");
   const Author = globalThis.AnkiOpsAuthor;
+  if (document.documentElement.classList.contains("anki-guide")) {
+    globalThis.AnkiOpsUsageGuide(download);
+    return;
+  }
 
   function sampleFor(model) {
     const spec = Card.Profiles.models[model];
@@ -9880,7 +10438,7 @@ globalThis.AnkiOpsSample = {
       if(studySession)await finishStudy();
       const value = await getRecord(key);
       if (!value) throw new Error("덱을 찾을 수 없습니다.");
-      project = readDraft(value);
+      project = readDraft(P.readProject(value));
       position=readPosition();previewCache.clear();
       page = notesPage = 0;
       $("desk-search").value = "";

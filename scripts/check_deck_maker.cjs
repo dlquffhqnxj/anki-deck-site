@@ -268,3 +268,29 @@ test("versioned study feedback stays scoped and shares a device identity with re
   assert.equal(projects.mergeFeedback(p,report), 0);
   assert.equal(projects.evidence(p).notes.get("q1").get("1.0.0-RC1").total, 3);
 });
+
+test("a saved edition predating learning settings can reopen as an editable project", () => {
+  const job = {...project().job, name: "JLPT N5 제작 표본", model: "kanji", level: "N5", version: "0.1.0-RC1", sample: true};
+  delete job.learning;
+  const p = projects.blank(job);
+  const note = {id: "n5-01", level: "N5", kanji: "学", answer: "배울 학", word: "学校", reading: "がっこう"};
+  const record = {key: "job-old", createdAt: 1700000000000,
+    result: {run: {id: "old", studioVersion: "0.1.0", job, dataset: {notes: 1, cards: 3}}, rows: [note]}};
+  projects.addEdition(p, record);
+  p.draft = {kanji: "海"};
+  const loaded = projects.readProject(p);
+  assert.equal(loaded.job.learning.included.records, true);
+  assert.ok(loaded.job.learning.appearance);
+  assert.equal(loaded.key, p.key);
+  assert.equal(loaded.head, record.key);
+  assert.equal(loaded.notes[0].id, note.id);
+  assert.equal(loaded.draft.kanji, "海");
+  assert.equal(loaded.next, "0.1.0-RC2");
+  assert.equal(record.result.run.job.learning, undefined);
+  assert.equal(p.job.learning, undefined);
+  const partial = projects.readProject({...p, job: {...job, learning: {included: {records: false}, opened: {ruby: false}}}});
+  assert.equal(partial.job.learning.included.records, false);
+  assert.equal(partial.job.learning.included.recovery, false);
+  assert.equal(partial.job.learning.opened.ruby, false);
+  assert.deepEqual(projects.readProject(partial).job.learning, partial.job.learning);
+});
