@@ -99,5 +99,56 @@ test("the displayed version, offline filename, and changelog match the producer"
   assert.ok(html.includes('<span class="version">v' + version + '</span>'));
   assert.ok(html.includes('Anki_Deck_Operations_v' + version + '.html'));
   const changelog = readFileSync(join(__dirname, "../deck-maker/CHANGELOG.md"), "utf8");
-  assert.ok(changelog.includes('## v' + version + ' '));
+  assert.ok(changelog.split('\n').some(line => line.startsWith('## v' + version + ' ·')));
+});
+
+test("exact retests retain both NoteIDs and support different passages under a shared stem", () => {
+  const p = project();
+  p.notes = [
+    {...row("original", "필자의 의도는?"), passage:"첫 번째 글"},
+    {...row("variant", "필자의 의도는?"), passage:"다른 관점의 글"}
+  ];
+  const change = projects.setPair(p, "original", "variant", "역접");
+  assert.equal(change.notes[0].id, "original");
+  assert.equal(change.notes[1].retestFor, "original");
+  assert.equal(change.notes[1].studyRole, "retest");
+  assert.equal(change.notes[1].concept, "역접");
+  assert.equal(change.learning.included.retest, true);
+  const source = factory.authorSource(change.notes, p.job.model);
+  assert.ok(source.split("\n")[0].includes("RetestFor"));
+  const removed = projects.removePair({...p, notes: change.notes}, "variant");
+  assert.equal(removed.notes.length, 2);
+  assert.equal(removed.notes[1].studyRole, "");
+  assert.equal(removed.learning.included.retest, false);
+});
+
+test("authoring refuses the same stimulus, conflicting concept, or a retest claimed by another source", () => {
+  const a=row("a","같은 질문"), b=row("b","같은 질문"), other=row("c","다른 질문");
+  assert.match(factory.pairProblem(a,b),/질문이나 지문/);
+  assert.match(factory.pairProblem(a,a),/다른 노트/);
+  assert.match(factory.pairProblem({...a,concept:"문법"},{...other,concept:"어휘"}),/개념 ID/);
+  assert.match(factory.pairProblem(a,{...other,retestFor:"other"}),/다른 원문항/);
+  assert.match(factory.pairProblem(a,{...other,studyRole:"보충"}),/사용 중/);
+});
+
+test("the exported retest bank names each source and carries the distinct reading passage", async () => {
+  const p=project();
+  p.notes=["first", "other", "retest-1", "retest-2"].map((id, index) => ({
+    ...row(id, "필자의 의도는?"), passage:"지문 " + index, optionC:"셋", optionD:"넷"
+  }));
+  for (const [source, target] of [["first", "retest-1"], ["other", "retest-2"]]) {
+    const update=projects.setPair(p, source, target, "독해");
+    p.notes=update.notes;
+    p.job.learning=update.learning;
+  }
+  async function inspect(notes) {
+    return factory.inspect({input:new TextEncoder().encode(factory.authorSource(notes,p.job.model)), name:"source.tsv", job:p.job});
+  }
+  const good=await inspect(p.notes);
+  assert.equal(good.errors,0);
+  assert.deepEqual(Array.from(good.bank.questions,q=>[q.id,q.retestFor,q.passage]),[
+    ["retest-1","first","지문 2"],["retest-2","other","지문 3"]
+  ]);
+  const broken=await inspect(p.notes.map(n=>n.id==="retest-1"?{...n,retestFor:"missing"}:n));
+  assert.ok(broken.errors>0);
 });
