@@ -29,6 +29,8 @@ jobs:
         run: node --test scripts/check_study.cjs
       - name: Check deck authoring and cumulative updates
         run: node --test scripts/check_deck_maker.cjs
+      - name: Stage verified Munkyeol furigana dictionaries
+        run: python3 munkyeol/stage-dictionaries.py munkyeol/furigana
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
