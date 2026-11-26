@@ -1,4 +1,4 @@
-import { NotebookStore } from "./notebook-store.mjs";
+import { NotebookStore } from "./notebook-store.mjs?v=1.11.1";
 
 const pageSize = 200;
 

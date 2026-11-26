@@ -25,15 +25,45 @@ const condition = new RegExp("^(?:(위와 같이|상기와 같이|아래와 같�
 const parameterRequest = /^(?:(보증\s*)?기준이\s*(?:있다면|있는 경우|있을 경우)[,，]?\s*)(.+?)(?:의)?\s*조건(?:을|들을)\s*(?:공유해|알려|안내해)\s*주시면\s*감사하겠습니다$/u;
 const endurance = /^(보증\s*기준이\s*(?:없다면|없는 경우|없을 경우))[,，]?\s*(몇\s*회|어느 정도)\s*반복\s*인가(?:했을 때|하면|할 경우)\s*(소손|파손|고장)이\s*(?:발생할 수 있는지|발생할 가능성이 있는지)에\s*대한\s*(실력치|실측값|시험 데이터|실측 데이터)(?:를|을)\s*(?:추가로|함께|별도로)?\s*확인(?:해|하여)\s*(?:주실 수 있을까요|주실 수 있습니까|주시기 바랍니다|주세요)$/u;
 
-const components={게이트:"ゲート",베이스:"ベース",컬렉터:"コレクタ",이미터:"エミッタ",소스:"ソース",드레인:"ドレイン",입력단:"入力端",출력단:"出力端"};
+const components={"평가 보드":"評価ボード",부하:"負荷",소자:"素子",회로:"回路",게이트:"ゲート",베이스:"ベース",컬렉터:"コレクタ",이미터:"エミッタ",소스:"ソース",드레인:"ドレイン",입력단:"入力端",출력단:"出力端"};
 const application=new RegExp("^("+Object.keys(components).join("|")+")에\\s*("+voltage+")(?:의)?\\s*(과도 역전압|역전압|과전압|전압)(?:을|를)\\s*(반복(?:적으로)?\\s*)?인가(했습니다|할 예정입니다|해도 되는지 확인 부탁드립니다)$","u");
 const measurement=new RegExp("^(VBE|VCE|VGS|VDS|VGE)(?:의)?\\s*피크(?:값|치)?(?:은|는|이|가)\\s*(약\\s*)?("+voltage+")(?:로|으로)\\s*측정(?:되었습니다|됐습니다)$","u");
+
+const observations={
+  "접합 온도":"接合温度", "케이스 온도":"ケース温度", "출력 전압":"出力電圧",
+  "피크 전류":"ピーク電流", "누설 전류":"漏れ電流", "역전압":"逆電圧"
+};
+const measureSequence=new RegExp("^("+Object.keys(components).join("|")+")에\\s*("+voltage+")(?:의\\s*(과도 역전압|역전압|과전압|전압))?(?:을|를)\\s*인가(하기 전|한 후|한 뒤)에?[,]?\\s*("+Object.keys(observations).join("|")+")(?:을|를)\\s*(측정|확인)해\\s*(?:주십시오|주세요|주시기 바랍니다)$","u");
+const recipients={제조사:"メーカー",공급사:"供給元",본사:"本社",대리점:"代理店",고객사:"お客様",고객:"お客様"};
+const recipientJapanese={제조사:"メーカー|製造元|製造会社|製造業者",공급사:"供給元|供給会社|サプライヤー",본사:"本社",대리점:"代理店|販売代理店",고객사:"お客様|客先|顧客|取引先|先方",고객:"お客様|客先|顧客|取引先|先方"};
+const requestedItems={
+  "실측 데이터":"実測データ", "측정 데이터":"測定データ", "시험 데이터":"試験データ",
+  "측정 결과":"測定結果", "평가 결과":"評価結果", "시험 성적서":"試験成績書",
+  "데이터시트":"データシート", "사양서":"仕様書", "회로도":"回路図", "견적서":"見積書"
+};
+const requestTarget="("+Object.keys(recipients).join("|")+")(?:에|에게)\\s*("+Object.keys(requestedItems).join("|")+")(?:을|를)";
+const requestStatus=new RegExp("^"+requestTarget+"\\s*(?:요청|의뢰)(?:했습니다|드렸습니다|(?:했으며|드렸으며|했고)[,，]?\\s*(답변|회신)(?:을|를)\\s*기다리고 있습니다)$","u");
+const pendingCriteria=/^(제조사(?:의)?\s*)?(보증 기준|사양|양산 일정|평가 일정)(?:은|는|이|가)\s*(아직\s*)?확정되지\s*않았습니다$/u;
+const electricalApplication=new RegExp("("+voltage+")(?:의\\s*(?:과도 역전압|역전압|과전압|전압))?(?:을|를)\\s*(?:반복\\s*)?인가","gu");
 
 function translateElectricalLine(text) {
   let match=circuitHeader.exec(text);
   if (match) {
     const component=({다이오드:"ダイオード",트랜지스터:"トランジスタ"})[match[2]] || match[2];
     return match[1].trim()+"回路に使用されている"+component+"のスイッチング時の"+electricalNames[match[3]]+"について、お伺いいたします。";
+  }
+  match=measureSequence.exec(text);
+  if (match) {
+    const [,where,value,signal,order,what,action]=match;
+    return components[where]+"に"+value+(signal?"の"+electricalNames[signal]:"")+"を印加"+(order==="하기 전"?"する前":"した後")+
+      "に、"+observations[what]+"を"+(action==="측정"?"測定":"確認")+"してください。";
+  }
+  match=requestStatus.exec(text);
+  if (match) return recipients[match[1]]+"に"+requestedItems[match[2]]+"の提供を依頼"+(match[3]?"し、"+(match[3]==="회신"?"返信":"回答")+"を待っております。":"しました。");
+  match=pendingCriteria.exec(text);
+  if (match) {
+    const field={"보증 기준":"保証基準",사양:"仕様", "양산 일정":"量産日程","평가 일정":"評価日程"}[match[2]];
+    return (match[1]?"メーカーの":"")+field+"は"+(match[3]?"まだ":"")+"確定しておりません。";
   }
   match=application.exec(text);
   if (match) {
@@ -111,6 +141,15 @@ export function electricalIssues(original,translation,direction) {
     if (!assigned || !new RegExp(quantityPattern(field[6])+"(?![a-zA-Z0-9])","u").test(assigned))
       issues.push("좌우 소자의 품번·피크 전압·극성 확인 · "+field[3]);
   }
+  for (const match of original.matchAll(new RegExp(requestTarget+"\\s*(?:요청|의뢰)","gu"))) {
+    const roleMistake=new RegExp(escaped(requestedItems[match[2]])+"の(?:製造元|メーカー|供給元|本社|代理店|顧客|お客様)(?:に|へ)","u");
+    const recipient=new RegExp("(?:"+recipientJapanese[match[1]]+")(?:(?:側|の担当(?:者|窓口))?\\s*(?:に|へ)|から[^。！？\\n]{0,45}(?:取り寄せ|入手))","u");
+    if (roleMistake.test(translation) || !recipient.test(translation))
+      issues.push("요청받은 곳과 요청 자료 확인 · "+match[1]+" / "+match[2]);
+  }
+  for (const match of original.matchAll(electricalApplication)) {
+    if (misusedVoltageVerb(match[1]).test(translation)) issues.push("전압을 가하는 동작은 印加 · "+match[1]);
+  }
   const wrongTerms=[
     [/소손/u,/燃え尽き症候群|バーンアウト症候群/u,"소손은 부품의 焼損"],
     [/(?:회로|전압|인가|측정|시험|소손)[\s\S]*실력치/u,/スキル(?:レベル)?|技能レベル/u,"실력치는 시험·실측 문맥"],
@@ -122,9 +161,17 @@ export function electricalIssues(original,translation,direction) {
   return issues;
 }
 
+// Limit the substitution to a voltage that is the grammatical object of the verb.
+function misusedVoltageVerb(value) {
+  return new RegExp("("+quantityPattern(value)+"\\s*(?:の(?:過渡的な)?(?:逆電圧|過電圧|電圧))?\\s*を(?:\\s*(?:評価ボード|端子|入力端|出力端|ゲート|ベース|ドレイン|回路|負荷|素子)に)?\\s*(?:繰り返し)?)適用","gu");
+}
+
 export function refineElectricalTerms(original,translation,direction) {
   if (direction!=="ko") return translation;
   let result=translation;
+  if (/접합\s*온도/u.test(original)) result=result.replace(/接合部の温度/gu,"接合温度");
+  for (const match of original.matchAll(electricalApplication))
+    result=result.replace(misusedVoltageVerb(match[1]),"$1印加");
   if (/소손/u.test(original) && !/번아웃|심리|증후군/u.test(original)) result=result.replace(/燃え尽き症候群|バーンアウト症候群/gu,"焼損");
   if (/(?:전압|펄스|소손|반복\s*인가)[^。.!?\n]*실력치/u.test(original)) result=result.replace(/スキルレベル|技能レベル/gu,"実測値");
   if (/(?:전압|펄스)\s*(?:을|를)?\s*반복\s*인가|반복\s*인가(?:되는|했을|할 때)/u.test(original))

@@ -1,4 +1,4 @@
-import { isReportKind, finalSubject, notebookKinds, notebookOutput, finalSectors, normalizeFinalText, cleanFinalClassifications } from "./notebook-store.mjs";
+import { isReportKind, finalSubject, notebookKinds, notebookOutput, finalSectors, normalizeFinalText, cleanFinalClassifications } from "./notebook-store.mjs?v=1.11.1";
 
 function companyNames(rows,sector) {
   const names=new Map();

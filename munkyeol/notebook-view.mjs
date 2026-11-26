@@ -1,7 +1,7 @@
-import { NotebookStore, newNotebookRecord, newNotebookIssue, notebookOutput, notebookBackup, readNotebookArchive, notebookKinds, notebookWords, notebookReferenceIndex, relatedNotebookRecords, issueTypes, localNotebookOrigin, isReportKind } from "./notebook-store.mjs";
-import { sentencePieces } from "./language-tools.mjs";
-import { preparePortableUpdate, makePortableHtml, readPortableNotebook, readPortableFile } from "./portable-notebook.mjs";
-import { startFinalDocuments } from "./final-documents.mjs";
+import { NotebookStore, newNotebookRecord, newNotebookIssue, notebookOutput, notebookBackup, readNotebookArchive, notebookKinds, notebookWords, notebookReferenceIndex, relatedNotebookRecords, issueTypes, localNotebookOrigin, isReportKind } from "./notebook-store.mjs?v=1.11.1";
+import { sentencePieces } from "./language-tools.mjs?v=1.11.1";
+import { preparePortableUpdate, makePortableHtml, readPortableNotebook, readPortableFile } from "./portable-notebook.mjs?v=1.11.1";
+import { startFinalDocuments } from "./final-documents.mjs?v=1.11.1";
 
 export function startNotebook({collectWords, canAsk, ask, exportWords, reuse, currentSource, currentResult, changesFor, replay, copy, termPairs, store=new NotebookStore(),onStoreRefresh}) {
   const el=id=>document.getElementById(id);

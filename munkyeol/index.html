@@ -9,9 +9,9 @@
   <meta name="munkyeol-document-classifications" content="1">
   <meta name="munkyeol-mode" content="browser-only">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; script-src 'self' 'sha256-NoQlXcfC9QYBrjpTYcPfQe2Uy4rG9jpfAE6cNdJa3aE='; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; img-src 'self' data:; connect-src 'self' https://cmuuhtbrvatqrtogegsb.supabase.co">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; script-src 'self' 'sha256-MzLXQVabG9N7vbKHs299x0/52Uis1bOYjUyPDvVjjsQ='; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; img-src 'self' data:; connect-src 'self' https://cmuuhtbrvatqrtogegsb.supabase.co">
   <script type="application/json" id="munkyeol-account-config">{"url":"https://cmuuhtbrvatqrtogegsb.supabase.co","key":"sb_publishable_ScD_oyLr7GbymI9RU7ithA_XrMeRwVE"}</script>
-  <title>문결 v1.11.0 · 한·일 비즈니스 번역</title>
+  <title>문결 v1.11.1 · 한·일 비즈니스 번역</title>
   <style>
     :root {
       color-scheme: light;
@@ -618,7 +618,7 @@
 <body>
   <header class="site-header">
     <div class="shell header-inner">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">文</span>문결 <span class="app-version" id="app-version">v1.11.0</span></div>
+      <div class="brand"><span class="brand-mark" aria-hidden="true">文</span>문결 <span class="app-version" id="app-version">v1.11.1</span></div>
       <p class="status nb-indicator" role="status" id="nb-indicator">브라우저 저장 공간을 확인하고 있습니다.</p>
       <button class="editor-button" type="button" id="account-button" aria-haspopup="dialog" aria-controls="account-dialog" hidden>로그인</button>
       <button class="engine-button" type="button" id="engine-button" aria-haspopup="dialog">
@@ -1283,17 +1283,17 @@
   </script>
   <!-- Standalone furigana bundle -->
   <script type="module">
-    import { electricalIssues, refineElectricalTerms } from "./technical-japanese.mjs";
-    import { coreWords, expandedWords, correctLocally, applyJapaneseSuggestions, sentencePieces, proofreadingChanges, proofReviewFlags, verifyProofFacts, technicalValues, sentenceForTerm, cleanGlossary, matchedGlossary, glossaryInText, applyPreferredTerm, auditTranslation, businessPhraseTranslation, businessDocumentTranslation, translationPieces, ankiTsv } from "./language-tools.mjs";
-    import { startNotebook, downloadNotebookFile } from "./notebook-view.mjs";
-    import { isReportKind, notebookKinds } from "./notebook-store.mjs";
+    import { electricalIssues, refineElectricalTerms } from "./technical-japanese.mjs?v=1.11.1";
+    import { coreWords, expandedWords, correctLocally, applyJapaneseSuggestions, sentencePieces, proofreadingChanges, proofReviewFlags, verifyProofFacts, technicalValues, sentenceForTerm, cleanGlossary, matchedGlossary, glossaryInText, applyPreferredTerm, auditTranslation, businessPhraseTranslation, businessDocumentTranslation, translationPieces, ankiTsv } from "./language-tools.mjs?v=1.11.1";
+    import { startNotebook, downloadNotebookFile } from "./notebook-view.mjs?v=1.11.1";
+    import { isReportKind, notebookKinds } from "./notebook-store.mjs?v=1.11.1";
 
     const wideWorkspace=matchMedia("(min-width:78rem)");
     const browserOnlySite=location.protocol!=="file:" && Boolean(document.querySelector('meta[name="munkyeol-mode"][content="browser-only"]'));
     document.getElementById("owner-storage-note").hidden=!browserOnlySite;
     document.getElementById("hosted-html-download").hidden=!browserOnlySite;
     const accountConfig=document.getElementById("munkyeol-account-config");
-    const accountStore=accountConfig ? (await import("./account-ui.mjs")).mountAccount(JSON.parse(accountConfig.textContent)) : null;
+    const accountStore=accountConfig ? (await import("./account-ui.mjs?v=1.11.1")).mountAccount(JSON.parse(accountConfig.textContent)) : null;
     if(accountStore) {
       document.getElementById("hosted-html-download").hidden=true;
       document.getElementById("nb-auto-label").textContent=accountStore.persistent ? "내 계정에 자동 저장" : "이 창에 임시 보관";

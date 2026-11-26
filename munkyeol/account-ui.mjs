@@ -1,5 +1,5 @@
-import { MunkyeolAccount } from "./account-auth.mjs";
-import { AccountNotebook } from "./account-store.mjs";
+import { MunkyeolAccount } from "./account-auth.mjs?v=1.11.1";
+import { AccountNotebook } from "./account-store.mjs?v=1.11.1";
 
 export function mountAccount(settings) {
   let storage;

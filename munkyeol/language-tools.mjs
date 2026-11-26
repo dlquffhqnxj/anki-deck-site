@@ -1,4 +1,4 @@
-import { technicalLine, electricalIssues } from "./technical-japanese.mjs";
+import { technicalLine, electricalIssues } from "./technical-japanese.mjs?v=1.11.1";
 export const coreWords = 20;
 export const expandedWords = 100;
 

@@ -1,4 +1,4 @@
-import { notebookBackup, validateNotebookArchive } from "./notebook-store.mjs";
+import { notebookBackup, validateNotebookArchive } from "./notebook-store.mjs?v=1.11.1";
 
 const dataSlot=/^([ \t]*<script type="application\/json" id="portable-notebook" data-format="1">)([^\r\n]*)(<\/script>[ \t]*\r?)$/m;
 const versionTag=/\bid="app-version">v(\d+\.\d+\.\d+)<\/span>/u;
