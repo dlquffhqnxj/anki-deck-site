@@ -226,3 +226,45 @@ test("live authoring uses production defaults without changing cumulative data",
   assert.equal(partial.row.kanji,"学");
   assert.equal(partial.job.cardTotal,6);
 });
+
+test("one web study attempt can change its grade without double-counting an answer or a distractor", () => {
+  const make = (token, started, outcome, pairs = []) => ({deck: "deck", id: "note", ord: 0, token, started, at: started, outcome, pairs});
+  const wrong = make("one", 1, "wrong", [["まで", "までに"]]);
+  const aided = make("one", 1, "aided");
+  const again = make("two", 2, "correct");
+  const solo = make("two", 2, "solo");
+  const card = projects.recordStudy(null, null, wrong);
+  assert.equal(card.pairs[0].n, 1);
+  projects.recordStudy(card, wrong, wrong);
+  assert.equal(card.counts.wrong, 1);
+  projects.recordStudy(card, wrong, aided);
+  assert.equal(card.pairs.length, 0);
+  assert.equal(card.counts.wrong, 0);
+  assert.equal(card.reason, "aided");
+  projects.recordStudy(card, null, again);
+  assert.equal(card.due, true);
+  projects.recordStudy(card, again, solo);
+  assert.equal(card.due, false);
+  assert.equal(card.counts.solo, 1);
+  projects.recordStudy(card, aided, make("one", 1, "guess"));
+  assert.equal(card.due, false);
+  assert.equal(card.outcome, "solo");
+});
+
+test("versioned study feedback stays scoped and shares a device identity with repeated imports", () => {
+  const p = project(), scope = [p.job.product, p.job.model, p.job.level, !!p.job.sample, p.job.name];
+  const local = {"anki-ops-feedback-device-v1": JSON.stringify("device-test")};
+  Object.defineProperty(local, "getItem", {value(key) { return this[key] ?? null; }});
+  function write(deck, id) {
+    const value = {id, ord: 0, v: "1.0.0-RC1", total: 3, rev: 3, pairs: [{a:"A", b:"B", n:2}], typed:{}};
+    local["anki-ops-attempts-v1:" + encodeURIComponent(JSON.stringify(deck)) + ":" + id] = JSON.stringify(value);
+  }
+  write([...scope.slice(0,-1), "다른 덱"], "outside");
+  assert.equal(projects.localFeedback(p,local), null);
+  write(scope, "q1");
+  const report = projects.localFeedback(p,local);
+  assert.equal(report.rows.length, 1);
+  assert.equal(projects.mergeFeedback(p,report), 1);
+  assert.equal(projects.mergeFeedback(p,report), 0);
+  assert.equal(projects.evidence(p).notes.get("q1").get("1.0.0-RC1").total, 3);
+});

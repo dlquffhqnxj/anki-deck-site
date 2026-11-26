@@ -531,6 +531,24 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
 #desk-live-card{min-width:0;overflow-wrap:anywhere}
 #desk-live-card .deck-card{margin-inline:0}
 @container (min-width:620px){.desk-compose{grid-template-columns:minmax(0,1fr) minmax(270px,.92fr)}.desk-compose .field-grid{grid-template-columns:1fr}.desk-live{position:sticky;top:12px}}
+.desk-school{border:1px solid var(--line,#d8ddd7);padding:14px;border-radius:12px;background:var(--panel,#fff)}
+.desk-school>.panel-head,.player-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.desk-school h3{margin:0}.desk-school #desk-study-count,.desk-school #desk-study-position{color:var(--muted,#52625c);font-size:.9rem}
+#desk-player{margin-top:12px;border-top:1px solid var(--line,#d8ddd7);padding-top:10px}
+#desk-study-card{min-width:0;max-width:100%;overflow-wrap:anywhere}
+#desk-study-status,#desk-study-summary{font-weight:650;margin:10px 0}
+#desk-study-pairs p{margin:6px 0;overflow-wrap:anywhere}
+#desk-active[data-studying] .desk-body > :not(#desk-school){display:none!important}
+#desk-active[data-studying] #desk-study-start{display:none}
+#desk-study-position{scroll-margin-top:12px}
+#desk-study-position:focus{outline:none}
+#desk-study-status:empty,#desk-study-choice:empty{display:none}
+.desk-study-controls{padding:8px 0 0}
+@media(max-width:720px){
+  .desk-study-controls{position:sticky;bottom:0;z-index:3;background:var(--surface,#fff);border-top:1px solid var(--line);padding:8px 0 max(8px,env(safe-area-inset-bottom))}
+  .desk-study-controls>.desk-actions:last-child>.button{flex:1}
+  #desk-study-choice{margin-bottom:6px}
+}
 </style>
 </head>
 <body>
@@ -557,11 +575,11 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
     <main id="main" class="main" tabindex="-1">
       <header class="topbar">
         <div class="location"><span>워크스페이스</span><span aria-hidden="true">/</span><strong id="current-location">덱 제작</strong></div>
-        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.9.0.html">오프라인 실행본</a>
+        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.10.0.html">오프라인 실행본</a>
       </header>
       <div class="content">
         <section id="view-decks" class="view">
-          <div class="hero work-hero"><div><div class="hero-title"><h1>내 덱</h1><span class="version">v0.9.0</span></div><p>덱을 골라 오늘 작성한 노트를 더하고 누적된 카드로 Anki 덱을 만드세요.</p></div>
+          <div class="hero work-hero"><div><div class="hero-title"><h1>내 덱</h1><span class="version">v0.10.0</span></div><p>덱을 골라 오늘 작성한 노트를 더하고 누적된 카드로 Anki 덱을 만드세요.</p></div>
             <div class="desk-actions"><button type="button" id="desk-new" class="button primary">새 덱 만들기</button><button type="button" id="desk-contrast-sample" class="button secondary">혼동 표현 10쌍 열기</button><button type="button" id="desk-import" class="button secondary">백업 복원</button><input type="file" id="desk-backup-file" accept=".zip" hidden></div></div>
           <p id="desk-status" class="desk-status" role="status" aria-live="polite"></p>
           <form id="desk-create" class="panel" hidden><div class="panel-head"><h2>새 덱 만들기</h2></div><div class="form-body">
@@ -585,6 +603,19 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
               </section>
               <button type="button" id="desk-legacy" class="button text-button" hidden>이전 공용 초안 가져오기</button>
               <section id="desk-review" hidden><h3>누적 전 확인</h3><p id="desk-balance" role="status"></p><p id="desk-forecast" aria-live="polite"></p><div id="desk-differences"></div><button type="button" id="desk-commit" class="button primary">선택한 분량 누적 저장</button> <button type="button" id="desk-dismiss" class="button text-button">비교 닫기</button></section>
+              <section id="desk-school" class="desk-school" aria-labelledby="desk-school-title">
+                <div class="panel-head"><h3 id="desk-school-title">내 덱 학습</h3><span id="desk-study-count"></span></div>
+                <div class="desk-actions"><button type="button" id="desk-study-start" class="button secondary">공부 시작</button><button type="button" id="desk-study-review" class="button secondary" hidden>복습할 카드</button></div>
+                <p id="desk-study-error" role="status" hidden></p>
+                <section id="desk-player" hidden aria-label="현재 학습 카드">
+                  <div class="player-head"><strong id="desk-study-position" tabindex="-1"></strong><button type="button" id="desk-study-end" class="button text-button">학습 마치기</button></div>
+                  <div id="desk-study-card"></div>
+                  <div class="desk-study-controls"><p id="desk-study-status" role="status" aria-live="polite"></p>
+                  <div class="desk-actions" id="desk-study-choice"></div>
+                  <div class="desk-actions"><button type="button" id="desk-study-flip" class="button secondary">정답 보기</button><button type="button" id="desk-study-next" class="button secondary">다음 카드</button></div></div>
+                </section>
+                <div id="desk-study-summary" role="status" hidden></div><div id="desk-study-pairs"></div>
+              </section>
               <details id="desk-contrast"><summary>오답으로 문제 만들기</summary>
                 <label>혼동 표현 예시<select id="contrast-pick"></select></label>
                 <div class="desk-actions"><button type="button" class="button secondary" id="contrast-open">미션 초안 열기</button><a class="button text-button" href="https://dlquffhqnxj.github.io/anki-deck-site/deck-maker/contrast/" target="_blank" rel="noopener">표본 10장 풀어보기</a></div>
@@ -618,7 +649,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
         <section id="view-work" class="view" hidden>
           <div class="hero work-hero">
             <div>
-              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.9.0</span></div>
+              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.10.0</span></div>
               <p>제작 모델을 고르고, 학습할 내용을 입력해 나만의 Anki 덱을 만드세요.</p>
             </div>
             <a class="button secondary" href="#design">기존 APKG 디자인 편집</a>
@@ -883,7 +914,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
         <section id="view-rules" class="view" hidden>
           <div class="hero"><h1>운영 기준</h1><p>원본, 카드 식별자와 검사 근거를 같은 실행에 연결합니다.</p></div>
           <div class="rules-grid">
-            <section class="panel rule-panel"><h2>제작기 변경 이력</h2><p><b>v0.9.0 · 2026-11-26</b> 작성 중인 카드의 앞·뒷면, 누적 후 수량, 초안 이어쓰기와 내 덱에서 APKG 받기를 추가했습니다.</p><p><b>v0.8.0 · 2026-11-26</b> 반복 오답에서 대조 문항을 만들고, 읽기·활용은 보기를 열기 전에 직접 씁니다. 학습 기록을 가져오면 덱 버전별 응답과 오답 보기를 비교할 수 있습니다.</p><p><b>v0.7.0 · 2026-11-26</b> 찍어서 맞힌 문제 복습, 반복된 오답 보기 비교, 원문항과 7일 변형 문항 연결을 추가했습니다. 내 덱에서 누적 수량과 다음 제작 작업을 구분해 표시합니다.</p><p><b>v0.6.0 · 2026-11-26</b> 내 덱, 오늘 분량 비교·누적, 덱 전체 백업·복원, 오답 복습 미션을 추가했습니다.</p><p>v0.5.0 · 2026-11-24　Kanji LAB v1.9.2형과 한자혁명 v1.10.0형 제작 모델을 추가했습니다.</p><p>제작기 버전과 각 덱의 버전은 별도로 기록합니다.</p></section>
+            <section class="panel rule-panel"><h2>제작기 변경 이력</h2><p><b>v0.10.0 · 2026-11-26</b> 내 덱에서 공부하고 오답·찍어서 맞힌 답·보기 도움을 세 장씩 복습합니다. 반복한 오답으로 같은 덱에 새 문제를 만들 수 있습니다.</p><p><b>v0.9.0 · 2026-11-26</b> 작성 중인 카드의 앞·뒷면, 누적 후 수량, 초안 이어쓰기와 내 덱에서 APKG 받기를 추가했습니다.</p><p><b>v0.8.0 · 2026-11-26</b> 반복 오답에서 대조 문항을 만들고, 읽기·활용은 보기를 열기 전에 직접 씁니다. 학습 기록을 가져오면 덱 버전별 응답과 오답 보기를 비교할 수 있습니다.</p><p><b>v0.7.0 · 2026-11-26</b> 찍어서 맞힌 문제 복습, 반복된 오답 보기 비교, 원문항과 7일 변형 문항 연결을 추가했습니다. 내 덱에서 누적 수량과 다음 제작 작업을 구분해 표시합니다.</p><p><b>v0.6.0 · 2026-11-26</b> 내 덱, 오늘 분량 비교·누적, 덱 전체 백업·복원, 오답 복습 미션을 추가했습니다.</p><p>v0.5.0 · 2026-11-24　Kanji LAB v1.9.2형과 한자혁명 v1.10.0형 제작 모델을 추가했습니다.</p><p>제작기 버전과 각 덱의 버전은 별도로 기록합니다.</p></section>
             <section class="panel rule-panel"><h2>원본과 모델</h2>
               <p>웹에서 카드 내용을 작성하거나 Excel 표를 붙여넣으면 NoteID를 발급합니다. 기존 NoteID가 있는 자료를 가져올 때는 그 값을 사용합니다. JLPT 한자 모델은 한자 인식·쓰기·대표어 읽기 카드 3장을 만들고, 객관식과 기본 회상은 노트당 1장을 만듭니다.</p>
               <p>기존 한자 MASTER는 핵심 필드를 읽어 신규 덱으로 제작합니다. N2·N3 일일 문항의 TSV 형식도 객관식 모델에서 읽을 수 있습니다.</p>
@@ -2037,7 +2068,7 @@ else if (typeof exports === 'object'){
   }
 
   // Kept self-contained because the same function runs inside the exported Anki note type.
-  function bindPractice(card, load, save, session, keepAttempt, helpers, previewStore) {
+  function bindPractice(card, load, save, session, keepAttempt, helpers, previewStore, observer) {
     const shell = card.querySelector("[data-learn]");
     if (!shell)
       return {
@@ -2105,11 +2136,15 @@ else if (typeof exports === 'object'){
         typed: { solo: 0, aided: 0, wrong: 0, reveal: 0 },
       });
     const persist = (r) => {
+      if (observer?.web && !previewStore) deviceId();
       r.rev++;
       save(key, r);
     };
     function score(selected, correct) {
-      if (!tracking || mission || typed || !correct || !map.has(selected)) return;
+      if (mission || typed || !correct || !map.has(selected)) return;
+      const picked = map.get(selected), right = map.get(correct);
+      observer?.score(selected === correct ? "correct" : "wrong", selected !== correct && picked && right ? [[picked, right]] : []);
+      if (!tracking) return;
       const r = data();
       if (r.lastChoice === session.attempt) return;
       r.lastChoice = session.attempt;
@@ -2129,6 +2164,12 @@ else if (typeof exports === 'object'){
       persist(r);
     }
     function gradeContrast(state) {
+      if (observer) {
+        const complete = mission.items.every((item, i) => state.answers[i] === item.correct && state.clues[i] === item.clue);
+        const pairs = mission.items.flatMap((item, i) => state.answers[i] === item.correct ? [] :
+          [[mission.choices[state.answers[i]], mission.choices[item.correct]]]);
+        observer.score(complete ? "mastered" : "wrong", pairs);
+      }
       if (!tracking) return;
       const r = data();
       if (r.lastContrast === session.attempt) return;
@@ -2180,6 +2221,7 @@ else if (typeof exports === 'object'){
         );
     }
     function recordTyped(outcome, spec) {
+      observer?.score(outcome);
       if (!tracking) return;
       const r = data();
       if (r.lastTyped?.attempt === session.attempt) {
@@ -2201,8 +2243,7 @@ else if (typeof exports === 'object'){
       if (outcome === "solo") delete shelf[shelfId];
       save(dueKey, shelf);
     }
-    function sendCode(selected) {
-      if (!tracking) return;
+    function deviceId() {
       let device = load("anki-ops-feedback-device-v1", "");
       if (!device) {
         device =
@@ -2210,6 +2251,12 @@ else if (typeof exports === 'object'){
           "web-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2);
         save("anki-ops-feedback-device-v1", device);
       }
+      return device;
+    }
+    function sendCode(selected) {
+      if (!tracking) return;
+      if (selected && observer?.handoff) { observer.handoff(selected); return; }
+      const device = deviceId();
       const rows = ledgerRows().map(({ id, ord, v, rev, total, pairs, typed }) => ({
         id,
         ord,
@@ -2413,7 +2460,7 @@ else if (typeof exports === 'object'){
     let run = null;
     function drawShelf() {
       rest.replaceChildren();
-      if (!tracking) return;
+      if (!tracking || observer?.web) return;
       const shelf = load(dueKey, {}),
         keys = Object.keys(shelf).sort((a, b) => shelf[a].at - shelf[b].at);
       if (!run) {
@@ -2510,7 +2557,7 @@ else if (typeof exports === 'object'){
     drawShelf();
     return { score, handoff: sendCode, patternEntries };
   }
-  function bindRecovery(card, load, save, scope, session, schedule = () => {}, advanced) {
+  function bindRecovery(card, load, save, scope, session, schedule = () => {}, advanced, observer) {
     const panel = card.querySelector("[data-recovery]");
     if (!panel) return () => {};
     const doc = card.ownerDocument,
@@ -2567,6 +2614,7 @@ else if (typeof exports === 'object'){
       saved = save(storage, queue);
     }
     const confidence = panel.querySelector("[data-confidence]");
+    if (confidence && observer?.web) confidence.style.display = "none";
     if (confidence) {
       const result = card.querySelector(".dc-result");
       if (result) result.after(confidence);
@@ -2639,6 +2687,7 @@ else if (typeof exports === 'object'){
     for (const b of confidence?.querySelectorAll("[data-confidence-value]") || []) {
       b.addEventListener("click", () => {
         const value = b.dataset.confidenceValue;
+        observer?.score(value === "unsure" ? "guess" : "sure");
         remember(own, current(), value, session.selected, session.attempt);
         schedule(value, session.attempt);
         draw();
@@ -3381,7 +3430,7 @@ else if (typeof exports === 'object'){
       if (!active) draw();
     };
   }
-  function bindCards(root, study, recovery, practice, helpers, bindExtra, previewStore) {
+  function bindCards(root, study, recovery, practice, helpers, bindExtra, previewStore, observer) {
     const memory = root.ownerDocument?.defaultView || root.defaultView || window;
     const fallback = previewStore || (memory.ankiOpsCardSession ??= new Map());
     function load(key, value) {
@@ -3457,8 +3506,8 @@ else if (typeof exports === 'object'){
       const options = [...card.querySelectorAll("[data-choice]")];
       let notify = () => {};
       const onReview = study(card,load,save,(action,value)=>notify(action,value));
-      const advanced = practice(card,load,save,session,keepAttempt,helpers,previewStore);
-      const recover = recovery(card,load,save,scope,session,onReview,advanced);
+      const advanced = practice(card,load,save,session,keepAttempt,helpers,previewStore,observer);
+      const recover = recovery(card,load,save,scope,session,onReview,advanced,observer);
       notify = recover;
       card.addEventListener("anki-ops-contrast-graded",()=>recover("refresh"));
       function recordStatus(persisted = true) {
@@ -3469,9 +3518,10 @@ else if (typeof exports === 'object'){
           (persisted ? "" : " · 현재 세션에만 저장");
       }
       function score() {
-        if (!mark || !session.selected || !data.correct || record.scored === session.attempt) return;
+        if ((!mark && !observer) || !session.selected || !data.correct || record.scored === session.attempt) return;
         record.scored = session.attempt;
         advanced.score(session.selected,data.correct);
+        if (!mark) return;
         profileEvent("score",session.selected === data.correct);
         record.answered = (record.answered ?? 0) + 1;
         if (session.selected === data.correct) record.right = (record.right ?? 0) + 1;
@@ -3514,7 +3564,10 @@ else if (typeof exports === 'object'){
         if (record.viewed !== session.attempt) { record.viewed = session.attempt; record.views = (record.views ?? 0) + 1; profileEvent("view"); }
         score();
         recordStatus(save(key,record));
-      } else recordStatus();
+      } else {
+        if (observer && side === "answer") score();
+        recordStatus();
+      }
       for (const option of options) {
         if (side !== "front") continue;
         option.addEventListener("click",() => {
@@ -3615,9 +3668,9 @@ else if (typeof exports === 'object'){
     }
   }
 
-  function install(root,previewStore) { bindCards(root,bindStudy,bindRecovery,bindPractice,Practice,Profiles.bindExtra,previewStore); }
+  function install(root,previewStore,observer) { bindCards(root,bindStudy,bindRecovery,bindPractice,Practice,Profiles.bindExtra,previewStore,observer); }
 
-  function renderInto(mount,row,job,ordinal,answer,bank,previewStore) {
+  function renderInto(mount,row,job,ordinal,answer,bank,previewStore,observer) {
     if (!row) { mount.replaceChildren(); return; }
     let host = mount;
     if (Profiles.models[job.model]) {
@@ -3635,7 +3688,7 @@ else if (typeof exports === 'object'){
       host = shell.shadowRoot.querySelector(".op-host");
     }
     host.innerHTML = previewCard(row,job,ordinal,answer,bank);
-    install(host,previewStore);
+    install(host,previewStore,observer);
   }
 
   function previewCard(row, job, ordinal, answer, bank) {
@@ -3673,7 +3726,7 @@ else if (typeof exports === 'object'){
 })(globalThis, function (Card, Zip, Excel, initSql, sqlBinary) {
   "use strict";
 
-  const VERSION = "0.9.0";
+  const VERSION = "0.10.0";
   const Profiles = Card.Profiles;
   const SCHEMA = 1;
   const MAX_INPUT = 24 * 1024 * 1024;
@@ -7058,6 +7111,146 @@ globalThis.AnkiOpsSample = {
     p.unbuilt = true;
     return p;
   }
+  const outcomes = ["wrong", "guess", "aided", "solo", "sure", "correct", "reveal", "mastered"];
+  const weakOutcomes = ["wrong", "guess", "aided"];
+  const strongOutcomes = ["solo", "sure", "mastered"];
+  function recordStudy(previous, older, answer) {
+    if (!outcomes.includes(answer.outcome)) throw Error("채점 결과를 확인하세요.");
+    const current = previous || {
+      deck: answer.deck,
+      id: answer.id,
+      ord: answer.ord,
+      counts: {},
+      pairs: [],
+      due: false,
+    };
+    const same =
+      older?.outcome === answer.outcome && JSON.stringify(older.pairs) === JSON.stringify(answer.pairs);
+    if (same) return current;
+    if (older) current.counts[older.outcome] = Math.max(0, (current.counts[older.outcome] || 0) - 1);
+    current.counts[answer.outcome] = (current.counts[answer.outcome] || 0) + 1;
+    function addPairs(pairs, delta) {
+      for (const [a, b] of pairs || []) {
+        const k = JSON.stringify([C.Practice.clean(a).toLowerCase(), C.Practice.clean(b).toLowerCase()]);
+        let found = current.pairs.find((p) => p.k === k);
+        if (!found) {
+          found = { k, a, b, n: 0 };
+          current.pairs.push(found);
+        }
+        found.n += delta;
+      }
+    }
+    addPairs(older?.pairs, -1);
+    addPairs(answer.pairs, 1);
+    current.pairs = current.pairs.filter((p) => p.n > 0);
+    if (
+      !current.stamp ||
+      answer.started > current.stamp ||
+      (answer.started === current.stamp && answer.token >= current.token)
+    ) {
+      const priorDue = current.token === answer.token ? current.beforeDue : current.due;
+      const priorReason = current.token === answer.token ? current.beforeReason : current.reason;
+      current.beforeDue = !!priorDue;
+      current.beforeReason = priorReason || "";
+      current.stamp = answer.started;
+      current.token = answer.token;
+      current.outcome = answer.outcome;
+      current.due =
+        weakOutcomes.includes(answer.outcome) || (!!priorDue && !strongOutcomes.includes(answer.outcome));
+      current.reason = weakOutcomes.includes(answer.outcome) ? answer.outcome : current.due ? priorReason : "";
+      current.at = answer.at;
+    }
+    return current;
+  }
+  function webStudyStore() {
+    let pending;
+    function open() {
+      if (!pending)
+        pending = new Promise((resolve, reject) => {
+          const req = indexedDB.open("anki-ops-personal-study", 1);
+          req.onupgradeneeded = () => {
+            const cards = req.result.createObjectStore("cards", { keyPath: ["deck", "id", "ord"] });
+            cards.createIndex("deck", "deck");
+            req.result.createObjectStore("attempts", { keyPath: ["deck", "id", "ord", "token"] });
+          };
+          req.onsuccess = () => {
+            req.result.onversionchange = () => {
+              req.result.close();
+              pending = null;
+            };
+            resolve(req.result);
+          };
+          req.onerror = () => {
+            pending = null;
+            reject(req.error);
+          };
+        });
+      return pending;
+    }
+    return {
+      async cards(deck) {
+        const db = await open();
+        return new Promise((resolve, reject) => {
+          const req = db.transaction("cards").objectStore("cards").index("deck").getAll(deck);
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+      },
+      async record(answer) {
+        const db = await open();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(["cards", "attempts"], "readwrite"),
+            cards = tx.objectStore("cards"),
+            attempts = tx.objectStore("attempts");
+          const id = [answer.deck, answer.id, answer.ord],
+            a = cards.get(id),
+            b = attempts.get([...id, answer.token]);
+          let result;
+          // The second read follows the first in this transaction; overlapping writers are serialized.
+          b.onsuccess = () => {
+            result = recordStudy(a.result, b.result, answer);
+            cards.put(result);
+            attempts.put(answer);
+          };
+          tx.oncomplete = () => resolve(result);
+          tx.onabort = () => reject(tx.error || Error("개인 학습 기록을 저장하지 못했습니다."));
+        });
+      },
+    };
+  }
+  function localFeedback(project, storage) {
+    const scope = [
+      project.job.product,
+      project.job.model,
+      project.job.level || "",
+      !!project.job.sample,
+      project.job.name,
+    ];
+    const device = JSON.parse(storage.getItem("anki-ops-feedback-device-v1") || "null");
+    if (!device) return null;
+    const prefix = "anki-ops-attempts-v1:" + encodeURIComponent(JSON.stringify(scope)) + ":",
+      rows = [];
+    for (const key of Object.keys(storage)) {
+      if (!key.startsWith(prefix)) continue;
+      const r = JSON.parse(storage.getItem(key));
+      if (!r) continue;
+      rows.push({
+        id: r.id,
+        ord: r.ord,
+        v: r.v,
+        rev: r.rev,
+        total: r.total,
+        typed: r.typed,
+        pairs: r.pairs.map(({ a, b, n }) => ({ a, b, n })),
+      });
+    }
+    if (!rows.length) return null;
+    return readFeedback(
+      JSON.stringify({ kind: "anki-author-feedback", schema: 1, deck: scope, device, rows }),
+      project,
+    );
+  }
+
   function feedbackGaps(notes) {
     const groups = { options: [], recall: [] };
     for (const row of notes) {
@@ -7406,7 +7599,7 @@ globalThis.AnkiOpsSample = {
     latestVersion,
     setPair,
     removePair,
-    contrastCatalog,quizModel,missionCard,starterProject,readFeedback,mergeFeedback,evidence,feedbackGaps
+    contrastCatalog,quizModel,missionCard,starterProject,readFeedback,mergeFeedback,evidence,feedbackGaps,recordStudy,webStudyStore,localFeedback
   };
 })(globalThis);
 </script>
@@ -8985,16 +9178,31 @@ globalThis.AnkiOpsSample = {
         await importFeedback(await f.text());
       }),
     );
+    function withBrowserFeedback(p) {
+      if (!p.job.learning.included.records) return p;
+      let report;
+      try {
+        report = P.localFeedback(p, localStorage);
+      } catch {
+        return p;
+      }
+      if (!report) return p;
+      const key = "source@" + report.device;
+      const copy = { ...p, studyReports: { ...p.studyReports, [key]: { ...p.studyReports?.[key] } } };
+      P.mergeFeedback(copy, report);
+      return copy;
+    }
+
     function refreshQuality() {
       const before = $("feedback-before"),
         after = $("feedback-after");
       if (!project || !$("desk-feedback").open) return;
-      const cacheKey = project.key + "|" + project.rev;
+      const cacheKey = project.key + "|" + project.rev + "|" + reportTick;
       if (qualityKey !== cacheKey) {
         const oldBefore = before.value,
           oldAfter = after.value,
           same = qualityKey.startsWith(project.key + "|");
-        qualityData = P.evidence(project);
+        qualityData = P.evidence(withBrowserFeedback(project));
         qualityKey = cacheKey;
         const versions = qualityData.versions;
         before.replaceChildren();
@@ -9137,6 +9345,404 @@ globalThis.AnkiOpsSample = {
     }
     $("desk-feedback").addEventListener("toggle", refreshQuality);
     for (const id of ["feedback-before", "feedback-after"]) $(id).addEventListener("change", refreshQuality);
+    const studyStore = P.webStudyStore();
+    let studySession = null,
+      studyRows = new Map(),
+      studyRead = 0,
+      pendingStudyWrite = Promise.resolve(),
+      reportTick = 0;
+    const cardKey = (id, ord) => JSON.stringify([id, ord]);
+    const studyLabels = {
+      wrong: "오답",
+      guess: "찍어서 맞힘",
+      aided: "보기 도움",
+      solo: "보기 없이 정답",
+      sure: "확실히 맞힘",
+      correct: "정답",
+      reveal: "정답 확인",
+      mastered: "미션 완료",
+    };
+    const studyError = (text) => {
+      const e = $("desk-study-error");
+      e.textContent = text;
+      e.hidden = !text;
+    };
+    function dueStudy() {
+      return [...studyRows.values()]
+        .filter((r) => r.due)
+        .sort((a, b) => a.at - b.at || a.id.localeCompare(b.id) || a.ord - b.ord);
+    }
+    function studyCounts() {
+      if (!project) return;
+      const flag = project.job.learning.included.records,
+        due = dueStudy();
+      $("desk-study-count").textContent = flag ? "개인 복습 " + due.length + "장" : "내 기록 사용 안 함";
+      $("desk-study-start").disabled = !project.notes.length || !!studySession;
+      if (flag && due.length) {
+        const labels = ["wrong", "guess", "aided"]
+          .map((v) => [v, due.filter((r) => r.reason === v).length])
+          .filter(([, n]) => n);
+        $("desk-study-count").textContent +=
+          " · " + labels.map(([v, n]) => studyLabels[v] + " " + n + "장").join(" · ");
+      }
+      $("desk-study-review").hidden = !flag || !due.length || !!studySession;
+      $("desk-study-review").textContent = "복습할 카드 " + Math.min(3, due.length) + "장";
+    }
+    function studyPairs() {
+      const host = $("desk-study-pairs");
+      host.replaceChildren();
+      if (!project || !P.quizModel(project.job.model) || !project.job.learning.included.records) return;
+      const pairs = new Map();
+      for (const r of studyRows.values())
+        for (const item of r.pairs) {
+          let set = pairs.get(item.k);
+          if (!set) {
+            set = { ...item, n: 0, ids: new Set() };
+            pairs.set(item.k, set);
+          }
+          set.n += item.n;
+          set.ids.add(r.id);
+        }
+      const repeated = [...pairs.values()].filter((p) => p.n >= 2).sort((a, b) => b.n - a.n);
+      if (!repeated.length) return;
+      const box = element("details"),
+        sum = element("summary", "반복해서 헷갈린 보기 " + repeated.length + "쌍");
+      box.append(sum);
+      host.append(box);
+      function add(start) {
+        for (const item of repeated.slice(start, start + 10)) {
+          const line = element("p", item.a + " → " + item.b + " · " + item.n + "회 ");
+          line.append(
+            button(
+              "이 오답으로 문제 만들기",
+              guard(() => handoffStudy([item.a, item.b], [...item.ids])),
+              "text-button",
+            ),
+          );
+          box.append(line);
+        }
+        if (start + 10 < repeated.length) {
+          const next = button(
+            "다음 10쌍",
+            () => {
+              next.remove();
+              add(start + 10);
+            },
+            "text-button",
+          );
+          box.append(next);
+        }
+      }
+      add(0);
+    }
+    async function loadStudyRecords() {
+      const p = project,
+        ticket = ++studyRead;
+      studyRows = new Map();
+      studyCounts();
+      studyPairs();
+      studyError("");
+      if (!p || !p.job.learning.included.records) return;
+      try {
+        await pendingStudyWrite;
+        const values = await studyStore.cards(p.key),
+          ids = new Set(p.notes.map((r) => r.id));
+        if (ticket !== studyRead || project?.key !== p.key) return;
+        studyRows = new Map(values.filter((r) => ids.has(r.id)).map((r) => [cardKey(r.id, r.ord), r]));
+        studyCounts();
+        studyPairs();
+      } catch (error) {
+        if (ticket === studyRead) studyError("학습 기록을 열 수 없습니다. " + error.message);
+      }
+    }
+    function stopSchool() {
+      studySession = null;
+      $("desk-active").removeAttribute("data-studying");
+      $("desk-player").hidden = true;
+      $("desk-study-card").replaceChildren();
+      studyCounts();
+    }
+    function nextItem(session) {
+      const item = session.items[session.at];
+      session.card = session.byId.get(item.id);
+      session.ord = item.ord;
+      session.back = false;
+      session.result = "";
+      session.writeState = "";
+      session.started = Date.now();
+      session.token = crypto.randomUUID();
+      session.lastEvent = null;
+      if (!session.review)
+        try {
+          localStorage.setItem("anki-ops-desk-bookmark:" + session.deck, JSON.stringify(item));
+        } catch {}
+    }
+    function saveAnswer(session, outcome, pairs = []) {
+      if (session !== studySession || !session.card || !Object.hasOwn(studyLabels, outcome)) return;
+      const event = {
+        deck: session.deck,
+        id: session.card.id,
+        ord: session.ord,
+        token: session.token,
+        started: session.started,
+        at: Date.now(),
+        outcome,
+        pairs,
+      };
+      if (
+        session.lastEvent?.outcome === outcome &&
+        JSON.stringify(session.lastEvent.pairs) === JSON.stringify(pairs)
+      )
+        return;
+      session.lastEvent = event;
+      session.result = outcome;
+      session.writeState = "pending";
+      if (outcome !== "reveal") session.seen.add(cardKey(session.card.id, session.ord));
+      if (session.job.learning.included.records) {
+        pendingStudyWrite = pendingStudyWrite
+          .then(async () => {
+            const result = await studyStore.record(event);
+            if (project?.key === event.deck) {
+              studyRows.set(cardKey(event.id, event.ord), result);
+              studyCounts();
+              reportTick++;
+              if (!studySession) studyPairs();
+              if (session === studySession && session.lastEvent === event) {
+                session.writeState = "saved";
+                paintStudyControls();
+              }
+            }
+          })
+          .catch((error) => {
+            if (session === studySession && session.lastEvent === event) {
+              session.writeState = "error";
+              paintStudyControls();
+            }
+            if (project?.key === event.deck) studyError("이 응답을 저장하지 못했습니다. " + error.message);
+          });
+      }
+      paintStudyControls();
+    }
+    function paintStudyControls() {
+      const session = studySession;
+      if (!session) return;
+      const status = $("desk-study-status"),
+        actions = $("desk-study-choice");
+      actions.replaceChildren();
+      status.textContent = session.result ? studyLabels[session.result] : "";
+      if (
+        session.result &&
+        ["aided", "wrong", "guess"].includes(session.result) &&
+        session.job.learning.included.records
+      )
+        status.textContent +=
+          session.writeState === "saved"
+            ? " · 개인 복습에 담김"
+            : session.writeState === "error"
+              ? " · 저장되지 않음"
+              : " · 저장 중";
+      const input =
+        !!session.card._recall &&
+        session.card._recall.ordinal === session.ord &&
+        session.job.learning.included.firstRecall;
+      const choice = !!session.card.correct && !!session.card.optionA;
+      const grade = (text, outcome) =>
+        actions.append(
+          button(
+            text,
+            () => {
+              const mount = $("desk-study-card"),
+                host = mount.firstElementChild?.shadowRoot || mount;
+              const confidence = outcome === "sure" ? "sure" : outcome === "guess" ? "unsure" : null;
+              const native =
+                choice && confidence && host.querySelector('[data-confidence-value="' + confidence + '"]');
+              if (native) native.click();
+              else saveAnswer(session, outcome);
+            },
+            "secondary",
+          ),
+        );
+      if (session.result === "correct") status.textContent += " · 이번 답에 얼마나 확신했나요?";
+      if (choice && ["correct", "sure", "guess"].includes(session.result) && !session.card.contrast && !input) {
+        grade("확실히 맞혔어요", "sure");
+        grade("찍어서 맞혔어요", "guess");
+      } else if (session.back && !session.card.contrast && !input && !choice) {
+        grade("보기 없이 떠올렸어요", "solo");
+        grade("다시 복습할래요", "wrong");
+        grade("확신이 없어요", "guess");
+      } else if (session.back && (!session.result || session.result === "reveal")) {
+        grade("다시 복습할래요", "wrong");
+      }
+      const flip = $("desk-study-flip"), next = $("desk-study-next");
+      const gradeNeeded = !session.result && !session.back;
+      flip.hidden = session.back;
+      flip.classList.toggle("primary", gradeNeeded);
+      flip.classList.toggle("secondary", !gradeNeeded);
+      next.classList.toggle("primary", !gradeNeeded);
+      next.classList.toggle("secondary", gradeNeeded);
+      const last = session.at === session.items.length - 1;
+      next.textContent = last ? (session.result ? "결과 보기" : "건너뛰고 마치기") :
+        (session.result ? "다음 카드" : "건너뛰기");
+    }
+    function focusStudyCard() {
+      const title = $("desk-study-position");
+      title.focus({preventScroll:true});
+      title.scrollIntoView({block:"start"});
+    }
+    function renderStudy() {
+      const session = studySession;
+      if (!session) return;
+      $("desk-study-position").textContent =
+        (session.review ? "개인 복습" : "내 덱 학습") +
+        " · " +
+        (session.at + 1) +
+        " / " +
+        session.items.length +
+        "장 · " +
+        Card.MODELS[session.job.model].types[session.ord];
+      if (session.review) {
+        const reason = studyRows.get(cardKey(session.card.id, session.ord))?.reason;
+        if (reason) $("desk-study-position").textContent += " · " + studyLabels[reason];
+      }
+      const token = session.token;
+      Card.renderInto(
+        $("desk-study-card"),
+        session.card,
+        session.job,
+        session.ord,
+        session.back,
+        session.bank,
+        session.scratch,
+        {
+          score(value, pairs) {
+            if (session === studySession && session.token === token) saveAnswer(session, value, pairs);
+          },
+          handoff(item) {
+            if (session === studySession) guard(() => handoffStudy([item.picked, item.right], item.ids))();
+          },
+          web: true,
+        },
+      );
+      paintStudyControls();
+    }
+    async function startStudy(review) {
+      if (!project.notes.length) return;
+      await pendingStudyWrite;
+      await loadStudyRecords();
+      const p = project,
+        head = p.versions.find((v) => v.key === p.head);
+      const published = !!head && !p.unbuilt;
+      const raw = { ...p.job, version: published ? head.version : p.next, expected: "" };
+      const scan = await Factory.inspect({
+        job: raw,
+        name: "누적원본.tsv",
+        input: encode(Factory.authorSource(p.notes, raw.model)),
+      });
+      if (scan.errors)
+        throw Error(scan.issues.find((v) => v.type === "error")?.message || "학습 원본을 확인하세요.");
+      const byId = new Map(scan.rows.map((r) => [r.id, r])),
+        types = Card.MODELS[raw.model].types;
+      const items = review
+        ? dueStudy()
+            .filter((r) => byId.has(r.id))
+            .slice(0, 3)
+            .map(({ id, ord }) => ({ id, ord }))
+        : scan.rows.flatMap((r) => types.map((_, ord) => ({ id: r.id, ord })));
+      if (!items.length) {
+        message("복습할 카드가 없습니다.");
+        return;
+      }
+      let at = 0;
+      if (!review)
+        try {
+          const item = JSON.parse(localStorage.getItem("anki-ops-desk-bookmark:" + p.key));
+          if (item)
+            at = Math.max(
+              0,
+              items.findIndex((n) => n.id === item.id && n.ord === item.ord),
+            );
+        } catch {}
+      studySession = {
+        deck: p.key,
+        job: scan.job,
+        bank: scan.bank,
+        byId,
+        items,
+        at,
+        review,
+        seen: new Set(),
+        scratch: published ? undefined : new Map(),
+      };
+      $("desk-active").setAttribute("data-studying", "");
+      $("desk-study-summary").hidden = true;
+      $("desk-player").hidden = false;
+      $("desk-study-pairs").replaceChildren();
+      nextItem(studySession);
+      studyCounts();
+      renderStudy();
+      focusStudyCard();
+    }
+    async function finishStudy(done = false) {
+      const session = studySession;
+      if (!session) return;
+      await pendingStudyWrite;
+      if (session !== studySession) return;
+      const summary = $("desk-study-summary");
+      if (session.review) {
+        const batch = session.items.map((r) => studyRows.get(cardKey(r.id, r.ord)));
+        const recovered = batch.filter((r) => r && !r.due);
+        summary.textContent =
+          "복습 " +
+          batch.length +
+          "장 중 " +
+          recovered.length +
+          "장 회복 · 보기 없이 " +
+          recovered.filter((r) => r.outcome === "solo").length +
+          "장 · 남은 " +
+          (batch.length - recovered.length) +
+          "장";
+      } else
+        summary.textContent =
+          (done ? "학습 완료" : "학습을 마쳤습니다") + " · 이번에 응답한 카드 " + session.seen.size + "장";
+      if (done && !session.review)
+        try {
+          localStorage.removeItem("anki-ops-desk-bookmark:" + session.deck);
+        } catch {}
+      stopSchool();
+      summary.hidden = false;
+      summary.scrollIntoView({block:"nearest"});
+      studyPairs();
+      qualityKey = "";
+      refreshQuality();
+    }
+    async function handoffStudy(pair, ids) {
+      if (studySession) await finishStudy();
+      forPair(pair, ids);
+      $("desk-contrast").scrollIntoView({ block: "start" });
+    }
+    click("desk-study-start", () => startStudy(false));
+    click("desk-study-review", () => startStudy(true));
+    click("desk-study-flip", () => {
+      if (!studySession || studySession.back) return;
+      studySession.back = true;
+      renderStudy();
+      focusStudyCard();
+    });
+    click("desk-study-next", async () => {
+      const session = studySession;
+      if (!session) return;
+      await pendingStudyWrite;
+      if (session.at + 1 >= session.items.length) {
+        await finishStudy(true);
+        return;
+      }
+      session.at++;
+      nextItem(session);
+      renderStudy();
+      focusStudyCard();
+    });
+    click("desk-study-end", () => finishStudy());
+
     function drawQuality() {
       const box = $("desk-quality"),
         host = $("desk-quality-list");
@@ -9172,6 +9778,7 @@ globalThis.AnkiOpsSample = {
     function drawProject() {
       $("desk-active").hidden = !project;
       if (!project) return;
+      studyCounts();studyPairs();
       const p = project,
         head = p.versions.find((v) => v.key === p.head);
       $("desk-title").textContent = p.job.name;
@@ -9270,6 +9877,7 @@ globalThis.AnkiOpsSample = {
       return items;
     }
     async function select(key) {
+      if(studySession)await finishStudy();
       const value = await getRecord(key);
       if (!value) throw new Error("덱을 찾을 수 없습니다.");
       project = readDraft(value);
@@ -9281,6 +9889,8 @@ globalThis.AnkiOpsSample = {
       $("desk-notes").open = false;
       $("desk-create").hidden = true;
       remember(key);
+      $("desk-study-summary").hidden=true;
+      await loadStudyRecords();
       drawProject();
       if(hasContent(project) && !project.pending)resumeEditor(false);
       if(project.missionDraft)$("desk-contrast").open=true;
@@ -9513,6 +10123,8 @@ globalThis.AnkiOpsSample = {
         p.job.learning = job.learning;
         p.next = job.version;
       });
+      await loadStudyRecords();
+      qualityKey="";
       drawProject();
       message("다음 제작에 사용할 카드 설정과 덱 버전을 저장했습니다.");
     });
@@ -9539,7 +10151,7 @@ globalThis.AnkiOpsSample = {
           ? { ...project, extraDraft: draft.rows }
           : project;
       download(
-        await P.backup(payload, getRecord),
+        await P.backup(withBrowserFeedback(payload), getRecord),
         project.job.product + "-project-v" + Factory.VERSION + ".zip",
         "application/zip"
       );
