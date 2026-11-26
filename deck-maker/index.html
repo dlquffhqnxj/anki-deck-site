@@ -519,6 +519,18 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
 .quality-note p,.quality-note small{margin:0;overflow-wrap:anywhere}
 .quality-note .text-button{justify-self:start}
 #feedback-report,#contrast-editor{margin-top:12px}
+#desk-model-example,#desk-forecast{padding:.7rem .9rem;background:var(--paper,#f6f5f0);border-left:3px solid var(--accent,#405c53);border-radius:6px;overflow-wrap:anywhere}
+#desk-write{container-type:inline-size}
+.desk-compose{display:grid;gap:16px;align-items:start}
+.desk-compose>*,.desk-compose .field-grid>*{min-width:0}
+.desk-live{padding:12px;border:1px solid var(--line,#d9ddd6);border-radius:12px;min-width:0}
+.desk-live h4{margin:0 0 8px;font-size:1rem}
+.desk-live .desk-actions{align-items:center}
+.desk-live select{max-width:100%}
+.desk-live button[aria-pressed=true]{background:#405c53;border-color:#405c53;color:white}
+#desk-live-card{min-width:0;overflow-wrap:anywhere}
+#desk-live-card .deck-card{margin-inline:0}
+@container (min-width:620px){.desk-compose{grid-template-columns:minmax(0,1fr) minmax(270px,.92fr)}.desk-compose .field-grid{grid-template-columns:1fr}.desk-live{position:sticky;top:12px}}
 </style>
 </head>
 <body>
@@ -545,33 +557,34 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
     <main id="main" class="main" tabindex="-1">
       <header class="topbar">
         <div class="location"><span>워크스페이스</span><span aria-hidden="true">/</span><strong id="current-location">덱 제작</strong></div>
-        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.8.0.html">오프라인 실행본</a>
+        <a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.9.0.html">오프라인 실행본</a>
       </header>
       <div class="content">
         <section id="view-decks" class="view">
-          <div class="hero work-hero"><div><div class="hero-title"><h1>내 덱</h1><span class="version">v0.8.0</span></div><p>덱을 골라 오늘 작성한 노트를 더하고 누적된 카드로 Anki 덱을 만드세요.</p></div>
+          <div class="hero work-hero"><div><div class="hero-title"><h1>내 덱</h1><span class="version">v0.9.0</span></div><p>덱을 골라 오늘 작성한 노트를 더하고 누적된 카드로 Anki 덱을 만드세요.</p></div>
             <div class="desk-actions"><button type="button" id="desk-new" class="button primary">새 덱 만들기</button><button type="button" id="desk-contrast-sample" class="button secondary">혼동 표현 10쌍 열기</button><button type="button" id="desk-import" class="button secondary">백업 복원</button><input type="file" id="desk-backup-file" accept=".zip" hidden></div></div>
           <p id="desk-status" class="desk-status" role="status" aria-live="polite"></p>
           <form id="desk-create" class="panel" hidden><div class="panel-head"><h2>새 덱 만들기</h2></div><div class="form-body">
             <div class="field-grid"><label>덱 이름<input id="desk-name" required maxlength="90" placeholder="예: N3·N2 문법과 독해"></label><label>카드 구성<select id="desk-model"></select></label>
             <label>제작 급수<select id="desk-level"><option value="">전체 급수</option><option>N5</option><option>N4</option><option>N3</option><option>N2</option><option>N1</option></select></label>
             <label>제품 ID <span class="form-optional">생략하면 자동 생성</span><input id="desk-product" maxlength="48" placeholder="예: jlpt-grammar" spellcheck="false"></label></div>
-            <div class="desk-actions"><button class="button primary" type="submit">덱 만들기</button><button type="button" id="desk-cancel" class="button secondary">취소</button></div></div></form>
+            <p id="desk-model-example"></p><div class="desk-actions"><button class="button primary" type="submit">덱 만들기</button><button type="button" id="desk-cancel" class="button secondary">취소</button></div></div></form>
           <div class="desk-layout"><section class="panel desk-library"><div class="panel-head"><h2>저장한 덱</h2><span id="desk-count"></span></div><div id="desk-list"></div></section>
           <section id="desk-active" class="panel" hidden><div class="panel-head desk-deck-head">
             <label class="desk-mobile-switch" hidden>저장한 덱 선택<select id="desk-jump" aria-label="저장한 덱 선택"></select></label>
             <div class="desk-detail-line"><h2 id="desk-title"></h2><span id="desk-model-info"></span></div><p id="desk-state"></p>
             <dl id="desk-meta"><div><dt>누적 원본</dt><dd id="desk-num-notes"></dd></div><div><dt id="desk-card-label">제작 카드</dt><dd id="desk-num-cards"></dd></div><div><dt>최근 덱 버전</dt><dd id="desk-last-version"></dd></div></dl></div>
             <div class="form-body desk-body">
-              <div class="desk-actions"><button type="button" class="button primary" id="desk-resume-review" hidden>분량 비교 확인</button><button type="button" class="button primary" id="desk-add">오늘 분량 추가</button><button type="button" class="button secondary" id="desk-build">누적 덱 제작</button></div>
+              <div class="desk-actions"><button type="button" class="button primary" id="desk-resume-review" hidden>분량 비교 확인</button><button type="button" class="button primary" id="desk-add">오늘 분량 추가</button><button type="button" class="button secondary" id="desk-build">누적 덱 제작</button><button id="desk-apkg" type="button" class="button secondary">APKG 받기</button></div>
               <section id="desk-entry" hidden><h3>오늘 분량 추가</h3>
                 <div class="desk-tabs" role="group" aria-label="입력 방법"><button type="button" data-desk-input="write">직접 작성</button><button type="button" data-desk-input="paste">표 붙여넣기</button><button type="button" data-desk-input="file">파일 가져오기</button></div>
-                <div id="desk-write"><div id="desk-fields" class="field-grid"></div><details><summary>추가 필드와 NoteID</summary><div id="desk-fields-extra" class="field-grid"></div></details><button class="button secondary" id="desk-stage-note" type="button">작성한 노트 비교</button></div>
+                <div id="desk-write"><div class="desk-compose"><div><div id="desk-fields" class="field-grid"></div><details><summary>추가 필드와 NoteID</summary><div id="desk-fields-extra" class="field-grid"></div></details><button class="button secondary" id="desk-stage-note" type="button">작성한 노트 비교</button></div>
+                <aside class="desk-live" aria-label="작성 중인 카드 미리보기"><h4>카드 미리보기</h4><div class="desk-actions"><label id="desk-live-types">카드 유형<select id="desk-live-type"></select></label><button type="button" id="desk-live-front" class="button compact secondary" aria-pressed="true">앞면</button><button type="button" id="desk-live-back" class="button compact secondary" aria-pressed="false">뒷면</button></div><div id="desk-live-card"></div></aside></div></div>
                 <div id="desk-paste-panel" hidden><label>엑셀 표<textarea id="desk-paste" rows="5" spellcheck="false"></textarea></label><label class="desk-check"><input type="checkbox" id="desk-headers" checked>첫 줄에 열 이름 포함</label><small id="desk-columns"></small><button type="button" id="desk-stage-paste" class="button secondary">붙여넣은 분량 비교</button></div>
                 <div id="desk-file-panel" hidden><label>추가할 XLSX · TSV · CSV 파일<input type="file" id="desk-delta" accept=".xlsx,.tsv,.csv,.txt"></label><small>기존 문제의 문구를 수정할 때는 NoteID 열을 포함하세요.</small></div>
               </section>
               <button type="button" id="desk-legacy" class="button text-button" hidden>이전 공용 초안 가져오기</button>
-              <section id="desk-review" hidden><h3>누적 전 확인</h3><p id="desk-balance" role="status"></p><div id="desk-differences"></div><button type="button" id="desk-commit" class="button primary">선택한 분량 누적 저장</button> <button type="button" id="desk-dismiss" class="button text-button">비교 닫기</button></section>
+              <section id="desk-review" hidden><h3>누적 전 확인</h3><p id="desk-balance" role="status"></p><p id="desk-forecast" aria-live="polite"></p><div id="desk-differences"></div><button type="button" id="desk-commit" class="button primary">선택한 분량 누적 저장</button> <button type="button" id="desk-dismiss" class="button text-button">비교 닫기</button></section>
               <details id="desk-contrast"><summary>오답으로 문제 만들기</summary>
                 <label>혼동 표현 예시<select id="contrast-pick"></select></label>
                 <div class="desk-actions"><button type="button" class="button secondary" id="contrast-open">미션 초안 열기</button><a class="button text-button" href="https://dlquffhqnxj.github.io/anki-deck-site/deck-maker/contrast/" target="_blank" rel="noopener">표본 10장 풀어보기</a></div>
@@ -605,7 +618,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
         <section id="view-work" class="view" hidden>
           <div class="hero work-hero">
             <div>
-              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.8.0</span></div>
+              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.9.0</span></div>
               <p>제작 모델을 고르고, 학습할 내용을 입력해 나만의 Anki 덱을 만드세요.</p>
             </div>
             <a class="button secondary" href="#design">기존 APKG 디자인 편집</a>
@@ -870,7 +883,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
         <section id="view-rules" class="view" hidden>
           <div class="hero"><h1>운영 기준</h1><p>원본, 카드 식별자와 검사 근거를 같은 실행에 연결합니다.</p></div>
           <div class="rules-grid">
-            <section class="panel rule-panel"><h2>제작기 변경 이력</h2><p><b>v0.8.0 · 2026-11-26</b> 반복 오답에서 대조 문항을 만들고, 읽기·활용은 보기를 열기 전에 직접 씁니다. 학습 기록을 가져오면 덱 버전별 응답과 오답 보기를 비교할 수 있습니다.</p><p><b>v0.7.0 · 2026-11-26</b> 찍어서 맞힌 문제 복습, 반복된 오답 보기 비교, 원문항과 7일 변형 문항 연결을 추가했습니다. 내 덱에서 누적 수량과 다음 제작 작업을 구분해 표시합니다.</p><p><b>v0.6.0 · 2026-11-26</b> 내 덱, 오늘 분량 비교·누적, 덱 전체 백업·복원, 오답 복습 미션을 추가했습니다.</p><p>v0.5.0 · 2026-11-24　Kanji LAB v1.9.2형과 한자혁명 v1.10.0형 제작 모델을 추가했습니다.</p><p>제작기 버전과 각 덱의 버전은 별도로 기록합니다.</p></section>
+            <section class="panel rule-panel"><h2>제작기 변경 이력</h2><p><b>v0.9.0 · 2026-11-26</b> 작성 중인 카드의 앞·뒷면, 누적 후 수량, 초안 이어쓰기와 내 덱에서 APKG 받기를 추가했습니다.</p><p><b>v0.8.0 · 2026-11-26</b> 반복 오답에서 대조 문항을 만들고, 읽기·활용은 보기를 열기 전에 직접 씁니다. 학습 기록을 가져오면 덱 버전별 응답과 오답 보기를 비교할 수 있습니다.</p><p><b>v0.7.0 · 2026-11-26</b> 찍어서 맞힌 문제 복습, 반복된 오답 보기 비교, 원문항과 7일 변형 문항 연결을 추가했습니다. 내 덱에서 누적 수량과 다음 제작 작업을 구분해 표시합니다.</p><p><b>v0.6.0 · 2026-11-26</b> 내 덱, 오늘 분량 비교·누적, 덱 전체 백업·복원, 오답 복습 미션을 추가했습니다.</p><p>v0.5.0 · 2026-11-24　Kanji LAB v1.9.2형과 한자혁명 v1.10.0형 제작 모델을 추가했습니다.</p><p>제작기 버전과 각 덱의 버전은 별도로 기록합니다.</p></section>
             <section class="panel rule-panel"><h2>원본과 모델</h2>
               <p>웹에서 카드 내용을 작성하거나 Excel 표를 붙여넣으면 NoteID를 발급합니다. 기존 NoteID가 있는 자료를 가져올 때는 그 값을 사용합니다. JLPT 한자 모델은 한자 인식·쓰기·대표어 읽기 카드 3장을 만들고, 객관식과 기본 회상은 노트당 1장을 만듭니다.</p>
               <p>기존 한자 MASTER는 핵심 필드를 읽어 신규 덱으로 제작합니다. N2·N3 일일 문항의 TSV 형식도 객관식 모델에서 읽을 수 있습니다.</p>
@@ -2024,7 +2037,7 @@ else if (typeof exports === 'object'){
   }
 
   // Kept self-contained because the same function runs inside the exported Anki note type.
-  function bindPractice(card, load, save, session, keepAttempt, helpers) {
+  function bindPractice(card, load, save, session, keepAttempt, helpers, previewStore) {
     const shell = card.querySelector("[data-learn]");
     if (!shell)
       return {
@@ -2139,6 +2152,7 @@ else if (typeof exports === 'object'){
       persist(r);
     }
     function ledgerRows() {
+      if(previewStore)return [...previewStore.keys()].filter(k=>k.startsWith(ledger)).map(k=>load(k,null)).filter(Boolean);
       let keys = [];
       try {
         keys = Object.keys(win.localStorage);
@@ -3367,14 +3381,16 @@ else if (typeof exports === 'object'){
       if (!active) draw();
     };
   }
-  function bindCards(root, study, recovery, practice, helpers, bindExtra) {
+  function bindCards(root, study, recovery, practice, helpers, bindExtra, previewStore) {
     const memory = root.ownerDocument?.defaultView || root.defaultView || window;
-    const fallback = memory.ankiOpsCardSession ??= new Map();
+    const fallback = previewStore || (memory.ankiOpsCardSession ??= new Map());
     function load(key, value) {
       if (fallback.has(key)) return fallback.get(key);
+      if(previewStore)return value;
       try { return JSON.parse(memory.localStorage.getItem(key)) ?? value; } catch { return value; }
     }
     function save(key, value) {
+      if(previewStore){previewStore.set(key,value);return true;}
       try { memory.localStorage.setItem(key,JSON.stringify(value)); fallback.delete(key); return true; }
       catch { fallback.set(key,value); return false; }
     }
@@ -3391,14 +3407,14 @@ else if (typeof exports === 'object'){
         ruby:data.ruby === "on",mix:data.mixDefault === "true",immediate:data.instantDefault === "true" };
       const settings = { ...defaults,...preferences,size:preferences.size ?? (preferences.large === true ? "large" : defaults.size) };
       let session;
-      try { session = JSON.parse(memory.sessionStorage.getItem(activeKey)); } catch {}
+      if(!previewStore)try { session = JSON.parse(memory.sessionStorage.getItem(activeKey)); } catch {}
       session = fallback.get(activeKey) ?? session;
       if (side === "front" || session?.key !== key) {
         session = { key,attempt:Date.now() + "-" + Math.random().toString(36).slice(2),selected:"",strokes:[] };
       }
       function keepAttempt() {
         fallback.set(activeKey,session);
-        try { memory.sessionStorage.setItem(activeKey,JSON.stringify(session)); } catch {}
+        if(!previewStore)try { memory.sessionStorage.setItem(activeKey,JSON.stringify(session)); } catch {}
       }
       keepAttempt();
 
@@ -3441,7 +3457,7 @@ else if (typeof exports === 'object'){
       const options = [...card.querySelectorAll("[data-choice]")];
       let notify = () => {};
       const onReview = study(card,load,save,(action,value)=>notify(action,value));
-      const advanced = practice(card,load,save,session,keepAttempt,helpers);
+      const advanced = practice(card,load,save,session,keepAttempt,helpers,previewStore);
       const recover = recovery(card,load,save,scope,session,onReview,advanced);
       notify = recover;
       card.addEventListener("anki-ops-contrast-graded",()=>recover("refresh"));
@@ -3599,9 +3615,9 @@ else if (typeof exports === 'object'){
     }
   }
 
-  function install(root) { bindCards(root,bindStudy,bindRecovery,bindPractice,Practice,Profiles.bindExtra); }
+  function install(root,previewStore) { bindCards(root,bindStudy,bindRecovery,bindPractice,Practice,Profiles.bindExtra,previewStore); }
 
-  function renderInto(mount,row,job,ordinal,answer,bank) {
+  function renderInto(mount,row,job,ordinal,answer,bank,previewStore) {
     if (!row) { mount.replaceChildren(); return; }
     let host = mount;
     if (Profiles.models[job.model]) {
@@ -3619,7 +3635,7 @@ else if (typeof exports === 'object'){
       host = shell.shadowRoot.querySelector(".op-host");
     }
     host.innerHTML = previewCard(row,job,ordinal,answer,bank);
-    install(host);
+    install(host,previewStore);
   }
 
   function previewCard(row, job, ordinal, answer, bank) {
@@ -3657,7 +3673,7 @@ else if (typeof exports === 'object'){
 })(globalThis, function (Card, Zip, Excel, initSql, sqlBinary) {
   "use strict";
 
-  const VERSION = "0.8.0";
+  const VERSION = "0.9.0";
   const Profiles = Card.Profiles;
   const SCHEMA = 1;
   const MAX_INPUT = 24 * 1024 * 1024;
@@ -4085,6 +4101,16 @@ else if (typeof exports === 'object'){
     return (row.level || "공통") + " · " + (row.category || Card.MODELS[model].name);
   }
 
+  function draftCard(project,draft) {
+    const job=validateJob({...project.job,version:project.next || project.job.version,expected:""});
+    const row=Object.fromEntries(columnsFor(job.model).map(([k])=>[k,String(draft[k] ?? "").trim()]));
+    const pos=row.id ? project.notes.findIndex(n=>n.id===row.id) : -1;
+    row.id ||= "draft"; row.level ||= job.level;
+    row.line=2; row.indexKey ||= String(pos<0 ? project.notes.length+1 : pos+1).padStart(4,"0");
+    job.noteTotal=project.notes.length+(pos<0?1:0); job.cardTotal=job.noteTotal*Card.MODELS[job.model].types.length;
+    inspectRows({rows:[row]},job,"누적원본.tsv");
+    return {job,row};
+  }
   function inspectRows(parsed, job, fileName) {
     const issues = [];
     const add = (type, line, message) => issues.push({ type, line, message });
@@ -5451,7 +5477,7 @@ copy of the Program in return for a fee.
     return { ...build, files, result, archive };
   }
 
-  return { VERSION,GATES,GATE_LABELS,MAX_INPUT,MAX_NOTES,digest,build,inspect,stageGates,
+  return { VERSION,draftCard,GATES,GATE_LABELS,MAX_INPUT,MAX_NOTES,digest,build,inspect,stageGates,
     validateJob,templateWorkbook,previousRelease,updateEvidence,authorFields,pastedNotes,parseSource,authorSource,columnInfo:columnsFor,pairProblem,studyRole,compareReleases:(a,b)=>compareVersion(versionKey(a),versionKey(b)),
     pasteFields:model => (Profiles.models[model]?.paste || PASTE_FIELDS[model]).map(key => labelFor(model,key)) };
 
@@ -7415,7 +7441,7 @@ globalThis.AnkiOpsSample = {
     const chosen = model === "kr-kanji" ? samples["lab-kanji"].map(r => ({...r,volume:"1",memoryHint:r.explanation})) : samples[model];
     const rows = chosen.map((row,i) => ({...row,id:"demo-"+model+"-"+(i+1),level:"N5",source:"직접 제작용 예시"}));
     return { job:{model,name:(spec ? Card.Profiles.families[spec.family].name + " · " + spec.name : Card.MODELS[model].name) + " 표본",
-      product:"sample-"+model,mode:"new",version:"1.0.0-RC1",level:"N5",expected:rows.length,sample:true}, tsv:Factory.authorSource(rows,model) };
+      product:"sample-"+model,mode:"new",version:"1.0.0-RC1",level:"N5",expected:rows.length,sample:true}, rows,tsv:Factory.authorSource(rows,model) };
   }
 
   let currentModel = "";
@@ -8121,7 +8147,7 @@ globalThis.AnkiOpsSample = {
     $("card-turn").textContent = state.side ? "앞면 보기" : "정답 보기";
     $("card-position").textContent = record ? number(state.cursor + 1) + " / " + number(state.visibleCards.length) + "장" : "검색 결과 없음";
     const mount = $("card-mount");
-    Card.renderInto(mount,record?.row,state.preview.job,record?.ordinal,state.side,state.preview.bank);
+    Card.renderInto(mount,record?.row,state.preview.job,record?.ordinal,state.side,state.preview.bank,mount.authorSession ||= new Map());
   }
 
   function renderFiles(build) {
@@ -8320,6 +8346,7 @@ globalThis.AnkiOpsSample = {
       $("desk-write").hidden = mode !== "write";
       $("desk-paste-panel").hidden = mode !== "paste";
       $("desk-file-panel").hidden = mode !== "file";
+      storePosition({mode});queueDraftPreview();
     }
     function opt(select, value, text) {
       const el = element("option", text);
@@ -8331,6 +8358,76 @@ globalThis.AnkiOpsSample = {
       l.append(control);
       return l;
     }
+    const previewCache = new Map();
+    let previewFrame = 0;
+    let position = {};
+    function hasContent(p) {
+      return !!p.paste || Object.entries(p.draft).some(([k,v])=>!["id","level","part"].includes(k) && String(v).trim());
+    }
+    function locationKey() { return "anki-ops-desk-position:"+project.key; }
+    function storePosition(patch) {
+      Object.assign(position,patch);
+      try { localStorage.setItem(locationKey(),JSON.stringify(position)); } catch {}
+    }
+    function readPosition() {
+      try { return JSON.parse(localStorage.getItem(locationKey())) || {}; } catch { return {}; }
+    }
+    function resumeEditor(focus=true) {
+      $("desk-entry").hidden=false;
+      const mode=position.mode || (project.paste && !Object.keys(project.draft).length?"paste":"write");
+      tabs(mode);
+      if(!focus)return;
+      const target=mode==="paste"?$("desk-paste"):mode==="file"?$("desk-delta"):
+        $("desk-field-"+(position.field || "")) || $("desk-fields").querySelector("input,textarea,select");
+      if(!target)return;
+      const {start,end}=position;
+      requestAnimationFrame(()=>{
+      if(!target.isConnected || $("desk-entry").hidden)return;
+      target.focus();
+      if(typeof start==="number" && target.setSelectionRange && (target.tagName==="TEXTAREA" || target.type==="text")){
+        target.setSelectionRange(start,end ?? start);
+      }
+      });
+    }
+    function rememberCursor(e) {
+      const input=e.target;
+      if(!project || !(input.id.startsWith("desk-field-") || input.id==="desk-paste"))return;
+      storePosition({field:input.id.replace("desk-field-",""),start:input.selectionStart,end:input.selectionEnd});
+    }
+    for(const event of ["input","focusin","select","keyup","pointerup"])$("desk-entry").addEventListener(event,rememberCursor);
+    function modelExample(){
+      const model=$("desk-model").value;
+      if(!model)return;
+      const row=sampleFor(model).rows[0],types=Card.MODELS[model].types;
+      const example=[row.kanji || row.word || row.prompt,row.word && row.kanji?row.word:"",row.reading || row.answer || row["option"+row.correct]].filter(Boolean);
+      $("desk-model-example").textContent="입력 예 · "+example.join(" / ")+"　→　"+types.join(" · ")+" ("+types.length+"장)";
+    }
+    function setupDraftPreview(){
+      const picker=$("desk-live-type"),model=project.job.model;
+      picker.replaceChildren();
+      Card.MODELS[model].types.forEach((type,i)=>opt(picker,String(i),type));
+      picker.value=String(Math.min(Number(position.ord)||0,picker.options.length-1));
+      $("desk-live-types").hidden=picker.options.length<2;
+      queueDraftPreview();
+    }
+    function queueDraftPreview(){
+      cancelAnimationFrame(previewFrame);
+      previewFrame=requestAnimationFrame(()=>{
+        if(!project || $("desk-entry").hidden || $("desk-write").hidden)return;
+        const active=Object.entries(project.draft).some(([k,v])=>!["level","id","part"].includes(k) && String(v).trim());
+        const mount=$("desk-live-card"),model=project.job.model,ord=Number($("desk-live-type").value)||0,back=!!position.back;
+        $("desk-live-front").setAttribute("aria-pressed",String(!back));
+        $("desk-live-back").setAttribute("aria-pressed",String(back));
+        if(!active){mount.replaceChildren(element("p","내용을 입력하면 이곳에 카드가 표시됩니다.","form-hint"));return;}
+        try{
+          const {row,job}=Factory.draftCard(project,project.draft);
+          Card.renderInto(mount,row,job,ord,back,undefined,previewCache);
+        }catch(error){mount.replaceChildren(element("p",error.message,"form-hint"));}
+      });
+    }
+    $("desk-live-type").addEventListener("change",()=>{storePosition({ord:Number($("desk-live-type").value)});queueDraftPreview();});
+    for(const [id,back] of [["desk-live-front",false],["desk-live-back",true]])$(id).addEventListener("click",()=>{storePosition({back});queueDraftPreview();});
+    $("desk-model").addEventListener("change",modelExample);
     function drawFields() {
       const model = project.job.model,
         profile = Card.Profiles.models[model];
@@ -8376,11 +8473,13 @@ globalThis.AnkiOpsSample = {
         input.addEventListener("input", () => {
           project.draft[id] = input.value;
           stash();
+          queueDraftPreview();
         });
         (main.has(id) ? primary : more).append(labelled(field.label, input));
       }
       $("desk-paste").value = project.paste || "";
       $("desk-headers").checked = project.headers !== false;
+      setupDraftPreview();
       $("desk-columns").textContent = "열 이름을 생략할 때의 순서 · " + Factory.pasteFields(model).join(" → ");
     }
     function drawSettings() {
@@ -8455,6 +8554,9 @@ globalThis.AnkiOpsSample = {
       $("desk-balance").textContent = Object.entries(labels)
         .map(([k, label]) => label + " " + tally[k])
         .join(" · ");
+      const finalNotes=project.notes.length+tally.add;
+      const edits=pending.selected.filter(i=>rows[i]?.state==="edit").length;
+      $("desk-forecast").textContent="기존 "+project.notes.length.toLocaleString()+"노트 + 신규 "+tally.add.toLocaleString()+"노트 · 선택한 수정 "+edits.toLocaleString()+"건 → 저장 후 "+finalNotes.toLocaleString()+"노트 / "+(finalNotes*Card.MODELS[project.job.model].types.length).toLocaleString()+"카드";
       const listed = rows
         .map((item, i) => ({ item, i }))
         .filter((v) => ["edit", "conflict", "scope"].includes(v.item.state));
@@ -9079,14 +9181,16 @@ globalThis.AnkiOpsSample = {
       $("desk-card-label").textContent=p.unbuilt || !head ? "제작 예정 카드" : "최근 제작 카드";
       $("desk-num-cards").textContent=(p.notes.length*Card.MODELS[p.job.model].types.length).toLocaleString()+"카드";
       $("desk-last-version").textContent=head?"v"+head.version:"첫 제작 전";
-      const hasDraft=!!p.paste || Object.entries(p.draft).some(([k,v])=>!["id","level","part"].includes(k) && v);
-      $("desk-add").textContent=hasDraft?"오늘 분량 이어쓰기":"오늘 분량 추가";
+      const hasDraft=hasContent(p);
+      $("desk-add").textContent=hasDraft?"이어서 만들기":"오늘 분량 추가";
       $("desk-state").textContent=p.pending?"오늘 분량 비교 중":p.unbuilt?(hasDraft?"작성 중인 초안 · 덱에 반영할 변경 있음":"누적 저장 완료 · 다음 덱에 반영할 변경 있음"):hasDraft?"작성 중인 초안 있음":"";
       $("desk-resume-review").hidden=!p.pending;
       for(const [id,primary] of [["desk-add",!p.pending && (!p.unbuilt || hasDraft)],["desk-build",!p.pending && p.unbuilt && !hasDraft]]){
         $(id).classList.toggle("primary",!!primary);$(id).classList.toggle("secondary",!primary);
       }
       $("desk-build").disabled = !p.notes.length || !!p.pending;
+      $("desk-apkg").disabled=$("desk-build").disabled;
+      $("desk-apkg").textContent=p.unbuilt || !head?"제작·APKG 받기":"APKG 받기";
       $("desk-versions").replaceChildren();
       for (const v of p.versions) {
         const line = element("div");
@@ -9169,6 +9273,7 @@ globalThis.AnkiOpsSample = {
       const value = await getRecord(key);
       if (!value) throw new Error("덱을 찾을 수 없습니다.");
       project = readDraft(value);
+      position=readPosition();previewCache.clear();
       page = notesPage = 0;
       $("desk-search").value = "";
       $("desk-entry").hidden = true;
@@ -9177,6 +9282,8 @@ globalThis.AnkiOpsSample = {
       $("desk-create").hidden = true;
       remember(key);
       drawProject();
+      if(hasContent(project) && !project.pending)resumeEditor(false);
+      if(project.missionDraft)$("desk-contrast").open=true;
       await library();
       message("");
     }
@@ -9190,7 +9297,7 @@ globalThis.AnkiOpsSample = {
       drawProject();
       message(label + " · 수정 후보는 전후 내용을 확인하고 선택하세요.");
     }
-    async function build() {
+    async function build(stay=false) {
       if (project.pending) throw new Error("분량 비교를 먼저 저장하거나 닫으세요.");
       const settings = readSettings(),
         p = project,
@@ -9234,7 +9341,8 @@ globalThis.AnkiOpsSample = {
       renderHistory();
       drawProject();
       await library();
-      await restore(record.key);
+      if(stay!==true)await restore(record.key);
+      return built;
     }
     async function indexRecord(record) {
       if (!record?.result) return;
@@ -9284,6 +9392,7 @@ globalThis.AnkiOpsSample = {
     }
     click("desk-new", () => {
       $("desk-create").hidden = false;
+      modelExample();
       $("desk-name").focus();
     });
     click("desk-cancel", () => {
@@ -9314,11 +9423,7 @@ globalThis.AnkiOpsSample = {
     );
     $("desk-jump").addEventListener("change",guard(()=>select($("desk-jump").value)));
     click("desk-resume-review",()=>{$("desk-review").scrollIntoView({block:"start"});});
-    click("desk-add", () => {
-      $("desk-entry").hidden = false;
-      tabs("write");
-      $("desk-fields").querySelector("input,textarea,select")?.focus();
-    });
+    click("desk-add",()=>resumeEditor());
     for (const c of document.querySelectorAll("[data-desk-input]"))
       c.addEventListener("click", () => tabs(c.dataset.deskInput));
     for (const evt of [
@@ -9404,6 +9509,7 @@ globalThis.AnkiOpsSample = {
     click("desk-save-settings", async () => {
       const job = readSettings();
       await save((p) => {
+        if(JSON.stringify(p.job.learning)!==JSON.stringify(job.learning) || p.next!==job.version)p.unbuilt=true;
         p.job.learning = job.learning;
         p.next = job.version;
       });
@@ -9411,9 +9517,19 @@ globalThis.AnkiOpsSample = {
       message("다음 제작에 사용할 카드 설정과 덱 버전을 저장했습니다.");
     });
     click("desk-build", build);
+    click("desk-apkg",async()=>{
+      const settings=readSettings();
+      const alreadyBuilt=project.head && !project.unbuilt && settings.version===project.next &&
+        JSON.stringify(settings.learning)===JSON.stringify(project.job.learning);
+      const built=alreadyBuilt?(await getRecord(project.head))?.result:await build(true);
+      if(!built?.files[built.apkgName])throw Error("제작본을 열 수 없습니다.");
+      download(built.files[built.apkgName],built.apkgName);
+      message("APKG 다운로드 · v"+built.run.job.version+" · "+built.run.dataset.cards+"카드");
+    });
     click("desk-export", async () => {
       const job = readSettings();
       await save((p) => {
+        if(JSON.stringify(p.job.learning)!==JSON.stringify(job.learning) || p.next!==job.version)p.unbuilt=true;
         p.job.learning = job.learning;
         p.next = job.version;
       });

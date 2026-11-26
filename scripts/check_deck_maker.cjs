@@ -210,3 +210,19 @@ test("version evidence replaces older per-device snapshots and retains the denom
   assert.throws(() => projects.readFeedback(JSON.stringify({...first, deck: ["different"]}), p), /다른 덱/);
   assert.throws(() => importSnapshot(snapshot("desk1", "1.0.0-RC2", 4, 4, 3)), /횟수/);
 });
+
+test("live authoring uses production defaults without changing cumulative data", () => {
+  const p=project();
+  const original=row("retained","원문항");
+  p.notes=[original];
+  const draft={prompt:"완성된 질문",level:"N3",optionA:"하나",optionB:"둘",optionC:"셋",optionD:"넷",correct:"B",explanation:"풀이"};
+  const preview=factory.draftCard(p,draft);
+  assert.equal(preview.row.answer,"둘");
+  assert.equal(preview.row.indexKey,"0002");
+  assert.equal(preview.job.cardTotal,2);
+  assert.equal(draft.answer,undefined);
+  assert.equal(factory.draftCard(p,original).job.cardTotal,1);
+  const partial=factory.draftCard({...p,job:{...p.job,model:"lab-kanji"}},{kanji:"学"});
+  assert.equal(partial.row.kanji,"学");
+  assert.equal(partial.job.cardTotal,6);
+});
