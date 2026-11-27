@@ -41,11 +41,13 @@ jobs:
               exit 1
             }
           fi
-      - name: Build the public ten-card practice preview
+      - name: Build the public practice and model previews
         run: |
           node scripts/deck_maker_release.cjs "$RUNNER_TEMP/deck-maker-release"
           mkdir -p deck-maker/contrast
           cp "$RUNNER_TEMP/deck-maker-release/JLPT_Grammar_Contrast_10_Preview.html" deck-maker/contrast/index.html
+          mkdir -p deck-maker/rule-06
+          cp -R "$RUNNER_TEMP/deck-maker-release/rule-06/." deck-maker/rule-06/
       - name: Stage verified Munkyeol furigana dictionaries
         run: python3 munkyeol/stage-dictionaries.py munkyeol/furigana
       - uses: actions/configure-pages@v5

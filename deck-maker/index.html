@@ -188,6 +188,8 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#6
 .range-table :is(th,td):first-child{text-align:left;white-space:normal;min-width:92px}
 .range-table thead{color:var(--muted)}
 .range-table tbody tr:last-child th,.range-table tbody tr:last-child td{border:0}
+.rule-status{margin:8px 20px;overflow-wrap:anywhere}
+.range-wrap:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .inset-head{border-top:1px solid #efedf4}
 .evidence-form>p{padding:10px 19px;color:var(--muted);font-size:.87rem}
 .evidence-form select,.evidence-form input{min-height:36px;font-size:.85rem}
@@ -627,11 +629,11 @@ html.anki-guide body>.layout,html.anki-guide body>.skip-link{display:none}
     <main id="main" class="main" tabindex="-1">
       <header class="topbar">
         <div class="location"><span>워크스페이스</span><span aria-hidden="true">/</span><strong id="current-location">덱 제작</strong></div>
-        <div class="ug-entry-links"><a class="button secondary compact" href="?guide=anki" target="_blank" rel="noopener">Anki 사용법</a><a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.10.1.html">오프라인 실행본</a></div>
+        <div class="ug-entry-links"><a class="button secondary compact" href="?guide=anki" target="_blank" rel="noopener">Anki 사용법</a><a id="portable-link" class="button secondary compact" href="./index.html" download="Anki_Deck_Operations_v0.11.0.html">오프라인 실행본</a></div>
       </header>
       <div class="content">
         <section id="view-decks" class="view">
-          <div class="hero work-hero"><div><div class="hero-title"><h1>내 덱</h1><span class="version">v0.10.1</span></div><p>덱을 골라 오늘 작성한 노트를 더하고 누적된 카드로 Anki 덱을 만드세요.</p></div>
+          <div class="hero work-hero"><div><div class="hero-title"><h1>내 덱</h1><span class="version">v0.11.0</span></div><p>덱을 골라 오늘 작성한 노트를 더하고 누적된 카드로 Anki 덱을 만드세요.</p></div>
             <div class="desk-actions"><button type="button" id="desk-new" class="button primary">새 덱 만들기</button><button type="button" id="desk-contrast-sample" class="button secondary">혼동 표현 10쌍 열기</button><button type="button" id="desk-import" class="button secondary">백업 복원</button><input type="file" id="desk-backup-file" accept=".zip" hidden></div></div>
           <p id="desk-status" class="desk-status" role="status" aria-live="polite"></p>
           <form id="desk-create" class="panel" hidden><div class="panel-head"><h2>새 덱 만들기</h2></div><div class="form-body">
@@ -701,7 +703,7 @@ html.anki-guide body>.layout,html.anki-guide body>.skip-link{display:none}
         <section id="view-work" class="view" hidden>
           <div class="hero work-hero">
             <div>
-              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.10.1</span></div>
+              <div class="hero-title"><h1>Anki 덱 운영 플랫폼</h1><span class="version">v0.11.0</span></div>
               <p>제작 모델을 고르고, 학습할 내용을 입력해 나만의 Anki 덱을 만드세요.</p>
             </div>
             <a class="button secondary" href="#design">기존 APKG 디자인 편집</a>
@@ -843,15 +845,17 @@ html.anki-guide body>.layout,html.anki-guide body>.skip-link{display:none}
             </nav>
             <section id="result-quality" class="result-pane panel">
               <div class="panel-head"><h3>자동 검사</h3><span id="static-status" class="badge good">통과</span></div>
+              <p id="run-standard" class="form-hint rule-status"></p>
               <div id="auto-list" class="quality-list"></div>
-              <div class="panel-head inset-head"><h3>범위별 수량</h3></div>
-              <div class="range-wrap"><table class="range-table" aria-label="범위별 수량">
-                <thead><tr><th scope="col">범위</th><th scope="col">노트</th><th scope="col">카드</th><th scope="col">추가</th><th scope="col">수정</th><th scope="col">유지</th></tr></thead>
+              <div class="panel-head inset-head"><h3>파트·영역별 수량</h3></div>
+              <p id="range-baseline" class="form-hint rule-status"></p>
+              <div class="range-wrap" tabindex="0"><table class="range-table" aria-label="파트·영역별 수량">
+                <thead><tr><th scope="col">파트·영역</th><th scope="col">추가 노트</th><th scope="col">누적 노트</th><th scope="col">누적 카드</th><th scope="col">추가 문항</th><th scope="col">누적 문항</th><th scope="col">이동 노트</th></tr></thead>
                 <tbody id="range-counts"></tbody>
               </table></div>
               <div class="panel-head inset-head"><h3>실기기·내용 검증 기록</h3></div>
               <form id="evidence-form" class="evidence-form">
-                <p>검사한 환경과 결과를 기록하면 후보 ZIP의 QA에 반영됩니다.</p>
+                <p>확인한 환경과 결과를 입력하면 QA, RUN.json, manifest.json에 반영됩니다.</p>
                 <div id="manual-list" class="quality-list"></div>
                 <div class="evidence-actions"><button type="submit" class="button secondary">QA 기록 반영</button></div>
               </form>
@@ -861,7 +865,12 @@ html.anki-guide body>.layout,html.anki-guide body>.skip-link{display:none}
               <div class="preview-controls">
                 <input id="card-search" aria-label="카드 찾기" type="search" placeholder="NoteID 또는 한자·문제 검색">
                 <select id="card-type" aria-label="카드 유형"><option value="">전체 유형</option></select>
+                <select id="card-part" aria-label="파트" hidden><option value="">전체 파트</option></select>
+                <select id="card-change" aria-label="이전판 대비 변경" hidden><option value="">전체 수록</option>
+                  <option value="added">이번 추가</option><option value="updated">이번 수정</option><option value="unchanged">기존 유지</option>
+                </select>
               </div>
+              <p id="card-identity" class="form-hint rule-status" hidden></p>
               <div id="card-mount" class="card-mount"></div>
               <div class="preview-actions">
                 <button type="button" id="card-prev" class="button secondary">이전</button>
@@ -966,7 +975,13 @@ html.anki-guide body>.layout,html.anki-guide body>.skip-link{display:none}
         <section id="view-rules" class="view" hidden>
           <div class="hero"><h1>운영 기준</h1><p>원본, 카드 식별자와 검사 근거를 같은 실행에 연결합니다.</p></div>
           <div class="rules-grid">
-            <section class="panel rule-panel"><h2>제작기 변경 이력</h2><p><b>v0.10.1 · 2026-11-26</b> 이전 버전에서 만든 덱의 학습 설정을 불러올 때 발생한 오류를 수정했습니다. Anki 사용법 미리보기를 추가했습니다.</p><p><b>v0.10.0 · 2026-11-26</b> 내 덱에서 공부하고 오답·찍어서 맞힌 답·보기 도움을 세 장씩 복습합니다. 반복한 오답으로 같은 덱에 새 문제를 만들 수 있습니다.</p><p><b>v0.9.0 · 2026-11-26</b> 작성 중인 카드의 앞·뒷면, 누적 후 수량, 초안 이어쓰기와 내 덱에서 APKG 받기를 추가했습니다.</p><p><b>v0.8.0 · 2026-11-26</b> 반복 오답에서 대조 문항을 만들고, 읽기·활용은 보기를 열기 전에 직접 씁니다. 학습 기록을 가져오면 덱 버전별 응답과 오답 보기를 비교할 수 있습니다.</p><p><b>v0.7.0 · 2026-11-26</b> 찍어서 맞힌 문제 복습, 반복된 오답 보기 비교, 원문항과 7일 변형 문항 연결을 추가했습니다. 내 덱에서 누적 수량과 다음 제작 작업을 구분해 표시합니다.</p><p><b>v0.6.0 · 2026-11-26</b> 내 덱, 오늘 분량 비교·누적, 덱 전체 백업·복원, 오답 복습 미션을 추가했습니다.</p><p>v0.5.0 · 2026-11-24　Kanji LAB v1.9.2형과 한자혁명 v1.10.0형 제작 모델을 추가했습니다.</p><p>제작기 버전과 각 덱의 버전은 별도로 기록합니다.</p></section>
+            <section class="panel rule-panel"><h2>RULE-06 v1.3.0</h2>
+              <p>2026-11-19 운영 기준을 신규·누적 제작에 적용합니다. 후보 ZIP의 RUN.json과 manifest.json에 모델, 카드 템플릿, 기능 기본값과 검수 결과를 기록합니다.</p>
+              <p><a href="https://chatgpt.com/library?file_id=libfile_fde3_f-6784c1c2338c8191a946cfcea8580c3f_17fbaae948688191b4639cf7c25daad8&amp;account_id=personal" target="_blank" rel="noopener noreferrer">운영 기준 원문</a></p>
+              <p><a href="https://dlquffhqnxj.github.io/anki-deck-site/deck-maker/rule-06/kanji-lab/">Kanji LAB 앞뒷면</a> ·
+                <a href="https://dlquffhqnxj.github.io/anki-deck-site/deck-maker/rule-06/kanji-revolution/">한자혁명 앞뒷면</a></p>
+            </section>
+            <section class="panel rule-panel"><h2>제작기 변경 이력</h2><p><b>v0.11.0 · 2026-11-27</b> 운영 기준, 검수 근거와 파트별 수량을 기록하고 APKG와 미리보기의 표본 앞뒷면을 대조합니다.</p><p><b>v0.10.1 · 2026-11-26</b> 이전 버전에서 만든 덱의 학습 설정을 불러올 때 발생한 오류를 수정했습니다. Anki 사용법 미리보기를 추가했습니다.</p><p><b>v0.10.0 · 2026-11-26</b> 내 덱에서 공부하고 오답·찍어서 맞힌 답·보기 도움을 세 장씩 복습합니다. 반복한 오답으로 같은 덱에 새 문제를 만들 수 있습니다.</p><p><b>v0.9.0 · 2026-11-26</b> 작성 중인 카드의 앞·뒷면, 누적 후 수량, 초안 이어쓰기와 내 덱에서 APKG 받기를 추가했습니다.</p><p><b>v0.8.0 · 2026-11-26</b> 반복 오답에서 대조 문항을 만들고, 읽기·활용은 보기를 열기 전에 직접 씁니다. 학습 기록을 가져오면 덱 버전별 응답과 오답 보기를 비교할 수 있습니다.</p><p><b>v0.7.0 · 2026-11-26</b> 찍어서 맞힌 문제 복습, 반복된 오답 보기 비교, 원문항과 7일 변형 문항 연결을 추가했습니다. 내 덱에서 누적 수량과 다음 제작 작업을 구분해 표시합니다.</p><p><b>v0.6.0 · 2026-11-26</b> 내 덱, 오늘 분량 비교·누적, 덱 전체 백업·복원, 오답 복습 미션을 추가했습니다.</p><p>v0.5.0 · 2026-11-24　Kanji LAB v1.9.2형과 한자혁명 v1.10.0형 제작 모델을 추가했습니다.</p><p>제작기 버전과 각 덱의 버전은 별도로 기록합니다.</p></section>
             <section class="panel rule-panel"><h2>원본과 모델</h2>
               <p>웹에서 카드 내용을 작성하거나 Excel 표를 붙여넣으면 NoteID를 발급합니다. 기존 NoteID가 있는 자료를 가져올 때는 그 값을 사용합니다. JLPT 한자 모델은 한자 인식·쓰기·대표어 읽기 카드 3장을 만들고, 객관식과 기본 회상은 노트당 1장을 만듭니다.</p>
               <p>기존 한자 MASTER는 핵심 필드를 읽어 신규 덱으로 제작합니다. N2·N3 일일 문항의 TSV 형식도 객관식 모델에서 읽을 수 있습니다.</p>
@@ -1471,12 +1486,37 @@ else if (typeof exports === 'object'){
   function cssFor(model, palette) {
     const spec = models[model];
     const swatch = palettes.find(p => p.id === palette);
-    return (styles[spec.style] || "") + "\n" + extraCSS + (swatch ? '\n.op-card[data-palette]:not([data-theme="dark"]){' +
+    return (styles[spec.style] || "") + "\n" + extraCSS + "\n.op-card .kf-panel[data-basic-info]:empty{display:none}" + (swatch ? '\n.op-card[data-palette]:not([data-theme="dark"]){' +
       Object.entries({ "--paper":swatch.background,"--panel":swatch.surface,"--panel-soft":swatch.soft,"--ink":swatch.ink,"--muted":swatch.muted,
         "--accent":swatch.accent,"--accent-soft":swatch.soft,"--level":swatch.accent,"--line":swatch.border,
         "--kr-bg":swatch.background,"--kr-surface":swatch.surface,"--kr-soft":swatch.soft,"--kr-text":swatch.ink,
         "--kr-muted":swatch.muted,"--kr-line":swatch.border,"--kr-green":swatch.accent,"--kr-accent":swatch.accent })
         .map(([key,value]) => key + ":" + value + " !important").join(";") + "}" : "");
+  }
+
+  function filterControls(job, types, escapeText) {
+    const choices = (values, selected) => values.map(([value,label]) =>
+      '<option value="' + escapeText(value) + '"' + (value === selected ? " selected" : "") + '>' + escapeText(label) + '</option>').join("");
+    const levels = job.availableLevels ?? (job.level ? [job.level] : /^lab-|^kr-|^(kanji|quiz)$/.test(job.model) ? ["N5","N4","N3","N2","N1"] : []);
+    const availableParts = job.availableParts ?? (job.model === "kr-quiz" ? parts : []);
+    const optional = (label, key, values) => values.length
+      ? '<label>' + label + '<select data-filter-' + key + '>' + choices([["","전체"],...values]) + '</select></label>' : "";
+    return '<div class="op-controls" data-filter-scope="' + escapeText(job.name + " [" + job.product + "]") + '">' +
+      '<label>검색 기준<select data-filter-kind>' + choices([["both","다시 평가 또는 주황 플래그"],["again","다시 평가"],
+        ["flag","주황 플래그"],["hard","어려움 평가"],["lapses","누적 실패 3회 이상"]]) + '</select></label>' +
+      '<label>기간<select data-filter-days>' + choices(["1","7","14","30"].map(n => [n,n + "일"]),"7") + '</select></label>' +
+      optional("급수","level",levels.map(value => [value,value])) +
+      optional("카드 유형","ordinal",types.map((label,index) => [String(index + 1),label])) +
+      optional("파트","part",availableParts.map(value => [value,value])) +
+      '<label>검색식<input type="text" data-filter-query readonly></label>' +
+      '<button type="button" data-filter-copy>검색식 복사</button> <button type="button" data-filter-select>전체 선택</button>' +
+      '<output data-filter-status role="status"></output>' +
+      '<label>복사 확인<input type="text" data-filter-confirm autocomplete="off" placeholder="여기에 붙여넣어 확인"></label>' +
+      '<output data-filter-match role="status"></output>' +
+      '<details><summary>Anki 필터 덱에서 사용하는 법</summary>' +
+      '<p>검색식은 선택한 덱·노트 유형·범위에서 Anki 평점과 현재 깃발을 찾습니다. 기간은 다시 또는 어려움 평가에 적용됩니다. 카드 안의 오답·헷갈림 메모는 이 기기의 기록입니다.</p>' +
+      '<p>예를 들어 최근 7일 다시 평가한 카드 또는 현재 주황 깃발 카드 중 20장을 모으려면 Anki 필터 덱의 찾기에 검색식을 붙이고 제한을 20으로 지정하세요. 같은 덱에서 다시 만들기로 갱신하거나 비워서 카드를 원래 덱으로 돌려보낼 수 있습니다.</p>' +
+      '<p>일시중지·묻힌 카드와 다른 필터 덱의 카드는 수집 대상에서 제외됩니다. 복사 버튼이 동작하기 어려우면 전체 선택 후 키보드 또는 길게 눌러 복사하세요.</p></details></div>';
   }
 
   function markup(job, ordinal, answer, val, group, ctx) {
@@ -1520,11 +1560,8 @@ else if (typeof exports === 'object'){
       (on.weakness ? '<div><strong>취약 항목</strong><div data-weak-list></div></div>' : "") +
       '<label><input type="checkbox" data-card-mark> 이 카드가 헷갈림</label><label>헷갈린 이유<select data-confusion-reason><option value="">선택 안 함</option>' +
       reasons.map(reason => '<option>' + reason + '</option>').join("") + '</select></label><output data-card-record></output><small>이 기기에서 학습한 기록</small>';
-    const filter = '<details data-tool="filter"' + open(opened.filter) + '><summary>오답·플래그로 복습할 카드 찾기</summary><div class="op-controls">' +
-      '<label>검색 기준<select data-filter-kind><option value="both">다시 평가 또는 주황 플래그</option><option value="again">다시 평가</option><option value="flag">주황 플래그</option><option value="hard">어려움 평가</option><option value="lapses">누적 실패 3회 이상</option></select></label>' +
-      '<label>기간<select data-filter-days><option>1</option><option selected>7</option><option>14</option><option>30</option></select>일</label>' +
-      '<label>급수<select data-filter-level><option value="">전체</option>' + ["N5","N4","N3","N2","N1"].map(v => '<option>' + v + '</option>').join("") + '</select></label>' +
-      '<label>검색식<input readonly data-filter-query></label><button type="button" data-filter-copy>검색식 복사</button><output data-filter-status></output></div></details>';
+    const filter = on.filter ? '<details data-tool="filter"' + open(opened.filter) + '><summary>오답·플래그로 복습할 카드 찾기</summary>' +
+      filterControls(job,model.types,safe) + '</details>' : "";
     const study = bank?.questions.length ? '<details data-tool="study"' + open(["diagnosis","practice","retest"].some(id => opened[id])) + '><summary>진단·보충·재시험</summary><div data-study-output></div><script type="application/json" data-study-bank>' + ctx.bankJSON(bank) + '<\/script></details>' : "";
     const panel = (id,content) => '<details class="op-panel" data-tool="' + id + '"' + feature(id) + open(opened[id]) + '><summary>' + names[id] +
       '</summary><div class="op-panel-body"><div class="op-panel-heading"><strong>' + names[id] + '</strong><button type="button" data-close-panel="' + id + '">닫기</button></div>' +
@@ -1582,7 +1619,7 @@ else if (typeof exports === 'object'){
           (write ? writing() : "") + (!word && lab ? (on.strokes ? strokes + group("StrokeSVG","",labGlyph) : labGlyph) : "") +
           (word ? '<div class="kf-word kr-word-prompt" lang="ja">' + val("Word") + '</div>' : (!lab ? '<div class="kr-glyph" lang="ja">' + val("Kanji") + '</div>' : "")) +
           (!lab && !word ? pair("OnReading","음독") + pair("KunReading","훈독") : "") + hero + '</section>' +
-          (lab && model.kind === "kanji" ? '<section class="kf-panel"><h3>기본 정보</h3>' + pair("OnReading","음독") + pair("KunReading","훈독") + pair("Radical","부수") + pair("StrokeCount","획수") + '</section>' : "") +
+          (lab && model.kind === "kanji" ? '<section class="kf-panel" data-basic-info aria-label="기본 정보">' + pair("OnReading","음독") + pair("KunReading","훈독") + pair("Radical","부수") + pair("StrokeCount","획수") + '</section>' : "") +
           (!lab || word ? strokes : "") + (on.explanation ? section("MemoryHint","기억 단서") : "") + explanation +
           (!word ? pair("Word","대표어") + pair("Reading","대표어 읽기") + pair("WordMeaning","대표어 뜻") : "") + section("ReadingExamples","음훈 예시") +
           (on.comparison ? section("SimilarKanji","유사 한자") : "") + sentence;
@@ -1591,7 +1628,8 @@ else if (typeof exports === 'object'){
     if (voice) body += '<span hidden data-voice-text>' + val(model.kind === "word" || ordinal === 2 ? "Word" : "Kanji") + "</span>";
     const familyKey = model.family;
     const baseClass = lab ? quiz ? "pq-shell" : "kf-shell" : "kr-card" + (quiz ? " kr-quiz" : "");
-    const footer = '<footer class="op-footer">' + safe(job.name) + ' · v' + val("Version") + '<br>' + family.name + ' · ' + val("NoteID") + '</footer>';
+    const standard = job.rule06Version ? ' · RULE-06 v' + safe(job.rule06Version) : "";
+    const footer = '<footer class="op-footer">' + safe(job.name) + ' · v' + val("Version") + '<br>' + family.name + ' · ' + val("NoteID") + standard + '</footer>';
     return '<article class="op-card ' + baseClass + '" data-ap-root data-kr-unified data-ui-family="' + familyKey + '" data-mode="' + model.kind +
       '" data-ordinal="' + ordinal + '" data-side="' + (answer ? "answer" : "front") + '" data-note="' + val("NoteID") +
       '" data-product="' + val("Product") + '" data-version="' + val("Version") + '" data-deck-name="' + safe(job.name) +
@@ -1788,7 +1826,7 @@ else if (typeof exports === 'object'){
     };
   }
 
-  return { models, families, parts, columns, featureDefaults, palettes, supports, cssFor, markup, strokeDrawing, bindExtra,
+  return { models, families, parts, columns, featureDefaults, palettes, supports, cssFor, filterControls, markup, strokeDrawing, bindExtra,
     browserSource:model => "(" + createReleaseProfiles.toString() + ")(" + JSON.stringify(models[model] ? { [models[model].style]:styles[models[model].style] } : {}) + "," + JSON.stringify(palettes) + ")" };
 });
 
@@ -2674,7 +2712,7 @@ else if (typeof exports === 'object'){
       question.replaceWith(focus);
     }
     drawShelf();
-    return { score, handoff: sendCode, patternEntries };
+    return { score, handoff: sendCode, patternEntries, ownsFeedback:Boolean(mission || typed) };
   }
   function bindRecovery(card, load, save, scope, session, schedule = () => {}, advanced, observer) {
     const panel = card.querySelector("[data-recovery]");
@@ -3226,11 +3264,7 @@ else if (typeof exports === 'object'){
         <label>헷갈린 이유<select data-confusion-reason><option value="">선택 안 함</option>${reasons.map(reason => `<option>${reason}</option>`).join("")}</select></label>
         <output data-card-record></output><small>이 기기의 카드 기록</small>`);
     }
-    if (included.filter) tools += panel("filter","오답·플래그 필터",`
-      <label>검색 기준<select data-filter-kind><option value="both">다시 또는 주황 플래그</option><option value="again">다시 평가</option><option value="flag">주황 플래그</option></select></label>
-      <label>최근 다시 평가<select data-filter-days><option>1</option><option selected>7</option><option>14</option><option>30</option></select>일</label>
-      <label>이 덱의 Anki 검색식<input type="text" data-filter-query readonly></label>
-      <button type="button" data-filter-copy>검색식 복사</button><output data-filter-status></output>`);
+    if (included.filter) tools += panel("filter","오답·플래그 필터",Profiles.filterControls(job,MODELS[model].types,escape));
     if (included.writing && model === "kanji" && ordinal === 1) {
       const canvas = '<canvas width="480" height="200" data-card-writing aria-label="한자 필기판"></canvas>';
       body += panel("writing","필기판",canvas + (answer ? "" : '<button type="button" data-writing-clear>지우기</button>'));
@@ -3244,7 +3278,7 @@ else if (typeof exports === 'object'){
       data-panel-default="${panelMode}" data-ruby="${included.ruby && opened.ruby ? "on" : "off"}" data-ruby-module="${included.ruby}">
       <div class="dc-top"><span class="dc-grade">${val("Level")}</span><span>${kind}</span></div>
       ${body}${tools ? '<div class="dc-tools">' + tools + '</div>' : ""}
-      <div class="dc-meta"><span>v${val("Version")}</span><span>${val("NoteID")} · ${ordinal + 1}</span></div>
+      <div class="dc-meta"><span>v${val("Version")}</span><span>${val("NoteID")} · ${ordinal + 1}${job.rule06Version ? " · RULE-06 v" + escape(job.rule06Version) : ""}</span></div>
     </article>`;
   }
 
@@ -3626,6 +3660,7 @@ else if (typeof exports === 'object'){
       let notify = () => {};
       const onReview = study(card,load,save,(action,value)=>notify(action,value));
       const advanced = practice(card,load,save,session,keepAttempt,helpers,previewStore,observer);
+      if (result && advanced.ownsFeedback) result.hidden = true;
       const recover = recovery(card,load,save,scope,session,onReview,advanced,observer);
       notify = recover;
       card.addEventListener("anki-ops-contrast-graded",()=>recover("refresh"));
@@ -3656,7 +3691,7 @@ else if (typeof exports === 'object'){
           if (label && revealed) label.textContent = [option.dataset.choice === session.selected ? "내 선택" : "",
             option.dataset.right ? "정답" : option.dataset.wrong ? "오답" : ""].filter(Boolean).join(" · ");
         }
-        if (result && (!data.uiFamily || options.length)) result.textContent = !revealed ? "" : !session.selected ? (data.uiFamily && options.length ? "선택 없이 답면을 열었습니다." : "정답과 풀이를 확인하세요.")
+        if (result && !advanced.ownsFeedback && (!data.uiFamily || options.length)) result.textContent = !revealed ? "" : !session.selected ? (options.length ? "선택 없이 답면을 열었습니다." : "정답과 풀이를 확인하세요.")
           : session.selected === data.correct ? "정답입니다." : "오답입니다. 정답과 풀이를 확인하세요.";
         const details = card.querySelector("[data-instant-detail]");
         if (details) details.hidden = !session.revealed;
@@ -3709,17 +3744,33 @@ else if (typeof exports === 'object'){
         const days = card.querySelector("[data-filter-days]");
         const filterStatus = card.querySelector("[data-filter-status]");
         const level = card.querySelector("[data-filter-level]");
+        const ordinal = card.querySelector("[data-filter-ordinal]");
+        const part = card.querySelector("[data-filter-part]");
+        const scope = query.closest("[data-filter-scope]")?.dataset.filterScope;
+        const confirmation = card.querySelector("[data-filter-confirm]");
+        const match = card.querySelector("[data-filter-match]");
+        const quoted = value => '"' + value.replace(/[\\"]/g,"\\$&") + '"';
+        function checkPaste() {
+          match.textContent = !confirmation.value ? "" : confirmation.value.trim() === query.value
+            ? "검색식이 일치합니다." : "붙여넣은 검색식이 다릅니다.";
+        }
         function updateQuery() {
           const again = "rated:" + days.value + ":1";
-          const clause = kind.value === "again" ? again : kind.value === "flag" ? "flag:2" : kind.value === "hard" ? "rated:" + days.value + ":2" : kind.value === "lapses" ? "prop:lapses>=3" : "(" + again + " OR flag:2)";
-          query.value = 'deck:"' + data.deckName.replace(/[\\"]/g,"\\$&") + '" ' + clause;
-          if (level?.value) query.value += " tag:AnkiOps::" + level.value;
+          const criteria = { both:"(" + again + " OR flag:2)", again, flag:"flag:2", hard:"rated:" + days.value + ":2", lapses:"is:review prop:lapses>=3" };
+          const search = ["deck:" + quoted(data.deckName)];
+          if (scope) search.push("note:" + quoted(scope));
+          if (level?.value) search.push("tag:AnkiOps::" + level.value);
+          if (ordinal?.value) search.push("card:" + ordinal.value);
+          if (part?.value) search.push("Part:" + quoted(part.value));
+          query.value = [...search,criteria[kind.value]].join(" ");
           days.disabled = kind.value === "flag" || kind.value === "lapses";
           filterStatus.textContent = "";
+          if (confirmation) checkPaste();
         }
-        kind.addEventListener("change",updateQuery);
-        days.addEventListener("change",updateQuery);
-        level?.addEventListener("change",updateQuery);
+        for (const control of [kind,days,level,ordinal,part]) control?.addEventListener("change",updateQuery);
+        confirmation?.addEventListener("input",checkPaste);
+        query.addEventListener("focus",() => query.select());
+        card.querySelector("[data-filter-select]")?.addEventListener("click",() => { query.focus(); query.select(); });
         card.querySelector("[data-filter-copy]").addEventListener("click",async () => {
           query.select();
           try { await memory.navigator.clipboard.writeText(query.value); filterStatus.textContent = "Anki에 붙여넣으세요."; }
@@ -3845,9 +3896,14 @@ else if (typeof exports === 'object'){
 })(globalThis, function (Card, Zip, Excel, initSql, sqlBinary) {
   "use strict";
 
-  const VERSION = "0.10.1";
+  const VERSION = "0.11.0";
   const Profiles = Card.Profiles;
   const SCHEMA = 1;
+  const RULE06 = Object.freeze({
+    id:"RULE-06", version:"1.3.0", effectiveDate:"2026-11-19",
+    url:"https://chatgpt.com/library?file_id=libfile_fde3_f-6784c1c2338c8191a946cfcea8580c3f_17fbaae948688191b4639cf7c25daad8&account_id=personal",
+    sha256:"d9e7f43651797fc97423c6454f4a9a4444ecadeeb6cc0ec9a9e09b73770dbf48",
+  });
   const MAX_INPUT = 24 * 1024 * 1024;
   const MAX_NOTES = 35000;
   const ENCODER = new TextEncoder();
@@ -4046,11 +4102,14 @@ else if (typeof exports === 'object'){
     return { questions,links,scope:JSON.stringify([job.product,job.model,job.level || "",Boolean(job.sample),job.name]) };
   }
   const GATES = [
+    { id:"SOURCE", label:"원본 출처·이용 범위" },
     { id:"CONTENT", label:"정답·해설 검수" },
+    { id:"PREVIEW", label:"브라우저 미리보기" },
     { id:"IMPORT", label:"Anki 가져오기" },
     { id:"UPDATE", label:"이전판 업데이트" },
     { id:"DEVICE", label:"Desktop · iPhone · iPad" },
     { id:"SYNC", label:"AnkiWeb 동기화" },
+    { id:"DELIVERY", label:"배포 파일·수신 확인" },
   ];
   const GATE_LABELS = {
     PASS: "통과", FAIL: "실패", PARTIAL: "일부 확인", NOT_TESTED: "미검증", NOT_APPLICABLE: "해당 없음",
@@ -4270,7 +4329,61 @@ else if (typeof exports === 'object'){
   }
 
   function groupLabel(row, model) {
-    return (row.level || "공통") + " · " + (row.category || Card.MODELS[model].name);
+    const name = model === "kr-quiz" ? Card.plain(row.part || "") || "종합 실전" : Card.plain(row.category || "");
+    return (row.level || "공통") + " · " + (name || Card.MODELS[model].name);
+  }
+
+  function questionModel(model) {
+    return model === "quiz" || Profiles.models[model]?.kind === "quiz";
+  }
+
+  function releaseCounts(rows, job, baseline, distribution, groups, cardCount) {
+    const parts = new Map(distribution.map(part => [part.label, {
+      ...part, previous:0, movedIn:0, movedOut:0,
+      questions:0, previousQuestions:0, addedQuestions:0, removedQuestions:0,
+      movedQuestionsIn:0, movedQuestionsOut:0,
+    }]));
+    const isQuiz = questionModel(job.model);
+    for (const row of rows) {
+      const label = groupLabel(row,job.model);
+      const current = parts.get(label);
+      const count = isQuiz ? (row.contrast ? 2 : 1) : 0;
+      current.questions += count;
+      const old = baseline?.get(row.id);
+      if (!old) {
+        current.addedQuestions += count;
+        continue;
+      }
+      if (!parts.has(old.label)) {
+        parts.set(old.label,{ label:old.label, notes:0,cards:0,added:0,updated:0,unchanged:0,
+          previous:0,movedIn:0,movedOut:0,questions:0,previousQuestions:0,addedQuestions:0,removedQuestions:0,
+          movedQuestionsIn:0,movedQuestionsOut:0 });
+      }
+      const from = parts.get(old.label);
+      from.previous++;
+      from.previousQuestions += old.questions;
+      if (old.label !== label) {
+        from.movedOut++;
+        current.movedIn++;
+        const moved = Math.min(old.questions,count);
+        from.movedQuestionsOut += moved;
+        current.movedQuestionsIn += moved;
+      }
+      current.addedQuestions += Math.max(0,count - old.questions);
+      from.removedQuestions += Math.max(0,old.questions - count);
+    }
+    const list = Array.from(parts.values());
+    const sum = field => list.reduce((total,part) => total + part[field],0);
+    if (list.some(p => p.notes !== p.previous + p.added + p.movedIn - p.movedOut ||
+      p.notes !== p.added + p.updated + p.unchanged ||
+      p.questions !== p.previousQuestions + p.addedQuestions - p.removedQuestions + p.movedQuestionsIn - p.movedQuestionsOut) ||
+      sum("cards") !== cardCount || sum("notes") !== rows.length || sum("previous") !== (baseline?.size ?? 0) ||
+      sum("added") !== groups.added || sum("updated") !== groups.updated || sum("unchanged") !== groups.unchanged) {
+      throw new Error("기준판과 파트별 노트·카드·문항 수가 일치하지 않습니다.");
+    }
+    return { unit:isQuiz ? "question" : "note", parts:list,
+      total:Object.fromEntries(["notes","cards","added","updated","unchanged","previous","movedIn","movedOut","questions",
+        "previousQuestions","addedQuestions","removedQuestions","movedQuestionsIn","movedQuestionsOut"].map(key => [key,sum(key)])) };
   }
 
   function draftCard(project,draft) {
@@ -4384,7 +4497,8 @@ else if (typeof exports === 'object'){
     const entry = zip.file("manifest.json");
     if (!entry) throw new Error("후보 ZIP에서 manifest.json을 찾을 수 없습니다.");
     const manifest = JSON.parse(await entry.async("string"));
-    if (manifest.kind !== "anki-ops-release" || manifest.schema !== SCHEMA || !Array.isArray(manifest.identities)) {
+    if (manifest.kind !== "anki-ops-release" || manifest.schema !== SCHEMA || !Array.isArray(manifest.identities) ||
+      !Object.hasOwn(Card.MODELS,manifest.job?.model)) {
       throw new Error("이전판은 이 플랫폼에서 만든 후보 ZIP이어야 합니다.");
     }
     const apkg = Object.entries(manifest.files ?? {}).find(([name]) => /^[a-z0-9.-]+\.apkg$/i.test(name));
@@ -4400,6 +4514,7 @@ else if (typeof exports === 'object'){
     }
     const SQL = await sqlite();
     const db = new SQL.Database(await collection.async("uint8array"));
+    const baseline = new Map();
     try {
       const { shape, identities } = manifest;
       checkDb(db,identities.length,identities.length*shape.cards.length,shape);
@@ -4415,8 +4530,16 @@ else if (typeof exports === 'object'){
           }))) {
         throw new Error("이전 후보의 필드, 카드 유형 또는 카드 템플릿을 확인할 수 없습니다.");
       }
-      const notes = new Map(db.exec("SELECT id,guid,flds FROM notes")[0].values.map(([nid,guid,fields]) =>
-        [nid,{ guid,id:fields.split("\x1f",1)[0],cards:[] }]));
+      const indexes = Object.fromEntries(shape.fields.map((field,index) => [field,index]));
+      const notes = new Map(db.exec("SELECT id,guid,flds FROM notes")[0].values.map(([nid,guid,fields]) => {
+        const cells = fields.split("\x1f");
+        const id = cells[indexes.NoteID];
+        const label = groupLabel({ level:cells[indexes.Level],part:cells[indexes.Part],category:cells[indexes.Category] },manifest.job.model);
+        const questions = questionModel(manifest.job.model)
+          ? /<template data-note-practice>&#123;&quot;mission&quot;:/.test(cells[indexes.Explanation]) ? 2 : 1 : 0;
+        baseline.set(id,{ label,questions });
+        return [nid,{ guid,id,cards:[] }];
+      }));
       for (const [cid,nid] of db.exec("SELECT id,nid FROM cards ORDER BY ord")[0].values) notes.get(nid).cards.push(cid);
       for (const item of identities) {
         const found = notes.get(item.nid);
@@ -4426,7 +4549,7 @@ else if (typeof exports === 'object'){
         }
       }
     } finally { db.close(); }
-    return { manifest, digest: await digest(bytes(zipBytes)) };
+    return { manifest, baseline, digest: await digest(bytes(zipBytes)) };
   }
 
   function asJSON(value) { return JSON.stringify(value, null, 2) + "\n"; }
@@ -4572,7 +4695,7 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
         groups[change] += 1;
         const nid = prior?.nid ?? ++nextId;
         const cards = prior?.cards ?? Array.from({ length:count }, () => ++nextId);
-        identities.push({ id:row.id, guid, nid, cards, content, checksum });
+        identities.push({ id:row.id, guid, nid, cards, content, checksum, change });
       }
     }
     return { identities, groups, perGroup };
@@ -4596,7 +4719,77 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     }
   }
 
-  async function apkgFor(rows, job, data, identities, clock, time) {
+  function renderTemplateBody(template, fields) {
+    const script = template.indexOf("<script>(");
+    if (script < 0) throw new Error("Anki 카드 실행 코드가 없습니다.");
+    const body = template.slice(0,script);
+    const stack = [{ key:"", visible:true }];
+    let result = "", offset = 0;
+    for (const match of body.matchAll(/{{([#^/]?)([A-Za-z0-9_]+)}}/g)) {
+      const [,operator,key] = match;
+      if (!Object.hasOwn(fields,key)) throw new Error("카드 템플릿에 알 수 없는 필드가 있습니다. " + key);
+      if (stack.at(-1).visible) result += body.slice(offset,match.index);
+      if (operator === "/") {
+        if (stack.pop().key !== key) throw new Error("카드 템플릿의 필드 조건이 올바르지 않습니다. " + key);
+      } else if (operator) {
+        stack.push({ key,visible:stack.at(-1).visible && (operator === "#" ? Boolean(fields[key]) : !fields[key]) });
+      } else if (stack.at(-1).visible) {
+        result += fields[key];
+      }
+      offset = match.index + match[0].length;
+    }
+    if (stack.length !== 1) throw new Error("카드 템플릿의 필드 조건이 닫히지 않았습니다.");
+    return result + body.slice(offset);
+  }
+
+  function verifyCardOutput(db, rows, job, {shape,model}, identities, bank) {
+    const packed = JSON.parse(scalar(db,"SELECT models FROM col"))[shape.id];
+    if (JSON.stringify(packed) !== JSON.stringify(model)) {
+      throw new Error("APKG에 저장한 노트 유형·앞뒷면 템플릿·CSS가 제작 계획과 다릅니다.");
+    }
+    const byNote = new Map(identities.map((identity,index) => [identity.nid,index]));
+    const partSamples = new Map();
+    rows.forEach((row,index) => {
+      const label = groupLabel(row,job.model);
+      if (!partSamples.has(label) && partSamples.size < 17) partSamples.set(label,index);
+    });
+    const sample = new Set([0,Math.floor(rows.length / 2),rows.length - 1,...partSamples.values()]);
+    const inspected = [];
+    const notes = db.prepare("SELECT id,guid,flds,tags FROM notes");
+    try {
+      while (notes.step()) {
+        const [nid,guid,payload,tags] = notes.get();
+        const index = byNote.get(nid);
+        const row = rows[index];
+        const identity = identities[index];
+        if (!row || guid !== identity.guid) throw new Error("APKG의 노트 ID 또는 GUID가 제작 기록과 다릅니다.");
+        const fields = Card.fieldsFor(row,job);
+        if (payload !== shape.fields.map(key => fields[key] || "").join("\x1f") || tags !== " " + safeTags(row).join(" ") + " ") {
+          throw new Error("APKG 필드 값 또는 태그가 제작 데이터와 다릅니다. " + row.id);
+        }
+        if (!sample.has(index)) continue;
+        const fromPackage = Object.fromEntries(payload.split("\x1f").map((value,position) => [shape.fields[position],value]));
+        for (const template of packed.tmpls) {
+          for (const [answer,html] of [[false,template.qfmt],[true,template.afmt]]) {
+            if (renderTemplateBody(html,fromPackage) !== Card.previewCard(row,job,template.ord,answer,bank)) {
+              throw new Error("APKG와 HTML 미리보기의 앞뒷면이 다릅니다. " + row.id + " · " + template.name);
+            }
+          }
+        }
+        inspected.push({ noteId:row.id, cards:identity.cards });
+      }
+    } finally { notes.free(); }
+    const cards = db.prepare("SELECT id,nid,ord FROM cards");
+    try {
+      while (cards.step()) {
+        const [id,nid,ord] = cards.get();
+        if (identities[byNote.get(nid)]?.cards[ord] !== id) throw new Error("APKG의 카드 ID 또는 순서가 기록과 다릅니다.");
+      }
+    } finally { cards.free(); }
+    return { sample:inspected, sides:inspected.length * packed.tmpls.length * 2 };
+  }
+
+  async function apkgFor(rows, job, data, identities, clock, time, bank) {
     const SQL = await sqlite();
     const db = new SQL.Database();
     let collection;
@@ -4645,10 +4838,13 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     const read = new SQL.Database(await roundtrip.file("collection.anki2").async("uint8array"));
     try {
       checkDb(read, rows.length, numCards, shape);
+      if (Object.keys(JSON.parse(await roundtrip.file("media").async("string"))).length !== 0) {
+        throw new Error("미디어 없이 제작한 APKG의 미디어 목록이 비어 있지 않습니다.");
+      }
+      return { archive, parity:verifyCardOutput(read,rows,job,data,identities,bank) };
     } finally {
       read.close();
     }
-    return archive;
   }
 
   function addFile(zip, name, data, isoDate) {
@@ -4659,7 +4855,7 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     return zip.generateAsync({ type:"uint8array", compression:"DEFLATE", compressionOptions:{ level:6 }, platform:"UNIX" });
   }
 
-  async function worksheetFor(rows, job, source, time) {
+  async function worksheetFor(rows, job, source, time, run) {
     const workbook = new Excel.Workbook();
     workbook.creator = "Anki 덱 운영 플랫폼";
     workbook.created = new Date(time);
@@ -4685,6 +4881,33 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
         const preference = spec.defaultLabel && active ? job.learning.opened[spec.id] ? spec.defaultLabel : "닫힘·숨김" : "";
         learning.addRow([spec.label,active ? "포함" : "제외",preference]);
       }
+    }
+    if (run) {
+      function sheet(name,headers,records) {
+        const table = workbook.addWorksheet(name,{ views:[{state:"frozen",ySplit:1}] });
+        table.columns = headers.map(([header,width]) => ({header,width}));
+        table.getRow(1).font = {bold:true};
+        for (const record of records) table.addRow(record);
+        return table;
+      }
+      for (const item of [["운영 기준","RULE-06 v" + run.operatingStandard.version],["실행 ID",run.id],
+        ["원본 항목",source.rows],["제작 범위 밖",source.outOfScope]]) info.addRow(item);
+      info.addRow(["출처·이용 범위","노트별 출처는 SOURCE_ITEMS에 기록합니다. 별도 확인 결과는 QA.json에 기록하세요."]);
+      sheet("README",[["항목",24],["내용",84]],[
+        ["편집 원본","NOTES 시트에서 NoteID를 유지하며 자료를 수정합니다."],
+        ["학습기록","이전 후보 ZIP을 사용하는 업데이트는 기존 노트 유형·카드 식별자를 대조합니다."],
+        ["제작 기준","RULE-06 v" + run.operatingStandard.version],
+        ["검수","QA 시트는 생성 시 자동 검사입니다. 브라우저·Anki·실기기 검수는 후보의 QA.json을 확인하세요."],
+      ]);
+      sheet("SOURCE_ITEMS",[["NoteID",30],["입력 행",14],["출처",72]],rows.map(row => [row.id,row.line,row.source]));
+      sheet("CORRECTION_LOG",[["NoteID",32],["변경 항목",34],["정정 근거",72]],[]);
+      sheet("MEDIA_INDEX",[["파일명",40],["형식",24],["출처",72]],[]);
+      sheet("QA",[["자동 검사",28],["결과",16],["근거",85]],run.verification.automated.map(gate => [gate.id,gate.status,gate.evidence]));
+      const counts = run.dataset.counts;
+      sheet("CHANGELOG",[["파트·영역",34],["이전 노트",14],["추가 노트",14],["누적 노트",14],["누적 카드",14],
+        ["추가 문항",14],["누적 문항",14],["이동 유입 노트",17],["이동 유출 노트",17]],
+        [...counts.parts,{label:"합계",...counts.total}].map(row => [row.label,row.previous,row.added,row.notes,row.cards,
+          counts.unit === "question" ? row.addedQuestions : null,counts.unit === "question" ? row.questions : null,row.movedIn,row.movedOut]));
     }
     const written = await Zip.loadAsync(bytes(await workbook.xlsx.writeBuffer()));
     const normalized = new Zip();
@@ -4712,6 +4935,8 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     const get = selector => document.querySelector(selector);
     const level = get("#level");
     const type = get("#type");
+    const part = get("#part");
+    const changes = get("#changes");
     const text = get("#lookup");
     const mount = get("#card-mount");
     const count = get("#position");
@@ -4731,6 +4956,10 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
     }
     for (const value of [...new Set(deck.rows.map(row => row.level).filter(Boolean))].sort().reverse()) option(level,value,value);
     model.types.forEach((value, index) => option(type,String(index),value));
+    const parts = [...new Set(deck.rows.map(row => row.part).filter(Boolean))];
+    for (const value of parts) option(part,value,value);
+    part.hidden = !parts.length;
+    changes.hidden = !deck.cards.length;
 
     function render() {
       const record = list[index];
@@ -4738,32 +4967,37 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
       prev.disabled = index < 1;
       turn.disabled = !record;
       count.textContent = record ? (index + 1) + " / " + list.length + "장" : "조건에 맞는 카드가 없습니다.";
+      get("#preview-identity").textContent = record ? "NoteID " + record.row.id + " · CardID " + record.meta.ids[record.ordinal] : "";
       turn.textContent = answer ? "앞면 보기" : "정답 보기";
       Card.renderInto(mount,record?.row,deck.job,record?.ordinal,answer,deck.bank);
     }
     function search() {
       const query = text.value.trim().toLowerCase();
       list = [];
-      for (const row of deck.rows) {
-        if (level.value && row.level !== level.value) continue;
-        if (query && ![row.id,row.kanji,row.word,row.prompt,row.answer].some(s => s.toLowerCase().includes(query))) continue;
+      for (let rowIndex = 0; rowIndex < deck.rows.length; rowIndex++) {
+        const row = deck.rows[rowIndex];
+        const meta = deck.cards[rowIndex];
+        if (level.value && row.level !== level.value || part.value && row.part !== part.value ||
+            changes.value && meta.change !== changes.value) continue;
+        if (query && ![row.id,row.kanji,row.word,row.prompt,row.answer].some(s => Card.plain(s).toLowerCase().includes(query))) continue;
         model.types.forEach((_, ordinal) => {
-          if (type.value === "" || Number(type.value) === ordinal) list.push({ row, ordinal });
+          if (type.value === "" || Number(type.value) === ordinal) list.push({ row, ordinal, meta });
         });
       }
       index = 0;
       answer = false;
       render();
     }
-    for (const node of [type,level,text]) node.addEventListener("input",search);
+    for (const node of [type,level,part,changes,text]) node.addEventListener("input",search);
     turn.addEventListener("click",() => { answer = !answer; render(); });
     next.addEventListener("click",() => { index += 1; answer = false; render(); });
     prev.addEventListener("click",() => { index -= 1; answer = false; render(); });
     search();
   }
 
-  function previewHTML(rows, job, dataset, source, bank) {
-    const data = JSON.stringify({ rows,job,bank }).replaceAll("<","\\u003c");
+  function previewHTML(rows, job, dataset, source, bank, identities) {
+    const cards = identities.map(item => ({ids:item.cards,change:item.change}));
+    const data = JSON.stringify({ rows,job,bank,cards }).replaceAll("<","\\u003c");
     const code = ("globalThis.AnkiOpsCard=" + Card.browserSource(job.model) + ";(" + startStandalonePreview.toString() + ")();")
       .replace(/<\/script/gi, "<\\/script");
     const title = Card.escape(job.name);
@@ -4772,20 +5006,26 @@ CREATE INDEX ix_revlog_cid ON revlog(cid);`;
 <style>
 body{margin:0;background:#f2f0ed;color:#26243a;font:16px/1.5 system-ui,"Noto Sans KR",sans-serif}
 main{box-sizing:border-box;max-width:820px;margin:auto;padding:20px}
-h1{font-size:clamp(1.4rem,4vw,2rem);margin:4px 0}p{margin:6px 0}
+h1{font-size:clamp(1.2rem,4vw,1.75rem);margin:4px 0;word-break:keep-all;overflow-wrap:anywhere;text-wrap:balance}p{margin:6px 0}
 .preview-meta{color:#535568;font-size:.9rem;overflow-wrap:anywhere}
+.preview-standard{display:inline-block;padding:3px 9px;border:1px solid #d1c5ad;border-radius:6px;color:#4a3823;background:#fff9ec}
+@media(prefers-color-scheme:dark){body{background:#1b1e26;color:#f0edf5}.preview-meta{color:#d3ccda}.preview-standard{background:#332b20;color:#f9e7bf}}
 .fields,.actions{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap;align-items:center}
 .fields input,.fields select,.actions button{font:inherit;min-height:40px;border:1px solid #d5d1dc;border-radius:8px;background:#fffdf9;color:#342a53;padding:6px 9px}
 .actions button:disabled{opacity:.45}.actions #turn{background:#574697;color:white}
 ${Card.CSS}
 </style><main><h1>${title}</h1>
 <p class="preview-meta">v${Card.escape(job.version)} · ${rows.length}노트 / ${dataset.cards}카드${job.sample ? " · 제작 표본" : ""}</p>
-<p class="preview-meta">입력 SHA-256 ${source.sha256}</p>
+<p class="preview-meta"><span class="preview-standard">RULE-06 v${job.rule06Version}</span> · 전체 수록 범위</p>
+<details class="preview-meta"><summary>제작 정보</summary><p>입력 SHA-256 ${source.sha256}</p></details>
 <div class="fields"><input id="lookup" type="search" aria-label="카드 검색" placeholder="카드 또는 ID 검색">
 <select id="level" aria-label="급수"><option value="">전체 급수</option></select>
-<select id="type" aria-label="카드 유형"><option value="">전체 유형</option></select></div>
+<select id="type" aria-label="카드 유형"><option value="">전체 유형</option></select>
+<select id="part" aria-label="파트"><option value="">전체 파트</option></select>
+<select id="changes" aria-label="이전판 대비 변경"><option value="">전체 수록</option>
+<option value="added">이번 추가</option><option value="updated">이번 수정</option><option value="unchanged">기존 유지</option></select></div>
 <div class="actions"><button id="prev">이전</button><button id="turn">정답 보기</button><button id="next">다음</button>
-<span id="position" role="status"></span></div><div id="card-mount"></div>
+<span id="position" role="status"></span></div><p id="preview-identity" class="preview-meta"></p><div id="card-mount"></div>
 </main><script type="application/json" id="deck-data">${data}<\/script><script>${code}<\/script><!--
 MIT license
 ===========
@@ -5521,14 +5761,59 @@ copy of the Program in return for a fee.
     });
   }
 
+  function operatingProfile(job, shape, bank) {
+    const family = Profiles.families[Profiles.models[job.model]?.family];
+    const registered = {
+      "kr-quiz":{id:"kanji_revolution_practice",version:"1.0.0"},
+      "lab-quiz":{id:"leveled_mock_exam",version:"1.0.0"},
+      quiz:{id:"vocabulary_quiz",version:"1.1.0"},
+      recall:{id:"recall",version:shape.template},
+    };
+    const model = registered[job.model] ?? {id:"kanji_study",version:"1.1.0"};
+    const spec = [
+      ["ui.settings",["settings"]],["ui.records",["records"]],["study.local_confusion",["records"]],
+      ["review.native_filter_helper",["filter"]],["quiz.immediate_feedback",["immediate"]],
+      ["japanese.furigana_translation",["ruby","examples"]],
+      ["japanese.stroke_controls",["writing","strokes"]],["audio.music_mix",["voice"]],
+    ];
+    const separateDefaults = ["settings","records","filter","writing","diagnosis","practice","retest"];
+    const features = feature => {
+      const included = job.learning.included[feature];
+      const opened = job.learning.opened[feature] === true;
+      if (separateDefaults.includes(feature)) return { included, defaultActive:included, openOnLoad:opened };
+      if (feature === "voice") return { included, defaultActive:included, mixWithMusic:opened };
+      if (feature === "explanation" || feature === "examples") return { included, defaultActive:included, showExpanded:opened };
+      return { included, defaultActive:(feature === "ruby" || feature === "immediate") ? included && opened : included };
+    };
+    const modules = spec.map(([id,keys]) => ({
+      id, version:"1.0.0", included:keys.some(key => job.learning.included[key]),
+      features:Object.fromEntries(keys.map(key => [key,features(key)])),
+    }));
+    if (questionModel(job.model)) modules.push({ id:"quiz.level_bank",version:"1.0.0",included:true });
+    return {
+      ...RULE06,
+      model:{...model, variant:job.model, referenceRelease:family?.release ?? null},
+      cardUI:{ id:"shared_learning_shell",version:"1.0.0",referenceUi:family?.ui ?? null,
+        template:shape.template,templateSHA256:shape.schemaHash },
+      dataSchema:SCHEMA, modules, appearance:job.learning.appearance,
+      extensions:Object.fromEntries(["firstRecall","recovery","diagnosis","practice","retest","stats","goals","weakness"]
+        .map(key => [key,features(key)])),
+      studyBankQuestions:bank?.questions.length ?? 0,
+      exceptions:["settings","records","filter"].filter(key => !job.learning.included[key])
+        .map(feature => ({feature, reason:"이 제작에 저장된 기능 선택에 따라 제외"})),
+    };
+  }
+
   function proofMarkdown(job, report, run) {
+    const automated = report.automated.map(gate => "- " + gate.id + " · " + gate.status + " · " + gate.evidence);
     const findings = report.gates.map(gate => "- " + gate.label + " · " + gate.status +
       (gate.evidence ? " · " + gate.evidence.replace(/\n/g," ") : ""));
     return ["# " + job.name + " v" + job.version,"",
       "후보 패키지" + (job.sample ? " · 제작 표본" : ""), "",
       "- 실행 ID " + run.id, "- 입력 SHA-256 " + run.source.sha256,
+      ...(run.operatingStandard ? ["- 운영 기준 RULE-06 v" + run.operatingStandard.version] : []),
       `- ${run.dataset.notes}노트 / ${run.dataset.cards}카드`,
-      "- 정적 검사 · PASS", ...findings, "",
+      ...automated, ...findings, "",
       "공개용 파일은 사용 범위와 QA 증거를 확인한 뒤 승인된 경로에서 게시합니다.",""].join("\n");
   }
 
@@ -5568,22 +5853,23 @@ copy of the Program in return for a fee.
     if (job.mode === "update" && parsed.mappedLegacy) throw new Error("이전 한자 MASTER는 Studio 신규 제작용입니다. 업데이트에는 Studio MASTER를 사용하세요.");
     const clock = Math.max(Math.floor(createdAt/1000), (prior?.manifest.clock ?? 0) + 1);
     const stamp = new Date(createdAt).toISOString();
+    job.rule06Version = RULE06.version;
+    job.availableLevels = [...new Set(rows.map(row => row.level).filter(Boolean))].sort().reverse();
+    job.availableParts = job.model === "kr-quiz" ? Profiles.parts.filter(part => rows.some(row => row.part === part)) : [];
     const meta = await modelMeta(job,clock,bank);
     const { shape } = meta;
     const previous = previousIdentities(prior,job,shape,rows);
     const { identities, groups, perGroup } = await makeIdentities(rows,shape,meta.scope,previous,createdAt,job.model);
-    const source = { name, size:bytes(input).byteLength, sha256:await digest(input), form:parsed.form };
+    const source = { name, size:bytes(input).byteLength, sha256:await digest(input), form:parsed.form,
+      rows:scan.total, selected:rows.length, outOfScope:scan.total - rows.length };
     const id = "RUN-" + (await digest(asJSON({ job, source, prior:prior?.digest, createdAt }))).slice(0,12).toUpperCase();
     const dataset = { notes:rows.length, cards:rows.length*shape.cards.length,
       distribution:distribution.map(part => ({ ...part, ...perGroup.get(part.label) })), ...groups };
-    const run = {
-      id, studioVersion:VERSION, createdAt:stamp, job, source, dataset,
-      prior:prior ? { version:prior.manifest.job.version, sha256:prior.digest } : null,
-      completed:"CANDIDATE_READY",
-    };
+    dataset.counts = releaseCounts(rows,job,prior?.baseline,dataset.distribution,groups,dataset.cards);
+    const standard = operatingProfile(job,shape,bank);
     progress("render");
-    const apkg = await apkgFor(rows,job,meta,identities,clock,createdAt);
-    const master = await worksheetFor(rows,job,source,createdAt);
+    const { archive:apkg,parity } = await apkgFor(rows,job,meta,identities,clock,createdAt,bank);
+    const preview = previewHTML(rows,job,dataset,source,bank,identities);
     const stem = job.product + "-v" + job.version;
     const apkgName = stem + ".apkg";
     const gates = stageGates(job,evidence);
@@ -5591,18 +5877,30 @@ copy of the Program in return for a fee.
       runId:id, packageSHA256:await digest(apkg), source, dataset, issues,
       automated:[
         { id:"INPUT", status:"PASS", evidence:"필수 값·지원 범위·목표 수량·중복 검사" },
-        { id:"STATIC", status:"PASS", evidence:"APKG ZIP CRC, SQLite 무결성, 노트·카드 수, GUID 및 카드 연결 검사" },
+        { id:"STATIC", status:"PASS", evidence:"APKG ZIP CRC, SQLite 무결성, 미디어 목록, 전 노트 필드·태그·GUID, 카드 ID·순서 대조" },
+        { id:"PREVIEW_PARITY", status:"PASS", evidence:"APKG와 HTML 공통 템플릿·필드 매핑, 표본 앞뒷면 " + parity.sides + "면 대조",
+          sample:parity.sample, sha256:await digest(preview) },
+        { id:"PART_COUNTS", status:"PASS", evidence:"기준판 대비 파트·영역별 추가·이동·누적 수와 실제 노트·카드 수 대조" },
         { id:"IDENTITY", status:prior ? "PASS" : "NOT_APPLICABLE",
           evidence:prior ? "이전 후보 APKG 해시와 노트·카드 식별자 매핑 대조" : "신규 제작" },
       ],
       gates,
     };
+    const verification = { automated:result.automated, gates };
+    const run = {
+      id, studioVersion:VERSION, createdAt:stamp, job, source, dataset,
+      operatingStandard:standard, verification,
+      prior:prior ? { version:prior.manifest.job.version, sha256:prior.digest,
+        operatingStandard:prior.manifest.operatingStandard?.version ?? null } : null,
+      completed:"CANDIDATE_READY",
+    };
+    const master = await worksheetFor(rows,job,source,createdAt,run);
     progress("archive");
     const files = {
       [apkgName]:apkg,
       "MASTER.xlsx":master,
       "NOTES.tsv":plainTSV(rows,job.model),
-      "preview.html":previewHTML(rows,job,dataset,source,bank),
+      "preview.html":preview,
       "QA.json":asJSON(result),
       "RUN.json":asJSON(run),
       "CHANGELOG.md":`# v${job.version}\n\n- 추가 ${groups.added} · 수정 ${groups.updated} · 유지 ${groups.unchanged}\n- ${dataset.notes}노트 / ${dataset.cards}카드\n`,
@@ -5613,7 +5911,7 @@ copy of the Program in return for a fee.
     };
     const manifest = {
       kind:"anki-ops-release", schema:SCHEMA, studioVersion:VERSION,
-      id, job, shape, clock, source, dataset,
+      id, job, shape, clock, source, dataset, prior:run.prior, operatingStandard:standard, verification,
       identities:identities.map(({ checksum, ...info }) => info),
     };
     const archive = await archiveFiles(files,manifest,stamp);
@@ -5637,19 +5935,24 @@ copy of the Program in return for a fee.
   }
 
   async function updateEvidence(build,evidence) {
-    const { run } = build;
+    const run = { ...build.run };
     const files = { ...build.files };
     const result = { ...build.result,gates:stageGates(run.job,evidence) };
     if (await digest(files[build.apkgName]) !== result.packageSHA256) {
       throw new Error("기존 후보 APKG의 해시를 확인할 수 없습니다.");
     }
+    const manifest = JSON.parse(files["manifest.json"]);
+    if (run.operatingStandard) {
+      run.verification = manifest.verification = { automated:result.automated, gates:result.gates };
+      files["RUN.json"] = asJSON(run);
+    }
     files["QA.json"] = asJSON(result);
     files["RELEASE.md"] = proofMarkdown(run.job,result,run);
-    const archive = await archiveFiles(files,JSON.parse(files["manifest.json"]),run.createdAt);
-    return { ...build, files, result, archive };
+    const archive = await archiveFiles(files,manifest,run.createdAt);
+    return { ...build, run, files, result, archive };
   }
 
-  return { VERSION,draftCard,GATES,GATE_LABELS,MAX_INPUT,MAX_NOTES,digest,build,inspect,stageGates,
+  return { VERSION,RULE06,draftCard,GATES,GATE_LABELS,MAX_INPUT,MAX_NOTES,digest,build,inspect,stageGates,
     validateJob,templateWorkbook,previousRelease,updateEvidence,authorFields,pastedNotes,parseSource,authorSource,columnInfo:columnsFor,pairProblem,studyRole,compareReleases:(a,b)=>compareVersion(versionKey(a),versionKey(b)),
     pasteFields:model => (Profiles.models[model]?.paste || PASTE_FIELDS[model]).map(key => labelFor(model,key)) };
 
@@ -6435,6 +6738,30 @@ globalThis.AnkiOpsSample = {
   "tsv": "NoteID\tLevel\tCategory\tKanji\tAnswer\tWord\tReading\tOnReading\tKunReading\tExplanation\tExample\tTranslation\tSource\tTags\nN5-KANJI-01\tN5\t한자\t日\t날 일\t毎日\tまいにち\tニチ・ジツ\tひ・か\t날짜와 날, 해를 나타냅니다. 毎日은 まいにち로 읽습니다.\t<ruby>毎日<rt>まいにち</rt></ruby>、<ruby>水<rt>みず</rt></ruby>を<ruby>飲<rt>の</rt></ruby>みます。\t매일 물을 마십니다.\t제작 예제 자체 작성\tJLPT::N5\nN5-KANJI-02\tN5\t한자\t月\t달 월\t月曜日\tげつようび\tゲツ・ガツ\tつき\t달이나 월을 나타냅니다. 요일 이름에서는 月을 ゲツ로 읽습니다.\t<ruby>月曜日<rt>げつようび</rt></ruby>に<ruby>会<rt>あ</rt></ruby>いましょう。\t월요일에 만납시다.\t제작 예제 자체 작성\tJLPT::N5\nN5-KANJI-03\tN5\t한자\t水\t물 수\t水曜日\tすいようび\tスイ\tみず\t水를 홀로 읽을 때는 みず가 대표적입니다. 水曜日에서는 スイ로 읽습니다.\t<ruby>水曜日<rt>すいようび</rt></ruby>は<ruby>休<rt>やす</rt></ruby>みです。\t수요일은 쉬는 날입니다.\t제작 예제 자체 작성\tJLPT::N5\nN5-KANJI-04\tN5\t한자\t木\t나무 목\t木曜日\tもくようび\tモク・ボク\tき・こ\t木는 나무를 뜻합니다. 木曜日의 첫 부분은 モク입니다.\t<ruby>木曜日<rt>もくようび</rt></ruby>に<ruby>図書館<rt>としょかん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。\t목요일에 도서관에 갑니다.\t제작 예제 자체 작성\tJLPT::N5\nN5-KANJI-05\tN5\t한자\t火\t불 화\t火曜日\tかようび\tカ\tひ・ほ\t火는 불을 뜻합니다. 火曜日에서는 カ로 읽습니다.\t<ruby>火曜日<rt>かようび</rt></ruby>に<ruby>日本語<rt>にほんご</rt></ruby>を<ruby>勉強<rt>べんきょう</rt></ruby>します。\t화요일에 일본어를 공부합니다.\t제작 예제 자체 작성\tJLPT::N5\nN5-KANJI-06\tN5\t한자\t金\t쇠 금\tお金\tおかね\tキン・コン\tかね・かな\t金에는 쇠나 금속, 돈의 뜻이 있습니다. お金는 おかね로 읽습니다.\t<ruby>お金<rt>おかね</rt></ruby>が<ruby>少<rt>すこ</rt></ruby>しあります。\t돈이 조금 있습니다.\t제작 예제 자체 작성\tJLPT::N5\nN5-KANJI-07\tN5\t한자\t土\t흙 토\t土曜日\tどようび\tド・ト\tつち\t土는 흙을 뜻합니다. 土曜日에서는 ド로 읽습니다.\t<ruby>土曜日<rt>どようび</rt></ruby>に<ruby>公園<rt>こうえん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。\t토요일에 공원에 갑니다.\t제작 예제 자체 작성\tJLPT::N5\nN5-KANJI-08\tN5\t한자\t山\t메 산\t山道\tやまみち\tサン\tやま\t山은 산을 뜻합니다. 山道에서는 山를 やま로 읽습니다.\t<ruby>山道<rt>やまみち</rt></ruby>をゆっくり<ruby>歩<rt>ある</rt></ruby>きます。\t산길을 천천히 걸어갑니다.\t제작 예제 자체 작성\tJLPT::N5\nN5-KANJI-09\tN5\t한자\t川\t내 천\t川\tかわ\tセン\tかわ\t川은 흐르는 물줄기인 강이나 하천을 뜻합니다.\t<ruby>川<rt>かわ</rt></ruby>のそばに<ruby>住<rt>す</rt></ruby>んでいます。\t강 근처에 살고 있습니다.\t제작 예제 자체 작성\tJLPT::N5\nN5-KANJI-10\tN5\t한자\t人\t사람 인\t大人\tおとな\tジン・ニン\tひと\t人은 사람을 뜻합니다. 大人은 두 글자를 묶어 おとな로 익힙니다.\tここからは<ruby>大人<rt>おとな</rt></ruby>の<ruby>料金<rt>りょうきん</rt></ruby>です。\t여기부터는 성인 요금입니다.\t제작 예제 자체 작성\tJLPT::N5\n"
 };
 
+
+globalThis.AnkiOpsSampleFor = function (model, Card = globalThis.AnkiOpsCard, Factory = globalThis.AnkiOpsFactory) {
+    const spec = Card.Profiles.models[model];
+    if (!spec && model === "kanji") return globalThis.AnkiOpsSample;
+    const samples = {
+      "lab-kanji":[
+        {kanji:"日",answer:"날 일",core:"해, 날, 하루",word:"毎日",reading:"まいにち",wordMeaning:"매일",onReading:"ニチ・ジツ",kunReading:"ひ・か",school:"초등 1학년",indexKey:"0001",radical:"日",strokeCount:"4",similar:"目（め）는 ‘눈’이며 안쪽 가로획이 두 개입니다.",explanation:"日은 안쪽 가로획이 한 개입니다.",example:"<ruby>毎日<rt>まいにち</rt></ruby>、<ruby>水<rt>みず</rt></ruby>を飲みます。",translation:"매일 물을 마십니다.",strokeSvg:'<svg viewBox="0 0 100 100"><path d="M25 17 L25 84"/><path d="M25 19 L75 19 L75 84"/><path d="M26 49 L73 49"/><path d="M26 81 L74 81"/></svg>'},
+        {kanji:"木",answer:"나무 목",word:"木曜日",reading:"もくようび",wordMeaning:"목요일",onReading:"モク・ボク",kunReading:"き・こ",school:"초등 1학년",indexKey:"0002",radical:"木",strokeCount:"4",strokeSvg:'<svg viewBox="0 0 100 100"><path d="M15 36 L84 36"/><path d="M50 13 L50 90"/><path d="M49 37 Q41 60 15 76"/><path d="M51 38 Q63 63 87 77"/></svg>'}
+      ],
+      "lab-quiz":[{category:"독해",instruction:"글을 읽고 답을 하나 고르세요.",passage:"きょうは雨です。ミナさんはバスで学校へ行きます。",prompt:"ミナさんはどうやって学校へ行きますか。",optionA:"歩いて",optionB:"バスで",optionC:"電車で",optionD:"自転車で",correct:"B",explanation:"두 번째 문장의 バスで가 이동 수단을 나타냅니다.",translation:"오늘은 비가 옵니다. 미나 씨는 버스로 학교에 갑니다."}],
+      "kr-quiz":[
+        {part:"유사 한자",category:"단어 읽기",instruction:"읽기에 맞는 단어를 하나 고르세요.",prompt:"「あいて」と読む言葉はどれですか。",optionA:"相手",optionB:"勝手",optionC:"上手",correct:"A",reading:"あいて",wordMeaning:"상대",explanation:"相手는 대화하거나 겨루는 상대를 뜻합니다.",comparison:"相手（あいて）는 상대, 勝手（かって）는 제멋대로 함, 上手（じょうず）는 능숙함입니다.",example:"<ruby>相手<rt>あいて</rt></ruby>の話をよく聞きます。",translation:"상대의 말을 잘 듣습니다."},
+        {part:"동사 활용",category:"て형 회상",instruction:"보기 없이 て형을 떠올리세요.",prompt:"待つ",answer:"待って",reading:"まって",verbGroup:"5단 동사",targetForm:"て형",explanation:"5단 동사의 つ는 て형에서 って로 바뀝니다.",trap:"待ちて로 만들지 않도록 っ를 확인하세요."}
+      ],
+      "lab-word":[{word:"休日",reading:"きゅうじつ",answer:"휴일",kanji:"休・日",example:"休日は家で休みます。",translation:"휴일에는 집에서 쉽니다."}],
+      "kr-word":[{word:"待ち時間",reading:"まちじかん",answer:"대기 시간",kanji:"待",volume:"1",memoryHint:"待つ와 時間을 연결해 떠올립니다.",example:"待ち時間は十分です。",translation:"대기 시간은 10분입니다."}],
+      quiz:[{prompt:"「水」の読み方はどれですか。",optionA:"みず",optionB:"ひ",optionC:"き",optionD:"つき",correct:"A",explanation:"水의 훈독은 みず입니다.",distractors:"ひ는 火, き는 木, つき는 月의 읽기입니다."}],
+      recall:[{prompt:"일본어로 ‘매일’은?",answer:"毎日（まいにち）"}],
+    };
+    const chosen = model === "kr-kanji" ? samples["lab-kanji"].map(r => ({...r,volume:"1",memoryHint:r.explanation})) : samples[model];
+    const rows = chosen.map((row,i) => ({...row,id:"demo-"+model+"-"+(i+1),level:"N5",source:"직접 제작용 예시"}));
+    return { job:{model,name:(spec ? Card.Profiles.families[spec.family].name + " · " + spec.name : Card.MODELS[model].name) + " 표본",
+      product:"sample-"+model,mode:"new",version:"1.0.0-RC1",level:"N5",expected:rows.length,sample:true}, rows,tsv:Factory.authorSource(rows,model) };
+  };
 
 </script>
 <script data-bundle="author.js">
@@ -8171,29 +8498,7 @@ globalThis.AnkiOpsSample = {
     return;
   }
 
-  function sampleFor(model) {
-    const spec = Card.Profiles.models[model];
-    if (!spec && model === "kanji") return globalThis.AnkiOpsSample;
-    const samples = {
-      "lab-kanji":[
-        {kanji:"日",answer:"날 일",core:"해, 날, 하루",word:"毎日",reading:"まいにち",wordMeaning:"매일",onReading:"ニチ・ジツ",kunReading:"ひ・か",school:"초등 1학년",indexKey:"0001",radical:"日",strokeCount:"4",similar:"目（め）는 ‘눈’이며 안쪽 가로획이 두 개입니다.",explanation:"日은 안쪽 가로획이 한 개입니다.",example:"<ruby>毎日<rt>まいにち</rt></ruby>、<ruby>水<rt>みず</rt></ruby>を飲みます。",translation:"매일 물을 마십니다.",strokeSvg:'<svg viewBox="0 0 100 100"><path d="M25 17 L25 84"/><path d="M25 19 L75 19 L75 84"/><path d="M26 49 L73 49"/><path d="M26 81 L74 81"/></svg>'},
-        {kanji:"木",answer:"나무 목",word:"木曜日",reading:"もくようび",wordMeaning:"목요일",onReading:"モク・ボク",kunReading:"き・こ",school:"초등 1학년",indexKey:"0002",radical:"木",strokeCount:"4",strokeSvg:'<svg viewBox="0 0 100 100"><path d="M15 36 L84 36"/><path d="M50 13 L50 90"/><path d="M49 37 Q41 60 15 76"/><path d="M51 38 Q63 63 87 77"/></svg>'}
-      ],
-      "lab-quiz":[{category:"독해",instruction:"글을 읽고 답을 하나 고르세요.",passage:"きょうは雨です。ミナさんはバスで学校へ行きます。",prompt:"ミナさんはどうやって学校へ行きますか。",optionA:"歩いて",optionB:"バスで",optionC:"電車で",optionD:"自転車で",correct:"B",explanation:"두 번째 문장의 バスで가 이동 수단을 나타냅니다.",translation:"오늘은 비가 옵니다. 미나 씨는 버스로 학교에 갑니다."}],
-      "kr-quiz":[
-        {part:"유사 한자",category:"단어 읽기",instruction:"읽기에 맞는 단어를 하나 고르세요.",prompt:"「あいて」と読む言葉はどれですか。",optionA:"相手",optionB:"勝手",optionC:"上手",correct:"A",reading:"あいて",wordMeaning:"상대",explanation:"相手는 대화하거나 겨루는 상대를 뜻합니다.",comparison:"相手（あいて）는 상대, 勝手（かって）는 제멋대로 함, 上手（じょうず）는 능숙함입니다.",example:"<ruby>相手<rt>あいて</rt></ruby>の話をよく聞きます。",translation:"상대의 말을 잘 듣습니다."},
-        {part:"동사 활용",category:"て형 회상",instruction:"보기 없이 て형을 떠올리세요.",prompt:"待つ",answer:"待って",reading:"まって",verbGroup:"5단 동사",targetForm:"て형",explanation:"5단 동사의 つ는 て형에서 って로 바뀝니다.",trap:"待ちて로 만들지 않도록 っ를 확인하세요."}
-      ],
-      "lab-word":[{word:"休日",reading:"きゅうじつ",answer:"휴일",kanji:"休・日",example:"休日は家で休みます。",translation:"휴일에는 집에서 쉽니다."}],
-      "kr-word":[{word:"待ち時間",reading:"まちじかん",answer:"대기 시간",kanji:"待",volume:"1",memoryHint:"待つ와 時間을 연결해 떠올립니다.",example:"待ち時間は十分です。",translation:"대기 시간은 10분입니다."}],
-      quiz:[{prompt:"「水」の読み方はどれですか。",optionA:"みず",optionB:"ひ",optionC:"き",optionD:"つき",correct:"A",explanation:"水의 훈독은 みず입니다.",distractors:"ひ는 火, き는 木, つき는 月의 읽기입니다."}],
-      recall:[{prompt:"일본어로 ‘매일’은?",answer:"毎日（まいにち）"}],
-    };
-    const chosen = model === "kr-kanji" ? samples["lab-kanji"].map(r => ({...r,volume:"1",memoryHint:r.explanation})) : samples[model];
-    const rows = chosen.map((row,i) => ({...row,id:"demo-"+model+"-"+(i+1),level:"N5",source:"직접 제작용 예시"}));
-    return { job:{model,name:(spec ? Card.Profiles.families[spec.family].name + " · " + spec.name : Card.MODELS[model].name) + " 표본",
-      product:"sample-"+model,mode:"new",version:"1.0.0-RC1",level:"N5",expected:rows.length,sample:true}, rows,tsv:Factory.authorSource(rows,model) };
-  }
+  const sampleFor = globalThis.AnkiOpsSampleFor;
 
   let currentModel = "";
   const familyOf = model => Card.Profiles.models[model]?.family || "studio";
@@ -8739,7 +9044,11 @@ globalThis.AnkiOpsSample = {
   function showQA(build) {
     const auto = $("auto-list");
     auto.replaceChildren();
-    const labels = { INPUT:"원본 필수 값·수량", STATIC:"APKG·SQLite 구조", IDENTITY:"업데이트 식별자" };
+    const standard = build.run.operatingStandard;
+    $("run-standard").textContent = standard ? "RULE-06 v" + standard.version + " · " + standard.effectiveDate +
+      " · " + Card.MODELS[build.run.job.model].name : "이전 제작본 · 운영 기준 버전 미기록";
+    const labels = { INPUT:"원본 필수 값·수량", STATIC:"APKG·SQLite 구조", PREVIEW_PARITY:"APKG·HTML 앞뒷면 대조",
+      PART_COUNTS:"파트별 수량 대조", IDENTITY:"업데이트 식별자" };
     for (const gate of build.result.automated) {
       const row = element("div",undefined,"quality-row");
       row.append(element("strong",labels[gate.id]),gateBadge(gate),element("p",gate.evidence));
@@ -8747,14 +9056,20 @@ globalThis.AnkiOpsSample = {
     }
     const ranges = $("range-counts");
     ranges.replaceChildren();
-    for (const part of build.run.dataset.distribution) {
+    const { counts,distribution } = build.run.dataset;
+    const parts = counts ? [...counts.parts,{label:"합계",...counts.total}] : distribution;
+    $("range-baseline").textContent = build.run.prior ? "비교 기준판 v" + build.run.prior.version : "신규 제작 · 처음 수록한 항목";
+    for (const part of parts) {
       const row = element("tr");
       const label = element("th",part.label);
       label.scope = "row";
       row.append(label);
-      for (const column of ["notes","cards","added","updated","unchanged"]) {
-        row.append(element("td",part[column] === undefined ? "—" : number(part[column])));
-      }
+      const delta = count => count === undefined ? "—" : count ? "+" + number(count) : "0";
+      const values = [delta(part.added),number(part.notes),number(part.cards),
+        counts?.unit === "question" ? delta(part.addedQuestions) : "—",
+        counts?.unit === "question" ? number(part.questions) : "—",
+        (part.movedIn || part.movedOut) ? "+" + number(part.movedIn) + " / −" + number(part.movedOut) : "—"];
+      for (const value of values) row.append(element("td",value));
       ranges.append(row);
     }
     const manual = $("manual-list");
@@ -8855,8 +9170,15 @@ globalThis.AnkiOpsSample = {
     if (source && state.previewAnchor === anchor && anchor && state.view === "work") showDraftPreview(source,anchor);
   }
 
-  function setPreview(job,rows,bank,anchor) {
-    state.preview = { job,rows,bank };
+  function setPreview(job,rows,bank,anchor,identities = []) {
+    state.preview = { job,rows,bank,identity:new Map(identities.map(item => [item.id,item])) };
+    const part = $("card-part");
+    part.replaceChildren(new Option("전체 파트",""));
+    for (const label of new Set(rows.map(row => row.part).filter(Boolean))) part.append(new Option(label,label));
+    part.hidden = part.options.length === 1;
+    const changes = $("card-change");
+    changes.value = "";
+    changes.hidden = !identities.some(item => item.change);
     $("card-search").value = "";
     const select = $("card-type");
     select.replaceChildren(element("option","전체 유형"));
@@ -8875,12 +9197,15 @@ globalThis.AnkiOpsSample = {
 
   function resetCardList(anchor) {
     if (!state.preview) return;
-    const { job, rows } = state.preview;
+    const { job, rows, identity } = state.preview;
     const model = Card.MODELS[job.model];
     const search = $("card-search").value.trim().toLowerCase();
     const value = $("card-type").value;
+    const part = $("card-part").value;
+    const change = $("card-change").value;
     state.visibleCards = [];
     for (const row of rows) {
+      if (part && row.part !== part || change && identity.get(row.id)?.change !== change) continue;
       if (search && ![row.id,row.kanji,row.word,row.prompt,row.answer].some(term => Card.plain(term).toLowerCase().includes(search))) continue;
       for (const ordinal of model.types.keys()) if (value === "" || ordinal === Number(value)) state.visibleCards.push({ row, ordinal });
     }
@@ -8898,6 +9223,9 @@ globalThis.AnkiOpsSample = {
     $("card-turn").textContent = state.side ? "앞면 보기" : "정답 보기";
     $("card-position").textContent = record ? number(state.cursor + 1) + " / " + number(state.visibleCards.length) + "장" : "검색 결과 없음";
     const mount = $("card-mount");
+    const id = record && state.preview.identity.get(record.row.id)?.cards[record.ordinal];
+    $("card-identity").hidden = !id;
+    $("card-identity").textContent = id ? "NoteID " + record.row.id + " · CardID " + id : "";
     Card.renderInto(mount,record?.row,state.preview.job,record?.ordinal,state.side,state.preview.bank,mount.authorSession ||= new Map());
   }
 
@@ -8911,6 +9239,7 @@ globalThis.AnkiOpsSample = {
       ["NOTES.tsv","노트 TSV","정규화한 제작 데이터"],
       ["QA.json","QA 기록","자동 검사 결과와 입력한 검사 근거"],
       ["RUN.json","실행 기록","원본 해시, 범위와 버전"],
+      ["manifest.json","후보 매니페스트","적용 기준·검수 결과·파일 해시"],
       ["SHA256SUMS.txt","SHA-256 목록","후보 파일 무결성 대조"],
     ];
     for (const [filename,label,detail] of pick) {
@@ -8939,7 +9268,8 @@ globalThis.AnkiOpsSample = {
     }
     showQA(build);
     renderFiles(build);
-    setPreview(job,build.rows,build.bank);
+    const identities = build.files["manifest.json"] ? JSON.parse(build.files["manifest.json"]).identities : [];
+    setPreview(job,build.rows,build.bank,undefined,identities);
     showResults(tab,"제작 결과",description,true);
     setStatus("후보 생성 완료",number(dataset.notes) + "노트 · " + number(dataset.cards) + "카드 · 정적 검사 통과");
   }
@@ -10847,6 +11177,8 @@ globalThis.AnkiOpsSample = {
   $("card-turn").addEventListener("click",() => { state.side = !state.side; renderCard(); });
   $("card-search").addEventListener("input",resetCardList);
   $("card-type").addEventListener("input",resetCardList);
+  $("card-part").addEventListener("input",resetCardList);
+  $("card-change").addEventListener("input",resetCardList);
   if (location.protocol === "file:") $("portable-link").hidden = true;
   window.addEventListener("hashchange",showLinkedView);
   showLinkedView();

@@ -2,6 +2,12 @@
 
 같은 주소에서 노트를 모으고, 수정한 노트와 새 노트를 확인한 뒤 누적 APKG를 만듭니다. 첫 화면에서 **혼동 표현 10쌍 열기**를 누르면 20개의 일본어 예문으로 만든 10장을 직접 편집하거나 Anki용으로 제작할 수 있습니다. [제작기 열기](https://dlquffhqnxj.github.io/anki-deck-site/deck-maker/) · [10장 바로 풀기](https://dlquffhqnxj.github.io/anki-deck-site/deck-maker/contrast/) · [버전 이력](CHANGELOG.md)
 
+## RULE-06 v1.3.0 적용 기록
+
+새 후보는 `RUN.json`과 `manifest.json`에 운영 기준 날짜와 SHA-256, 제작 모델, 카드 UI와 템플릿 해시, 기능별 포함 여부·기본값, 파트별 수량 및 검수 결과를 기록합니다. 검증 탭에서 실제 앱·기기 검사 결과를 입력하면 두 기록과 `QA.json`이 함께 갱신됩니다. 이전 후보는 제작 당시의 기록과 파일로 다시 열 수 있습니다.
+
+후보 생성은 SQLite와 필드, 식별자, 파트별 수량 및 APKG·HTML 표본 앞뒷면을 자동 검사합니다. Anki 앱 가져오기·업데이트, 실기기, AnkiWeb 및 배포 파일 확인에는 해당 환경에서 수행한 검사 근거를 입력합니다. 미리보기의 파트·변경 필터와 NoteID·CardID로 확인할 카드를 찾을 수 있습니다.
+
 ## Anki 사용법 미리보기
 
 한자 노트의 입력값을 바꿔 앞·뒷면 6개를 비교하고, 실제로 가져올 APKG를 내려받을 수 있습니다. 단어 카드에서는 직접 입력과 보기 후 다시 쓰기를, 객관식 카드에서는 확신도와 반복 오답을 연습합니다. 두 원문항에서 받은 코드를 반영하고 검토하면 3장 누적 덱을 받습니다. 같은 원본을 제작기에서 열 수 있는 백업 ZIP도 제공합니다. [사용법 열기](https://dlquffhqnxj.github.io/anki-deck-site/deck-maker/?guide=anki)

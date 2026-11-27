@@ -1,0 +1,33 @@
+{
+  "producerVersion": "0.11.0",
+  "models": {
+    "lab-kanji": {
+      "apkgSHA256": "61e342e8263ef518b9397fb9bb1338069fe05c10e74f1759ee5ba047c6bd0bd8",
+      "previewSHA256": "bbfe63816f5f0d06bfd55cdcf6c61334043838d16e94fc2b2bfdbb31f37b5e28",
+      "gates": {
+        "IMPORT": {
+          "status": "PASS",
+          "evidence": "Anki 엔진 26.09.4, 2026-11-27, 새 시험 컬렉션에 가져오기 2노트·6카드, 양면 12면 및 필터 검색을 확인. Desktop 앱 화면은 별도."
+        },
+        "PREVIEW": {
+          "status": "PASS",
+          "evidence": "Chromium 151.0.7922.34 오프라인, 2026-11-27, 390×844 다크 및 1440×900 라이트에서 12면, 개별 카드 식별자·미리보기 필터·수동 복사·붙여넣기 확인을 검사. 페이지 오류와 외부 요청 0건."
+        }
+      }
+    },
+    "kr-quiz": {
+      "apkgSHA256": "f70ffec0c3e51573cfc0a66b4ee347fdb456670935f20934d34e5ed91c3b4f0f",
+      "previewSHA256": "96f345a3b23621dd45be8eff60ad5271bbf36b55ccf40c2eb5b3e49455c6f40c",
+      "gates": {
+        "IMPORT": {
+          "status": "PASS",
+          "evidence": "Anki 엔진 26.09.4, 2026-11-27, 새 시험 컬렉션에 가져오기 2노트·2카드, 양면 4면 및 필터 검색을 확인. Desktop 앱 화면은 별도."
+        },
+        "PREVIEW": {
+          "status": "PASS",
+          "evidence": "Chromium 151.0.7922.34 오프라인, 2026-11-27, 390×844 다크 및 1440×900 라이트에서 4면, 개별 카드 식별자·미리보기 필터·수동 복사·붙여넣기 확인을 검사. 페이지 오류와 외부 요청 0건."
+        }
+      }
+    }
+  }
+}

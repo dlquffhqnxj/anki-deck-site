@@ -2,8 +2,11 @@ const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const { readFileSync } = require("node:fs");
 const { join } = require("node:path");
+const { mkdtempSync, rmSync } = require("node:fs");
+const { tmpdir } = require("node:os");
 const vm = require("node:vm");
 const { webcrypto } = require("node:crypto");
+const { loadBuilder } = require("./deck_maker_release.cjs");
 
 const html = readFileSync(join(__dirname, "../deck-maker/index.html"), "utf8");
 const context = vm.createContext({ TextEncoder, TextDecoder, crypto: webcrypto });
@@ -100,6 +103,51 @@ test("the displayed version, offline filename, and changelog match the producer"
   assert.ok(html.includes('Anki_Deck_Operations_v' + version + '.html'));
   const changelog = readFileSync(join(__dirname, "../deck-maker/CHANGELOG.md"), "utf8");
   assert.ok(changelog.split('\n').find(line => line.startsWith('## v')).startsWith('## v' + version + ' ·'));
+});
+
+test("RULE-06 records match across both deck models and evidence edits preserve APKG and HTML", async () => {
+  const temp = mkdtempSync(join(tmpdir(),"deck-rule06-"));
+  try {
+    const {factory:builder,sampleFor} = loadBuilder(temp);
+    for (const model of ["lab-kanji","kr-quiz"]) {
+      const sample = sampleFor(model);
+      const args = {job:sample.job,input:sample.tsv,name:"test.tsv",createdAt:Date.UTC(2026,10,27)};
+      const build = await builder.build(args);
+      const manifest = JSON.parse(build.files["manifest.json"]);
+      const run = JSON.parse(build.files["RUN.json"]);
+      assert.equal(run.operatingStandard.version,"1.3.0");
+      assert.deepEqual(run.operatingStandard,manifest.operatingStandard);
+      assert.deepEqual(run.verification,manifest.verification);
+      assert.equal(run.verification.gates.find(gate => gate.id === "IMPORT").status,"NOT_TESTED");
+      assert.equal(run.verification.automated.find(gate => gate.id === "PREVIEW_PARITY").status,"PASS");
+      assert.equal(run.operatingStandard.modules.find(module => module.id === "review.native_filter_helper").features.filter.defaultActive,true);
+
+      const verified = await builder.updateEvidence(build,{PREVIEW:{status:"PARTIAL",evidence:"검수 기록 갱신 회귀 시험"}});
+      const verifiedManifest = JSON.parse(verified.files["manifest.json"]);
+      assert.deepEqual(JSON.parse(verified.files["RUN.json"]).verification,verifiedManifest.verification);
+      assert.deepEqual(JSON.parse(verified.files["QA.json"]).gates,verifiedManifest.verification.gates);
+      for (const name of [build.apkgName,"preview.html"]) {
+        assert.equal(verifiedManifest.files[name].sha256,manifest.files[name].sha256);
+      }
+
+      const moved = sample.rows.map((row,i) => model === "kr-quiz" && i === 0 ? {...row,part:"어휘·문맥"} : row);
+      const updated = await builder.build({
+        ...args, job:{...sample.job,mode:"update",version:"1.0.0-RC2"}, priorBytes:verified.archive,
+        input:builder.authorSource(moved,model), createdAt:args.createdAt + 86400000,
+      });
+      const after = JSON.parse(updated.files["manifest.json"]);
+      assert.deepEqual(after.identities.map(item => [item.nid,item.guid,item.cards]),
+        manifest.identities.map(item => [item.nid,item.guid,item.cards]));
+      assert.equal(after.dataset.counts.total.added,0);
+      if (model === "kr-quiz") {
+        assert.equal(after.dataset.counts.total.movedIn,1);
+        assert.equal(after.dataset.counts.total.movedOut,1);
+        assert.equal(after.dataset.counts.total.questions,2);
+      }
+    }
+  } finally {
+    rmSync(temp,{recursive:true,force:true});
+  }
 });
 
 test("exact retests retain both NoteIDs and support different passages under a shared stem", () => {
