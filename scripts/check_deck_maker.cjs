@@ -76,7 +76,7 @@ test("review missions cover every card type and respect deck-level settings", ()
   for (const [model, spec] of Object.entries(cards.MODELS)) {
     const job = factory.validateJob({...project().job, model});
     const disabled = {...job, learning: cards.learningProfile(model, {included: {records: false}})};
-    const fields = new Set(cards.fieldList(model));
+    const fields = new Set([...cards.fieldList(model),"CardFlag","Tags"]);
     for (let ordinal = 0; ordinal < spec.types.length; ordinal++) {
       for (const side of [false, true]) {
         const template = cards.ankiCard(job, ordinal, side).split("<script>")[0];
@@ -88,6 +88,46 @@ test("review missions cover every card type and respect deck-level settings", ()
       }
     }
   }
+});
+
+test("native features keep the Anki field layout and only expose the answer tools on the back", () => {
+  const job = factory.validateJob({...project().job,model:"lab-kanji"});
+  const note = {id:"one",level:"N3",concept:" JP_読む * ",reading:"まいにち",
+    example:"<ruby>毎日<rt>まいにち</rt></ruby>、水を飲みます。",tags:"기존::태그"};
+  const linked = {linkedConcept:note.concept.trim()};
+  const tag = "AnkiOps::Concept::JP%5F%E8%AA%AD%E3%82%80%20%2A";
+  assert.ok(cards.noteTags(note).includes(tag));
+  assert.ok(cards.noteTags(note).includes("기존::태그"));
+  assert.ok(cards.noteTags(linked).includes(tag));
+  assert.equal(job.learning.included.nativeTts,false);
+  assert.doesNotMatch(cards.fieldsFor(note,job).SourceText,/\[anki:tts/);
+
+  const enabled = factory.validateJob({...job,learning:{included:{nativeTts:true}}});
+  const front = cards.previewCard(note,enabled,0,false);
+  const answer = cards.previewCard(note,enabled,0,true);
+  assert.doesNotMatch(front,/id="answer"|data-concept-panel|\[anki:tts/);
+  assert.match(answer,/id="answer"/);
+  assert.match(answer,/data-concept-panel/);
+  assert.match(answer,/\[anki:tts lang=ja_JP\]まいにち\[\/anki:tts\]/);
+  assert.match(answer,/\[anki:tts lang=ja_JP\]毎日、水を飲みます。\[\/anki:tts\]/);
+  assert.match(cards.ankiCard(enabled,0,true),/data-native-flag="{{CardFlag}}"/);
+  assert.ok(!cards.fieldList(job.model).includes("LinkedConceptID"));
+});
+
+test("Anki tag restoration matches GUIDs and retains the current maker tags", () => {
+  const header = "#separator:tab\n#guid column:1\n#notetype column:2\n#tags column:4\n";
+  const type = "표본 [sample]";
+  const before = header + 'kept\t' + type + '\t"예문\t열"\tleech 개인::복습 AnkiOps::Concept::OUTDATED\n' +
+    'missing\t' + type + '\t문제\t개인::다른노트\n';
+  const after = header + 'kept\t' + type + '\t"예문\n줄"\tAnkiOps::Concept::CURRENT\n' +
+    'new\t' + type + '\t새로운노트\tAnkiOps\n';
+  const restored = factory.restoreTags(before,after,type);
+  assert.equal(restored.count,1);
+  assert.match(restored.text,/kept\t표본 \[sample\]\tAnkiOps::Concept::CURRENT leech 개인::복습\n/);
+  assert.doesNotMatch(restored.text,/OUTDATED|missing|새로운노트|예문/);
+  assert.throws(() => factory.restoreTags("일반 텍스트",after,type),/GUID/);
+  assert.throws(() => factory.restoreTags(before,after,"다른 노트 유형"),/노트 유형/);
+  assert.equal(factory.restoreTags(before,before,type).count,0);
 });
 
 test("learning design check finds notes missing explanations for comparison or recall", () => {
@@ -117,6 +157,8 @@ test("RULE-06 records match across both deck models and evidence edits preserve 
       const run = JSON.parse(build.files["RUN.json"]);
       assert.equal(run.operatingStandard.version,"1.3.0");
       assert.deepEqual(run.operatingStandard,manifest.operatingStandard);
+      assert.equal(run.operatingStandard.ankiNative.answerAnchor,"answer");
+      assert.deepEqual(run.operatingStandard.ankiNative.filterPresets,["today","exam","fsrs","leech"]);
       assert.deepEqual(run.verification,manifest.verification);
       assert.equal(run.verification.gates.find(gate => gate.id === "IMPORT").status,"NOT_TESTED");
       assert.equal(run.verification.automated.find(gate => gate.id === "PREVIEW_PARITY").status,"PASS");
@@ -142,7 +184,7 @@ test("RULE-06 records match across both deck models and evidence edits preserve 
       if (model === "kr-quiz") {
         assert.equal(after.dataset.counts.total.movedIn,1);
         assert.equal(after.dataset.counts.total.movedOut,1);
-        assert.equal(after.dataset.counts.total.questions,2);
+        assert.equal(after.dataset.counts.total.questions,sample.rows.length);
       }
     }
   } finally {

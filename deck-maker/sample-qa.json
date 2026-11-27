@@ -1,31 +1,31 @@
 {
-  "producerVersion": "0.11.0",
+  "producerVersion": "0.12.0",
   "models": {
     "lab-kanji": {
-      "apkgSHA256": "61e342e8263ef518b9397fb9bb1338069fe05c10e74f1759ee5ba047c6bd0bd8",
-      "previewSHA256": "bbfe63816f5f0d06bfd55cdcf6c61334043838d16e94fc2b2bfdbb31f37b5e28",
+      "apkgSHA256": "b0688be57de494dd639e4444fd96887d4cdce3c54df3bb79183135c7e1ab1e13",
+      "previewSHA256": "18706d75d962bd92d85bbfc0696a3c242aa4d9f08f0ee233561c534fbac337b9",
       "gates": {
         "IMPORT": {
           "status": "PASS",
-          "evidence": "Anki 엔진 26.09.4, 2026-11-27, 새 시험 컬렉션에 가져오기 2노트·6카드, 양면 12면 및 필터 검색을 확인. Desktop 앱 화면은 별도."
+          "evidence": "Anki 엔진 26.09.4 · 2026-11-27 · 새 시험 컬렉션에 2노트·6카드 가져오기. 답면 앵커, Anki 플래그, 두 덱의 개념 태그, 필터 검색과 답면 일본어 TTS 지시문 확인. Desktop 앱 화면과 음성 출력은 별도."
         },
         "PREVIEW": {
           "status": "PASS",
-          "evidence": "Chromium 151.0.7922.34 오프라인, 2026-11-27, 390×844 다크 및 1440×900 라이트에서 12면, 개별 카드 식별자·미리보기 필터·수동 복사·붙여넣기 확인을 검사. 페이지 오류와 외부 요청 0건."
+          "evidence": "Chromium 151.0.7922.34 · 2026-11-27 · 오프라인 390×844 다크 및 1440×900 라이트에서 12면, 답면 위치 이동, 연결 개념 검색식, 기간과 복습 프리셋 확인. 페이지 오류와 외부 요청 0건."
         }
       }
     },
     "kr-quiz": {
-      "apkgSHA256": "f70ffec0c3e51573cfc0a66b4ee347fdb456670935f20934d34e5ed91c3b4f0f",
-      "previewSHA256": "96f345a3b23621dd45be8eff60ad5271bbf36b55ccf40c2eb5b3e49455c6f40c",
+      "apkgSHA256": "66bbfd271a467fc9a82a315edb1f0ce264b65cb9192711a705b46003523a9e02",
+      "previewSHA256": "767154f0dd9cb03cf9e657c1ed1f276bc288a6713ce5e6980df1df790e13550b",
       "gates": {
         "IMPORT": {
           "status": "PASS",
-          "evidence": "Anki 엔진 26.09.4, 2026-11-27, 새 시험 컬렉션에 가져오기 2노트·2카드, 양면 4면 및 필터 검색을 확인. Desktop 앱 화면은 별도."
+          "evidence": "Anki 엔진 26.09.4 · 2026-11-27 · 새 시험 컬렉션에 3노트·3카드 가져오기. 답면 앵커, Anki 플래그, 두 덱의 개념 태그, 필터 검색과 답면 일본어 TTS 지시문 확인. Desktop 앱 화면과 음성 출력은 별도."
         },
         "PREVIEW": {
           "status": "PASS",
-          "evidence": "Chromium 151.0.7922.34 오프라인, 2026-11-27, 390×844 다크 및 1440×900 라이트에서 4면, 개별 카드 식별자·미리보기 필터·수동 복사·붙여넣기 확인을 검사. 페이지 오류와 외부 요청 0건."
+          "evidence": "Chromium 151.0.7922.34 · 2026-11-27 · 오프라인 390×844 다크 및 1440×900 라이트에서 6면, 답면 위치 이동, 연결 개념 검색식, 기간과 복습 프리셋 확인. 페이지 오류와 외부 요청 0건."
         }
       }
     }

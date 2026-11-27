@@ -33,10 +33,11 @@ async function modelSamples(dir, factory, sampleFor) {
   const destination = path.join(dir,"rule-06");
   const evidenceFile = path.join(directory,"sample-qa.json");
   const recorded = fs.existsSync(evidenceFile) ? JSON.parse(fs.readFileSync(evidenceFile,"utf8")) : {};
-  for (const [subdirectory,model,counts] of [["kanji-lab","lab-kanji",[2,6]],["kanji-revolution","kr-quiz",[2,2]]]) {
+  for (const [subdirectory,model,counts] of [["kanji-lab","lab-kanji",[2,6]],["kanji-revolution","kr-quiz",[3,3]]]) {
     const sample = sampleFor(model);
     const input = new TextEncoder().encode(sample.tsv);
-    let result = await factory.build({ input,name:sample.job.product + ".tsv",job:sample.job,
+    const job = {...sample.job,learning:{included:{nativeTts:true}}};
+    let result = await factory.build({ input,name:sample.job.product + ".tsv",job,
       createdAt:Date.parse(section[2] + "T00:00:00Z") });
     if (result.run.dataset.notes !== counts[0] || result.run.dataset.cards !== counts[1] ||
         result.run.operatingStandard.version !== factory.RULE06.version) throw Error("RULE-06 sample data differs from the release plan.");
